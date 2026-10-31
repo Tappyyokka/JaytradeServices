@@ -1,0 +1,1055 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Services | Indipay</title>
+    <link rel="stylesheet" href="../css/style.css">
+
+    <style>
+        .all-services {
+            max-width: 1200px;
+            margin: auto;
+            padding: 30px 24px 60px;
+            color: #092b61;
+        }
+
+        .services-breadcrumb {
+            margin-bottom: 22px;
+            color: #6480ad;
+            font-size: 13px;
+        }
+
+        .services-breadcrumb a {
+            color: #0866f5;
+            text-decoration: none;
+        }
+
+        .services-hero {
+            padding: 42px;
+            border-radius: 22px;
+            border: 1px solid #dceaff;
+            background: linear-gradient(120deg, #e4f1ff, #f7faff);
+        }
+
+        .services-eyebrow {
+            display: inline-block;
+            padding: 8px 13px;
+            border-radius: 7px;
+            background: #d6e8ff;
+            color: #0866f5;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: .5px;
+        }
+
+        .services-hero h1 {
+            max-width: 750px;
+            margin: 18px 0 12px;
+            font-size: clamp(30px, 4vw, 43px);
+            line-height: 1.2;
+        }
+
+        .services-hero p {
+            max-width: 700px;
+            margin: 0;
+            color: #52709f;
+            font-size: 15px;
+            line-height: 1.8;
+        }
+
+        .services-search {
+            display: flex;
+            gap: 12px;
+            max-width: 550px;
+            margin-top: 25px;
+        }
+
+        .services-search input {
+            width: 100%;
+            min-width: 0;
+            padding: 14px 16px;
+            border: 1px solid #d5e4f8;
+            border-radius: 10px;
+            background: #fff;
+            color: #092b61;
+            font: inherit;
+            outline: none;
+        }
+
+        .services-search input:focus {
+            border-color: #0866f5;
+            box-shadow: 0 0 0 3px rgba(8,102,245,.1);
+        }
+
+        .services-search button {
+            padding: 14px 20px;
+            border: 0;
+            border-radius: 10px;
+            background: #0866f5;
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .services-shortcuts {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        .services-shortcuts a {
+            padding: 10px 14px;
+            border: 1px solid #dceaff;
+            border-radius: 9px;
+            background: white;
+            color: #315b91;
+            font-size: 13px;
+            text-decoration: none;
+            transition: background .2s, color .2s;
+        }
+
+        .services-shortcuts a:hover {
+            background: #0866f5;
+            color: white;
+        }
+
+        .service-category {
+            margin-top: 48px;
+            scroll-margin-top: 25px;
+        }
+
+        .service-category-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            margin-bottom: 22px;
+        }
+
+        .service-category-heading {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            min-width: 0;
+        }
+
+        .service-category-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 0 0 58px;
+            width: 58px;
+            height: 58px;
+            border-radius: 16px;
+            background: #e7f2ff;
+            color: #0866f5;
+        }
+
+        .service-category-icon svg {
+            width: 29px;
+            height: 29px;
+        }
+
+        .service-category-heading h2 {
+            margin: 0 0 5px;
+            font-size: 23px;
+            line-height: 1.3;
+        }
+
+        .service-category-heading p {
+            margin: 0;
+            color: #6480ad;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .service-count {
+            color: #6480ad;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        .all-service-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .all-service-card {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            min-width: 0;
+            padding: 22px 18px;
+            border: 1px solid #e0edfc;
+            border-radius: 15px;
+            background: #fff;
+            color: #092b61;
+            text-decoration: none;
+            transition: transform .22s ease,
+                        border-color .22s ease,
+                        box-shadow .22s ease;
+        }
+
+        .all-service-card:hover,
+        .all-service-card:focus-visible {
+            transform: translateY(-5px);
+            border-color: #a9ceff;
+            box-shadow: 0 12px 28px rgba(8,102,245,.09);
+            outline: none;
+        }
+
+        .all-service-card[hidden] {
+            display: none !important;
+        }
+
+        .all-service-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 54px;
+            height: 54px;
+            margin-bottom: 17px;
+            border-radius: 15px;
+            background: #e8f3ff;
+            color: #0866f5;
+            transition: background .2s, color .2s;
+        }
+
+        .all-service-icon svg {
+            width: 27px;
+            height: 27px;
+        }
+
+        .all-service-card:hover .all-service-icon,
+        .all-service-card:focus-visible .all-service-icon {
+            background: #0866f5;
+            color: white;
+        }
+
+        .all-service-card h3 {
+            margin: 0 0 9px;
+            font-size: 15px;
+            line-height: 1.5;
+        }
+
+        .all-service-card p {
+            flex: 1;
+            margin: 0 0 17px;
+            color: #6480ad;
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        .service-card-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #0866f5;
+            font-size: 13px;
+            font-weight: 750;
+        }
+
+        .service-card-link span {
+            font-size: 19px;
+            transition: transform .2s;
+        }
+
+        .all-service-card:hover .service-card-link span {
+            transform: translateX(4px);
+        }
+
+        .services-empty {
+            display: none;
+            margin-top: 20px;
+            padding: 25px;
+            border: 1px solid #e0edfc;
+            border-radius: 12px;
+            color: #6480ad;
+            text-align: center;
+        }
+
+        /* Distinct promotional banners */
+
+        .service-promo {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            align-items: center;
+            gap: 28px;
+            margin-top: 35px;
+            padding: 32px;
+            border-radius: 18px;
+            border: 1px solid #dceaff;
+        }
+
+        .rewards-promo {
+            background: linear-gradient(115deg, #e8edff, #f5f4ff);
+        }
+
+        .referral-promo {
+            background: linear-gradient(115deg, #e1f8f0, #edfaff);
+            border-color: #d0eee5;
+        }
+
+        .service-promo-label {
+            display: inline-block;
+            margin-bottom: 12px;
+            color: #0866f5;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: .7px;
+        }
+
+        .referral-promo .service-promo-label {
+            color: #087e72;
+        }
+
+        .service-promo h2 {
+            margin: 0 0 10px;
+            font-size: 25px;
+        }
+
+        .service-promo p {
+            max-width: 620px;
+            margin: 0;
+            color: #52709f;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .service-promo-art {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100px;
+            height: 100px;
+            border-radius: 25px;
+            background: rgba(255,255,255,.8);
+            color: #0866f5;
+        }
+
+        .service-promo-art svg {
+            width: 52px;
+            height: 52px;
+        }
+
+        .referral-promo .service-promo-art {
+            color: #087e72;
+            border-radius: 50%;
+        }
+
+        .service-promo-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 19px;
+            padding: 13px 19px;
+            border-radius: 10px;
+            background: #0866f5;
+            color: white;
+            font-size: 13px;
+            font-weight: 750;
+            text-decoration: none;
+            transition: transform .2s;
+        }
+
+        .referral-promo .service-promo-button {
+            background: #087e72;
+        }
+
+        .service-promo-button:hover {
+            transform: translateY(-2px);
+        }
+
+        .services-contact {
+            margin-top: 45px;
+            padding: 35px 25px;
+            border-radius: 18px;
+            background: #092b61;
+            color: white;
+            text-align: center;
+        }
+
+        .services-contact h2 {
+            margin: 0 0 10px;
+            font-size: 27px;
+        }
+
+        .services-contact p {
+            max-width: 650px;
+            margin: 0 auto 20px;
+            color: #dceaff;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .services-contact a {
+            display: inline-flex;
+            padding: 13px 22px;
+            border-radius: 10px;
+            background: white;
+            color: #0866f5;
+            font-size: 14px;
+            font-weight: 750;
+            text-decoration: none;
+        }
+
+        @media (max-width: 950px) {
+            .all-service-grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 700px) {
+            .all-services {
+                padding: 20px 16px 40px;
+            }
+
+            .services-hero {
+                padding: 28px 22px;
+            }
+
+            .all-service-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 12px;
+            }
+
+            .all-service-card {
+                padding: 17px 14px;
+            }
+
+            .service-category-heading h2 {
+                font-size: 20px;
+            }
+
+            .service-category-icon {
+                flex-basis: 48px;
+                width: 48px;
+                height: 48px;
+            }
+
+            .service-category-icon svg {
+                width: 24px;
+                height: 24px;
+            }
+
+            .service-promo {
+                padding: 24px 20px;
+                gap: 15px;
+            }
+
+            .service-promo-art {
+                width: 70px;
+                height: 70px;
+                border-radius: 18px;
+            }
+
+            .service-promo-art svg {
+                width: 37px;
+                height: 37px;
+            }
+        }
+
+        @media (max-width: 430px) {
+            .all-service-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .all-service-card {
+                display: grid;
+                grid-template-columns: 48px 1fr;
+                column-gap: 13px;
+                align-items: start;
+            }
+
+            .all-service-icon {
+                grid-row: 1 / span 3;
+                width: 48px;
+                height: 48px;
+                margin: 0;
+            }
+
+            .all-service-icon svg {
+                width: 23px;
+                height: 23px;
+            }
+
+            .all-service-card h3 {
+                margin: 1px 0 5px;
+            }
+
+            .all-service-card p {
+                margin-bottom: 10px;
+            }
+
+            .all-service-card .service-card-link {
+                grid-column: 2;
+            }
+
+            .services-search {
+                flex-direction: column;
+            }
+
+            .services-search button {
+                width: 100%;
+            }
+
+            .service-promo {
+                grid-template-columns: 1fr;
+            }
+
+            .service-promo-art {
+                display: none;
+            }
+
+            .service-category-header {
+                align-items: flex-start;
+            }
+
+            .service-count {
+                padding-top: 8px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .all-service-card,
+            .all-service-icon,
+            .service-promo-button,
+            .service-card-link span {
+                transition: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- Keep your existing Indipay header and navigation here -->
+
+<main class="all-services">
+
+    <div class="services-breadcrumb">
+        <a href="index.html">Home</a> / All Services
+    </div>
+
+    <!-- HERO -->
+    <section class="services-hero">
+        <span class="services-eyebrow">THE INDIPAY ADVANTAGE</span>
+
+        <h1>Discover Services Designed Around You</h1>
+
+        <p>
+            Explore financial solutions, business services, technology
+            support, investments and insurance from one convenient place.
+            Find a service that fits your needs and discover what's possible
+            with Indipay.
+        </p>
+
+        <form class="services-search" id="serviceSearchForm" role="search">
+            <input
+                type="search"
+                id="serviceSearch"
+                placeholder="Search for a service..."
+                aria-label="Search services"
+            >
+            <button type="submit">Search</button>
+        </form>
+
+        <nav class="services-shortcuts" aria-label="Service categories">
+            <a href="#financial">Financial Services</a>
+            <a href="#legal">Legal & Business</a>
+            <a href="#media">Media & Technology</a>
+            <a href="#investments">Investments & Insurance</a>
+        </nav>
+    </section>
+
+    <!-- FINANCIAL SERVICES -->
+    <section class="service-category" id="financial">
+        <div class="service-category-header">
+            <div class="service-category-heading">
+                <div class="service-category-icon">
+                    <svg viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="1.8"
+                         stroke-linecap="round" stroke-linejoin="round"
+                         aria-hidden="true">
+                        <path d="M3 10h18"/>
+                        <path d="m5 10 7-6 7 6"/>
+                        <path d="M5 20h14M7 10v8m5-8v8m5-8v8M3 22h18"/>
+                    </svg>
+                </div>
+                <div>
+                    <h2>Financial Services</h2>
+                    <p>Explore financing options for your personal and property needs.</p>
+                </div>
+            </div>
+            <span class="service-count">4 services</span>
+        </div>
+
+        <div class="all-service-grid">
+            <a href="housing-loan.html" class="all-service-card"
+               data-service="housing home loan property purchase">
+                <div class="all-service-icon">
+                    <svg viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="1.8"
+                         stroke-linecap="round" stroke-linejoin="round"
+                         aria-hidden="true">
+                        <path d="m3 11 9-8 9 8"/>
+                        <path d="M5 10v11h14V10"/>
+                        <path d="M9 21v-7h6v7"/>
+                    </svg>
+                </div>
+                <h3>Housing Loan</h3>
+                <p>Explore financing options for purchasing or constructing your home.</p>
+                <span class="service-card-link">Explore service <span>→</span></span>
+            </a>
+
+            <a href="lap.html" class="all-service-card"
+               data-service="lap loan against property secured loan">
+                <div class="all-service-icon">
+                    <svg viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="1.8"
+                         stroke-linecap="round" stroke-linejoin="round"
+                         aria-hidden="true">
+                        <path d="m3 10 9-7 9 7"/>
+                        <path d="M5 10v10h14V10"/>
+                        <path d="M9 20v-6h6v6"/>
+                        <path d="M16 4h3v3"/>
+                    </svg>
+                </div>
+                <h3>Loan Against Property</h3>
+                <p>Learn about borrowing options secured against eligible property.</p>
+                <span class="service-card-link">Explore service <span>→</span></span>
+            </a>
+
+            <a href="personal-loan.html" class="all-service-card"
+               data-service="personal loan">
+                <div class="all-service-icon">
+                    <svg viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="1.8"
+                         stroke-linecap="round" stroke-linejoin="round"
+                         aria-hidden="true">
+                        <rect x="3" y="5" width="18" height="14" rx="2"/>
+                        <path d="M7 10h4m-4 4h2m5-3h3"/>
+                    </svg>
+                </div>
+                <h3>Personal Loan</h3>
+                <p>Explore personal financing options for eligible expenses.</p>
+                <span class="service-card-link">Explore service <span>→</span></span>
+            </a>
+
+            <a href="business-loan.html" class="all-service-card"
+               data-service="business loan sme working capital">
+                <div class="all-service-icon">
+                    <svg viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="1.8"
+                         stroke-linecap="round" stroke-linejoin="round"
+                         aria-hidden="true">
+                        <rect x="3" y="7" width="18" height="14" rx="2"/>
+                        <path d="M8 7V4h8v3M3 12h18m-11 0v3h4v-3"/>
+                    </svg>
+                </div>
+                <h3>Business Loan</h3>
+                <p>Discover potential financing options for eligible business needs.</p>
+                <span class="service-card-link">Explore service <span>→</span></span>
+            </a>
+        </div>
+    </section>
+
+    <!-- LEGAL AND BUSINESS -->
+    <section class="service-category" id="legal">
+        <div class="service-category-header">
+            <div class="service-category-heading">
+                <div class="service-category-icon">
+                    <svg viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="1.8"
+                         stroke-linecap="round" stroke-linejoin="round"
+                         aria-hidden="true">
+                        <path d="M12 3v18m-8-14h16M4 7l-3 6h6L4 7Zm16 0-3 6h6l-3-6Z"/>
+                        <path d="M5 21h14"/>
+                    </svg>
+                </div>
+                <div>
+                    <h2>Legal & Business Services</h2>
+                    <p>Support for compliance, registrations and business documentation.</p>
+                </div>
+            </div>
+            <span class="service-count">4 services</span>
+        </div>
+
+        <div class="all-service-grid">
+            <a href="gst-services.html" class="all-service-card"
+               data-service="gst goods services tax registration filing">
+                <div class="all-service-icon">
+                    <svg viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="1.8"
+                         stroke-linecap="round" stroke-linejoin="round"
+                         aria-hidden="true">
+                        <rect x="5" y="3" width="14" height="18" rx="2"/>
+                        <path d="M9 8h6m-6 4h6m-6 4h4"/>
+                    </svg>
+                </div>
+                <h3>GST Services</h3>
+                <p>Explore GST registration and related compliance support.</p>
+                <span class="service-card-link">Explore service <span>→</span></span>
+            </a>
+
+            <a href="msme-registration.html" class="all-service-card"
+               data-service="msme udyam registration small business">
+                <div class="all-service-icon">
+                    <svg viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="1.8"
+                         stroke-linecap="round" stroke-linejoin="round"
+                         aria-hidden="true">
+                        <path d="M3 21V9l9-6 9 6v12"/>
+                        <path d="M7 21v-7h10v7M8 10h2m4 0h2"/>
+                    </svg>
+                </div>
+                <h3>MSME Registration</h3>
+                <p>Learn about MSME and Udyam registration assistance.</p>
+                <span class="service-card-link">Explore service <span>→</span></span>
+            </a>
+
+            <a href="business-registration.html" class="all-service-card"
+               data-service="business company firm registration">
+                <div class="all-service-icon">
+                    <svg viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="1.8"
+                         stroke-linecap="round" stroke-linejoin="round"
+                         aria-hidden="true">
+                        <rect x="3" y="7" width="18" height="14" rx="2"/>
+                        <path d="M8 7V4h8v3M8 12h8m-8 4h5"/>
+                    </svg>
+                </div>
+                <h3>Business Registration</h3>
+                <p>Find information about business setup and registration options.</p>
+                <span class="service-card-link">Explore service <span>→</span></span>
+            </a>
+
+            <a href="documentation.html" class="all-service-card"
+               data-service="documentation legal paperwork">
+                <div class="all-service-icon">
+                    <svg viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="1.8"
+                         stroke-linecap="round" stroke-linejoin="round"
+                         aria-hidden="true">
+                        <path d="M6 3h9l4 4v14H6z"/>
+                        <path d="M15 3v5h4M9 12h6m-6 4h6"/>
+                    </svg>
+                </div>
+                <h3>Documentation Support</h3>
+                <p>Explore assistance with eligible business documentation needs.</p>
+                <span class="service-card-link">Explore service <span>→</span></span>
+            </a>
+        </div>
+    </section>
+
+    <!-- MEDIA AND TECHNOLOGY -->
+    <section class="service-category" id="media">
+        <div class="service-category-header">
+            <div class="service-category-heading">
+                <div class="service-category-icon">
+                    <svg viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="1.8"
+                         stroke-linecap="round" stroke-linejoin="round"
+                         aria-hidden="true">
+                        <rect x="3" y="4" width="18" height="13" rx="2"/>
+                        <path d="M8 21h8m-4-4v4M7 9h10m-10 4h6"/>
+                    </svg>
+                </div>
+                <div>
+                    <h2>Media & Technology Services</h2>
+                    <p>Digital solutions to help individuals and businesses build an online presence.</p>
+                </div>
+            </div>
+            <span class="service-count">4 services</span>
+        </div>
+
+        <div class="all-service-grid">
+            <a href="website-development.html" class="all-service-card"
+               data-service="website web development design">
+                <div class="all-service-icon">
+                    <svg viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="1.8"
+                         stroke-linecap="round" stroke-linejoin="round"
+                         aria-hidden="true">
+                        <rect x="3" y="4" width="18" height="16" rx="2"/>
+                        <path d="m8 10-3 2 3 2m8-4 3 2-3 2m-3-5-2 6"/>
+                    </svg>
+                </div>
+                <h3>Website Development</h3>
+                <p>Build a professional website for your business or brand.</p>
+                <span class="service-card-link">Explore service <span>→</span></span>
+            </a>
+
+            <a href="digital-marketing.html" class="all-service-card"
+               data-service="digital marketing social media advertising">
+                <div class="all-service-icon">
+                    <svg viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="1.8"
+                         stroke-linecap="round" stroke-linejoin="round"
+                         aria-hidden="true">
+                        <path d="M3 11v2a2 2 0 0 0 2 2h3l8 4V5l-8 4H5a2 2 0 0 0-2 2Z"/>
+                        <path d="m8 15 2 5m9-11 2-2m-2 10 2 2"/>
+                    </svg>
+                </div>
+                <h3>Digital Marketing</h3>
+                <p>Explore online promotion and digital visibility services.</p>
+                <span class="service-card-link">Explore service <span>→</span></span>
+            </a>
+
+            <a href="branding-design.html" class="all-service-card"
+               data-service="branding graphic design logo creative">
+                <div class="all-service-icon">
+                    <svg viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="1.8"
+                         stroke-linecap="round" stroke-linejoin="round"
+                         aria-hidden="true">
+                        <path d="M12 3a9 9 0 1 0 0 18h1a2 2 0 0 0 1.6-3.2 1.5 1.5 0 0 1 1.2-2.4H18a3 3 0 0 0 3-3 9 9 0 0 0-9-9Z"/>
+                        <circle cx="7.5" cy="10" r="1"/>
+                        <circle cx="11" cy="7" r="1"/>
+                        <circle cx="16" cy="9" r="1"/>
+                    </svg>
+                </div>
+                <h3>Branding & Design</h3>
+                <p>Develop a consistent visual identity for your business.</p>
+                <span class="service-card-link">Explore service <span>→</span></span>
+            </a>
+
+            <a href="technology-solutions.html" class="all-service-card"
+               data-service="technology software it technical solutions">
+                <div class="all-service-icon">
+                    <svg viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="1.8"
+                         stroke-linecap="round" stroke-linejoin="round"
+                         aria-hidden="true">
+                        <rect x="4" y="4" width="16" height="12" rx="2"/>
+                        <path d="M8 20h8m-4-4v4M8 9l-2 2 2 2m8-4 2 2-2 2"/>
+                    </svg>
+                </div>
+                <h3>Technology Solutions</h3>
+                <p>Explore digital tools and technology support for your needs.</p>
+                <span class="service-card-link">Explore service <span>→</span></span>
+            </a>
+        </div>
+    </section>
+
+    <!-- INVESTMENTS AND INSURANCE -->
+    <section class="service-category" id="investments">
+        <div class="service-category-header">
+            <div class="service-category-heading">
+                <div class="service-category-icon">
+                    <svg viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="1.8"
+                         stroke-linecap="round" stroke-linejoin="round"
+                         aria-hidden="true">
+                        <path d="M3 20h18M5 17l5-5 4 3 6-8"/>
+                        <path d="M15 7h5v5"/>
+                    </svg>
+                </div>
+                <div>
+                    <h2>Investments & Insurance</h2>
+                    <p>Explore options for financial planning and protection.</p>
+                </div>
+            </div>
+            <span class="service-count">4 services</span>
+        </div>
+
+        <div class="all-service-grid">
+            <a href="investment-services.html" class="all-service-card"
+               data-service="investment financial planning">
+                <div class="all-service-icon">
+                    <svg viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="1.8"
+                         stroke-linecap="round" stroke-linejoin="round"
+                         aria-hidden="true">
+                        <path d="M3 20h18M5 16l5-5 4 3 5-7"/>
+                        <path d="M14 7h5v5"/>
+                    </svg>
+                </div>
+                <h3>Investment Services</h3>
+                <p>Explore investment-related information and financial planning options.</p>
+                <span class="service-card-link">Explore service <span>→</span></span>
+            </a>
+
+            <a href="life-insurance.html" class="all-service-card"
+               data-service="life insurance protection">
+                <div class="all-service-icon">
+                    <svg viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="1.8"
+                         stroke-linecap="round" stroke-linejoin="round"
+                         aria-hidden="true">
+                        <path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/>
+                        <path d="m9 12 2 2 4-4"/>
+                    </svg>
+                </div>
+                <h3>Life Insurance</h3>
+                <p>Learn about life insurance options and financial protection.</p>
+                <span class="service-card-link">Explore service <span>→</span></span>
+            </a>
+
+            <a href="health-insurance.html" class="all-service-card"
+               data-service="health insurance medical cover">
+                <div class="all-service-icon">
+                    <svg viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="1.8"
+                         stroke-linecap="round" stroke-linejoin="round"
+                         aria-hidden="true">
+                        <path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/>
+                        <path d="M12 8v8m-4-4h8"/>
+                    </svg>
+                </div>
+                <h3>Health Insurance</h3>
+                <p>Explore health coverage options for eligible medical expenses.</p>
+                <span class="service-card-link">Explore service <span>→</span></span>
+            </a>
+
+            <a href="general-insurance.html" class="all-service-card"
+               data-service="general insurance motor property coverage">
+                <div class="all-service-icon">
+                    <svg viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="1.8"
+                         stroke-linecap="round" stroke-linejoin="round"
+                         aria-hidden="true">
+                        <path d="M12 3 20 7v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7l8-4Z"/>
+                        <path d="m8 12 3 3 5-6"/>
+                    </svg>
+                </div>
+                <h3>General Insurance</h3>
+                <p>Learn about eligible protection options for property and other assets.</p>
+                <span class="service-card-link">Explore service <span>→</span></span>
+            </a>
+        </div>
+    </section>
+
+    <!-- REWARDS BANNER -->
+    <section class="service-promo rewards-promo">
+        <div>
+            <span class="service-promo-label">REWARDS & OFFERS</span>
+            <h2>Discover More Value with Indipay</h2>
+            <p>
+                Explore featured offers, special benefits and promotions.
+                Check the terms and eligibility of each offer before participating.
+            </p>
+            <a href="rewards.html" class="service-promo-button">
+                Explore Rewards <span>→</span>
+            </a>
+        </div>
+
+        <div class="service-promo-art" aria-hidden="true">
+            <svg viewBox="0 0 48 48" fill="none"
+                 stroke="currentColor" stroke-width="1.8"
+                 stroke-linecap="round" stroke-linejoin="round">
+                <rect x="6" y="20" width="36" height="23" rx="3"/>
+                <path d="M4 14h40v8H4zM24 14v29"/>
+                <path d="M24 14H13a5 5 0 1 1 5-5c0 3 6 5 6 5Zm0 0h11a5 5 0 1 0-5-5c0 3-6 5-6 5Z"/>
+            </svg>
+        </div>
+    </section>
+
+    <!-- REFER AND EARN BANNER -->
+    <section class="service-promo referral-promo">
+        <div>
+            <span class="service-promo-label">REFER & EARN</span>
+            <h2>Share Indipay with Your Network</h2>
+            <p>
+                Invite friends and family to discover Indipay. Any referral
+                benefits will be subject to the programme's published terms
+                and eligibility requirements.
+            </p>
+            <a href="refer-and-earn.html" class="service-promo-button">
+                Refer a Friend <span>→</span>
+            </a>
+        </div>
+
+        <div class="service-promo-art" aria-hidden="true">
+            <svg viewBox="0 0 48 48" fill="none"
+                 stroke="currentColor" stroke-width="1.8"
+                 stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="18" cy="15" r="7"/>
+                <path d="M5 39v-4a13 13 0 0 1 26 0v4H5Z"/>
+                <circle cx="35" cy="17" r="5"/>
+                <path d="M33 28a10 10 0 0 1 10 10"/>
+            </svg>
+        </div>
+    </section>
+
+    <div class="services-empty" id="servicesEmpty">
+        No matching services found. Try another search term.
+    </div>
+
+    <!-- CONTACT CTA -->
+    <section class="services-contact">
+        <h2>Need Help Finding the Right Service?</h2>
+        <p>
+            Explore the available options or contact the Indipay team
+            for guidance on the next steps.
+        </p>
+        <a href="contact.html">Contact Us</a>
+    </section>
+
+</main>
+
+<!-- Keep your existing Indipay footer here -->
+
+<script>
+    const serviceSearchForm = document.getElementById("serviceSearchForm");
+    const serviceSearch = document.getElementById("serviceSearch");
+    const serviceCards = document.querySelectorAll(".all-service-card");
+    const serviceCategories = document.querySelectorAll(".service-category");
+    const servicesEmpty = document.getElementById("servicesEmpty");
+    const serviceShortcuts = document.querySelector(".services-shortcuts");
+
+    function filterServices() {
+        const query = serviceSearch.value.trim().toLowerCase();
+        let totalVisible = 0;
+
+        serviceCards.forEach(card => {
+            const searchableText =
+                (card.innerText + " " + (card.dataset.service || ""))
+                .toLowerCase();
+
+            const matches = searchableText.includes(query);
+            card.hidden = !matches;
+
+            if (matches) totalVisible++;
+        });
+
+        serviceCategories.forEach(category => {
+            const visibleCards = category.querySelectorAll(
+                ".all-service-card:not([hidden])"
+            ).length;
+
+            category.hidden = visibleCards === 0;
+        });
+
+        servicesEmpty.style.display =
+            totalVisible === 0 ? "block" : "none";
+
+        serviceShortcuts.style.display =
+            query ? "none" : "flex";
+    }
+
+    serviceSearch.addEventListener("input", filterServices);
+
+    serviceSearchForm.addEventListener("submit", function(event) {
+        event.preventDefault();
+        filterServices();
+
+        const firstVisibleCategory = Array.from(serviceCategories)
+            .find(category => !category.hidden);
+
+        if (firstVisibleCategory) {
+            firstVisibleCategory.scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+            });
+        }
+    });
+</script>
+
+</body>
+</html>
