@@ -10,13 +10,13 @@ function Navbar() {
         {/* Brand - temporary logo comparison */}
         <a href="#top" className="brand">
         
-<img
-  src={blueLogo}
-  alt="Indipay logo with blue background"
-  className="logo-comparison"
-  style={{ height: "58px", width: "auto" }}
-/>
 
+<img
+  src={transparentLogo}
+  alt="Indipay logo with transparent background"
+  className="logo-comparison"
+  style={{ height: "75px", width: "auto" }}
+/>
           
         </a>
 
