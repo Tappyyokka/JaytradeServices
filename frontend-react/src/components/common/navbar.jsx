@@ -1,14 +1,23 @@
+
+import blueLogo from "../../assets/images/logo-blue.jpeg";
+import transparentLogo from "../../assets/images/logo-transparent.png";
+
 function Navbar() {
   return (
     <header className="navbar">
       <div className="navbar-container">
 
-        {/* Brand */}
+        {/* Brand - temporary logo comparison */}
         <a href="#top" className="brand">
-          <span className="brand-icon">I</span>
-          <span className="brand-name">
-            Indi<span>pay</span>
-          </span>
+        
+<img
+  src={blueLogo}
+  alt="Indipay logo with blue background"
+  className="logo-comparison"
+  style={{ height: "58px", width: "auto" }}
+/>
+
+          
         </a>
 
         {/* Navigation */}
