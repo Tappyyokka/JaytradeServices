@@ -38,7 +38,7 @@ const serviceCategories = [
   },
   {
     number: "05",
-    title: "Jaytrade Times",
+    title: "Jaytrade Times & Technologies",
     description:
       "Promote your brand, reach wider audiences and explore professional advertising and media solutions.",
     icon: "▤",

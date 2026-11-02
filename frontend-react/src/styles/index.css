@@ -1268,3 +1268,293 @@
     width: 100%;
   }
 }
+
+/* =========================================
+   WHY CHOOSE INDI PAY
+========================================= */
+
+.why-choose-section {
+  position: relative;
+  padding: 100px 7%;
+  background: var(--cream);
+  overflow: hidden;
+}
+
+.why-choose-container {
+  max-width: 1240px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: 75px;
+  align-items: center;
+}
+
+.why-choose-heading {
+  max-width: 480px;
+}
+
+.why-eyebrow {
+  display: inline-block;
+  color: var(--orange);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  margin-bottom: 22px;
+}
+
+.why-choose-heading h2 {
+  color: var(--navy);
+  font-family: "Manrope", sans-serif;
+  font-size: clamp(34px, 4vw, 51px);
+  line-height: 1.18;
+  font-weight: 800;
+  letter-spacing: -2px;
+  margin: 0 0 24px;
+}
+
+.why-choose-heading h2 span {
+  color: var(--orange);
+}
+
+.why-choose-heading > p {
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.9;
+  margin-bottom: 30px;
+}
+
+.why-trust-note {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--navy);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.trust-dot {
+  width: 9px;
+  height: 9px;
+  background: var(--orange);
+  border-radius: 50%;
+  box-shadow: 0 0 0 5px rgba(242, 140, 40, 0.13);
+}
+
+.why-benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.why-benefit-card {
+  position: relative;
+  min-height: 225px;
+  padding: 26px;
+  background: var(--white);
+  border: 1px solid rgba(16, 29, 54, 0.06);
+  border-radius: 18px;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+}
+
+.why-benefit-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 40px rgba(16, 29, 54, 0.09);
+}
+
+.benefit-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.benefit-icon {
+  width: 43px;
+  height: 43px;
+  display: grid;
+  place-items: center;
+  background: rgba(242, 140, 40, 0.12);
+  color: var(--orange);
+  border-radius: 13px;
+  font-size: 23px;
+}
+
+.benefit-number {
+  color: rgba(16, 29, 54, 0.25);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.why-benefit-card h3 {
+  color: var(--navy);
+  font-size: 17px;
+  font-weight: 800;
+  margin: 0 0 10px;
+}
+
+.why-benefit-card p {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.75;
+  margin: 0;
+}
+
+.benefit-card-line {
+  position: absolute;
+  bottom: 0;
+  left: 26px;
+  width: 35px;
+  height: 3px;
+  background: var(--orange);
+  border-radius: 5px 5px 0 0;
+  transition: width 0.3s ease;
+}
+
+.why-benefit-card:hover .benefit-card-line {
+  width: calc(100% - 52px);
+}
+
+
+/* =========================================
+   INDI PAY STATISTICS
+========================================= */
+
+.why-bottom-strip {
+  max-width: 1240px;
+  margin: 75px auto 0;
+  padding: 30px 35px;
+  background: var(--white);
+  border: 1px solid rgba(16, 29, 54, 0.08);
+  border-radius: 18px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  box-shadow: 0 12px 35px rgba(16, 29, 54, 0.04);
+}
+
+.why-bottom-strip > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 5px;
+  padding: 10px 12px;
+  border-right: 1px solid rgba(16, 29, 54, 0.1);
+}
+
+.why-bottom-strip > div:last-child {
+  border-right: none;
+}
+
+.why-bottom-strip strong {
+  color: var(--orange);
+  font-family: "Manrope", sans-serif;
+  font-size: clamp(32px, 4vw, 48px);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -1.5px;
+}
+
+.why-bottom-strip span {
+  color: var(--navy);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* Responsive statistics */
+
+@media (max-width: 700px) {
+  .why-bottom-strip {
+    grid-template-columns: repeat(2, 1fr);
+    padding: 22px 15px;
+    gap: 15px 5px;
+  }
+
+  .why-bottom-strip > div:nth-child(2) {
+    border-right: none;
+  }
+
+  .why-bottom-strip > div:nth-child(3),
+  .why-bottom-strip > div:nth-child(4) {
+    border-top: 1px solid rgba(16, 29, 54, 0.1);
+    padding-top: 20px;
+  }
+}
+
+@media (max-width: 380px) {
+  .why-bottom-strip strong {
+    font-size: 29px;
+  }
+
+  .why-bottom-strip span {
+    font-size: 11px;
+  }
+}
+
+
+/* MOBILE LAYOUT FIX - WHY CHOOSE INDI PAY */
+
+@media (max-width: 700px) {
+  .why-choose-section {
+    padding: 65px 20px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .why-choose-container {
+    width: 100%;
+    max-width: 100%;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 35px;
+  }
+
+  .why-choose-heading {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .why-choose-heading h2 {
+    font-size: 36px;
+    line-height: 1.2;
+  }
+
+  .why-choose-heading > p {
+    font-size: 14px;
+  }
+
+  .why-benefits-grid {
+    width: 100%;
+    min-width: 0;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 15px;
+  }
+
+  .why-benefit-card {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    min-height: 190px;
+  }
+
+  .why-benefit-card h3 {
+    font-size: 17px;
+  }
+
+  .why-benefit-card p {
+    font-size: 13px;
+  }
+
+  .why-bottom-strip {
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 45px;
+  }
+}
+

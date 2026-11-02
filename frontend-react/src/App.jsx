@@ -3,6 +3,8 @@ import IndexHero from "./components/index/IndexHero";
 import AboutSection from "./components/index/AboutSection";
 import FeaturedStories from "./components/index/FeaturedStories";
 import ServicesOverview from "./components/index/ServicesOverview";
+import WhyChooseUs from "./components/index/WhyChooseUs";
+
 
 function App() {
   return (
@@ -12,6 +14,7 @@ function App() {
       <AboutSection />
       <FeaturedStories />
       <ServicesOverview />
+      <WhyChooseUs />
     </>
   );
 }
