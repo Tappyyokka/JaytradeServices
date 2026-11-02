@@ -1,5 +1,7 @@
 
 import { useState } from "react";
+import graySuit from "../../assets/images/gray-suit.png";
+import burgundySuit from "../../assets/images/burgundy-suit.png";
 
 const slides = [
   {
@@ -9,9 +11,8 @@ const slides = [
     description:
       "Discover financial services designed to simplify your journey and help you move forward with confidence.",
     button: "Explore Our Services",
-    visual: "₹",
-    visualTitle: "Financial Freedom",
-    visualText: "Solutions for every milestone",
+    image: graySuit,
+    imageAlt: "Gray suit portrait",
   },
   {
     tag: "BUSINESS MADE SIMPLER",
@@ -20,9 +21,7 @@ const slides = [
     description:
       "From business registration to professional assistance, find the support you need to grow.",
     button: "Explore Business Services",
-    visual: "↗",
-    visualTitle: "Business Growth",
-    visualText: "Your ambitions deserve support",
+    imageAlt: "Burgundy suit portrait",
   },
   {
     tag: "ONE PLATFORM. MANY SOLUTIONS.",
@@ -31,9 +30,6 @@ const slides = [
     description:
       "Access financial, legal and business services through one convenient platform.",
     button: "Discover Indipay",
-    visual: "✦",
-    visualTitle: "All-in-One Services",
-    visualText: "Convenience at your fingertips",
   },
 ];
 
@@ -84,24 +80,15 @@ function IndexHero() {
           <div className="hero-ring ring-one"></div>
           <div className="hero-ring ring-two"></div>
 
-          <div className="hero-feature-card">
-            <div className="feature-card-top">
-              <span>INDIPAY</span>
-              <span className="feature-dot">●</span>
-            </div>
-
-            <div className="feature-symbol" key={current}>
-              {slide.visual}
-            </div>
-
-            <h3>{slide.visualTitle}</h3>
-            <p>{slide.visualText}</p>
-
-            <div className="feature-card-bottom">
-              <span>FINANCIAL PARTNER</span>
-              <span>01 — 03</span>
-            </div>
-          </div>
+          {/* Individual hero portrait */}
+          {slide.image && (
+            <img
+              key={current}
+              src={slide.image}
+              alt={slide.imageAlt}
+              className={`hero-portrait hero-portrait-${current + 1}`}
+            />
+          )}
 
           <div className="hero-float float-one">
             <span>₹</span>

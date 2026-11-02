@@ -155,12 +155,14 @@
   position: relative;
   overflow: hidden;
   border-radius: 20px;
-  background: linear-gradient(115deg, #101D36 45%, #1D3557 100%);
+  background: #001638;
   display: flex;
   align-items: center;
   padding: 65px 9%;
   color: white;
 }
+
+
 
 .hero-inner::before {
   content: "";
@@ -268,9 +270,9 @@
 .hero-art {
   position: absolute;
   width: 43%;
-  height: 100%;
-  right: 5%;
   top: 0;
+  bottom: 0;
+  right: 5%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -2263,4 +2265,131 @@
   object-fit: contain;
   flex-shrink: 0;
   max-width: 1000px;
+}
+
+/* Base portrait settings */
+.hero-portrait {
+  position: absolute;
+  z-index: 2;
+  width: auto;
+  max-width: 90%;
+  max-height: 100%;
+  object-fit: contain;
+  object-position: bottom center;
+  bottom: 0;
+  display: block;
+  animation: heroPortraitIn 0.6s ease;
+}
+
+/* Slide 1 — Gray suit */
+.hero-portrait-1 {
+  height: 95%;
+  right: 8%;
+}
+
+/* Slide 2 — Burgundy suit */
+.hero-portrait-2 {
+  height: 90%;
+  right: 12%;
+}
+
+/* Slide 3 */
+.hero-portrait-3 {
+  height: 85%;
+  right: 10%;
+}
+
+@keyframes heroPortraitIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 650px) {
+
+  .hero-inner {
+    min-height: 730px;
+    padding: 40px 8%;
+    align-items: flex-start;
+  }
+
+  .hero-copy {
+    width: 100%;
+  }
+
+  .hero-art {
+    width: 100%;
+    height: 43%;
+    top: auto;
+    bottom: 15px;
+    right: 0;
+  }
+
+  .hero-portrait {
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    max-width: 95%;
+  }
+
+  .hero-portrait-1 {
+    height: 100%;
+  }
+
+  .hero-portrait-2 {
+    height: 75%;
+  }
+
+  .hero-portrait-3 {
+    height: 60%;
+  }
+}
+
+@media (min-width: 651px) and (max-width: 1024px) {
+
+  .hero-inner {
+    padding: 55px 7%;
+    min-height: 500px;
+  }
+
+  .hero-copy {
+    width: 55%;
+  }
+
+  .hero-copy h1 {
+    font-size: clamp(36px, 4.5vw, 52px);
+  }
+
+  .hero-art {
+    width: 42%;
+    right: 3%;
+  }
+
+  .hero-portrait-1 {
+    height: 150%;
+    right: 10%;
+  }
+
+  .hero-portrait-2 {
+    height: 80%;
+    right: 0;
+  }
+
+  .hero-portrait-3 {
+    height: 75%;
+    right: 0;
+  }
+
+  .ring-one {
+    width: 320px;
+    height: 320px;
+  }
+
+  .ring-two {
+    width: 380px;
+    height: 380px;
+  }
 }
