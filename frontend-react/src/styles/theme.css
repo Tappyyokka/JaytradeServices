@@ -1,0 +1,23 @@
+
+:root {
+  /* Primary brand colours */
+  --brand-navy: #101D36;
+  --brand-navy-light: #1D3557;
+  --brand-navy-deep: #001638;
+
+  --brand-orange: #F28C28;
+  --brand-orange-light: #FFAA50;
+  --brand-orange-dark: #D87517;
+
+  /* Backgrounds */
+  --brand-cream: #FFF8F0;
+  --brand-white: #FFFFFF;
+  --brand-pale-orange: #FFF0DF;
+
+  /* Text */
+  --brand-text: #17243A;
+  --brand-muted: #69758A;
+
+  /* Borders and effects */
+  --brand-border: #E8DCCF;
+}

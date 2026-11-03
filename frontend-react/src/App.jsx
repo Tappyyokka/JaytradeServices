@@ -10,27 +10,46 @@ import WhyChooseUs from "./components/index/WhyChooseUs";
 import HowItWorks from "./components/index/HowItWorks";
 import AuthBanner from "./components/index/AuthBanner";
 import Footer from "./components/common/Footer";
+import ServiceDetail from "./pages/ServiceDetail";
 
 import Home from "./pages/Home";
 import DetailedServices from "./pages/DetailedServices";
 
 function App() {
   const [currentPage, setCurrentPage] = useState("existing");
+  const [selectedService, setSelectedService] = useState(null);
+
+  if (currentPage === "service-detail") {
+  return (
+    <ServiceDetail
+      service={selectedService}
+      onBack={() => setCurrentPage("services")}
+    />
+  );
+}
 
   if (currentPage === "services") {
-    return (
-      <DetailedServices
-        onBack={() => setCurrentPage("home")}
-      />
-    );
-  }
+  return (
+    <DetailedServices
+      onBack={() => setCurrentPage("home")}
+      onSelectService={(service) => {
+        setSelectedService(service);
+        setCurrentPage("service-detail");
+      }}
+    />
+  );
+}
 
   if (currentPage === "home") {
     return (
       <Home
-        onBack={() => setCurrentPage("existing")}
-        onOpenServices={() => setCurrentPage("services")}
-      />
+  onBack={() => setCurrentPage("existing")}
+  onOpenServices={() => setCurrentPage("services")}
+  onSelectService={(service) => {
+    setSelectedService(service);
+    setCurrentPage("service-detail");
+  }}
+/>
     );
   }
 

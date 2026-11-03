@@ -41,7 +41,7 @@ import {
 
 import "./Home.css";
 
-function Home({ onBack, onOpenServices }) {
+function Home({ onBack, onOpenServices, onSelectService }) {
   const [profileOpen, setProfileOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeSlide, setActiveSlide] = useState(0);
@@ -389,21 +389,25 @@ const serviceCategories = [
   </div>
 )}
 
-              <div className="indipay-floating-icon float-home">
-  <HomeIcon size={25} />
-</div>
+           {slide.visual === "home" && (
+  <>
+    <div className="indipay-floating-icon float-home">
+      <HomeIcon size={25} />
+    </div>
 
-<div className="indipay-floating-icon float-bank">
-  <Wallet size={25} />
-</div>
+    <div className="indipay-floating-icon float-bank">
+      <Wallet size={25} />
+    </div>
 
-<div className="indipay-floating-icon float-doc">
-  <FileText size={25} />
-</div>
+    <div className="indipay-floating-icon float-doc">
+      <FileText size={25} />
+    </div>
 
-<div className="indipay-floating-icon float-shield">
-  <ShieldCheck size={25} />
-</div>
+    <div className="indipay-floating-icon float-shield">
+      <ShieldCheck size={25} />
+    </div>
+  </>
+)}
             </div>
           </article>
 

@@ -36,7 +36,7 @@ import {
 import "./Home.css";
 import "./DetailedServices.css";
 
-function DetailedServices({ onBack }) {
+function DetailedServices({ onBack, onSelectService }) {
   const [profileOpen, setProfileOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -367,29 +367,45 @@ function DetailedServices({ onBack }) {
                       const ServiceIcon = service.icon;
 
                       return (
-                        <div
-                          className="indipay-detail-service-item"
-                          key={service.name}
-                        >
-                          <span className="indipay-detail-service-icon">
-  {service.image ? (
-    <img
-      src={service.image}
-      alt={service.name}
-      className="indipay-custom-service-image"
-    />
-  ) : (
-    <ServiceIcon size={24} strokeWidth={1.8} />
-  )}
-</span>
+  <div
+    className="indipay-detail-service-item"
+    key={service.name}
+    onClick={
+      category.id === "financial-services"
+        ? () => onSelectService?.(service)
+        : undefined
+    }
+    role={
+      category.id === "financial-services"
+        ? "button"
+        : undefined
+    }
+    tabIndex={
+      category.id === "financial-services"
+        ? 0
+        : undefined
+    }
+    onKeyDown={(event) => {
+      if (
+        category.id === "financial-services" &&
+        (event.key === "Enter" || event.key === " ")
+      ) {
+        event.preventDefault();
+        onSelectService?.(service);
+      }
+    }}
+  >
+    <span className="indipay-detail-service-icon">
+      <ServiceIcon size={24} strokeWidth={1.8} />
+    </span>
 
-                          <h3>{service.name}</h3>
+    <h3>{service.name}</h3>
 
-                          <span className="indipay-detail-service-arrow">
-                            <ChevronRight size={17} />
-                          </span>
-                        </div>
-                      );
+    <span className="indipay-detail-service-arrow">
+      <ChevronRight size={17} />
+    </span>
+  </div>
+);
                     })}
                   </div>
                 )}
