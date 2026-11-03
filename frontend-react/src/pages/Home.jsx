@@ -54,40 +54,43 @@ function Home({ onBack, onOpenServices }) {
 ];
 
   const slides = [
-    {
-      eyebrow: "YOUR EVERYDAY SERVICES, SIMPLIFIED",
-      first: "Everything You Need.",
-      second: "All in One Place.",
-      description:
-        "Discover financial, legal, property and everyday services through one convenient platform.",
-      button: "Explore Services",
-      target: "#services",
-      icons: [HomeIcon, LayoutGrid, Wallet, ShieldCheck],
-      phone: true,
-    },
-    {
-      eyebrow: "SMARTER FINANCIAL SERVICES",
-      first: "Your Money.",
-      second: "Your Convenience.",
-      description:
-        "Explore financial tools and services designed to make everyday tasks simpler.",
-      button: "Explore Financial Services",
-      target: "#financial",
-      icons: [Landmark, Wallet, ArrowRight, BadgeCheck],
-      phone: false,
-    },
-    {
-      eyebrow: "SERVICES FOR EVERY NEED",
-      first: "Less Hassle.",
-      second: "More Possibilities.",
-      description:
-        "Find convenient solutions for your financial, legal, property and personal needs.",
-      button: "Discover More",
-      target: "#services",
-      icons: [HomeIcon, FileText, LayoutGrid, ShieldCheck],
-      phone: false,
-    },
-  ];
+  {
+    eyebrow: "YOUR EVERYDAY SERVICES, SIMPLIFIED",
+    first: "Everything You Need.",
+    second: "All in One Place.",
+    description:
+      "Discover financial, legal, property and everyday services through one convenient platform.",
+    button: "Explore Services",
+    target: "#services",
+    icons: [HomeIcon, LayoutGrid, Wallet, ShieldCheck],
+    phone: true,
+    visual: "home",
+  },
+  {
+    eyebrow: "SMARTER FINANCIAL SERVICES",
+    first: "Your Money.",
+    second: "Your Convenience.",
+    description:
+      "Explore financial tools and services designed to make everyday tasks simpler.",
+    button: "Explore Financial Services",
+    target: "#financial",
+    icons: [Landmark, Wallet, ArrowRight, BadgeCheck],
+    phone: false,
+    visual: "finance",
+  },
+  {
+    eyebrow: "SERVICES FOR EVERY NEED",
+    first: "Less Hassle.",
+    second: "More Possibilities.",
+    description:
+      "Find convenient solutions for your financial, legal, property and personal needs.",
+    button: "Discover More",
+    target: "#services",
+    icons: [HomeIcon, FileText, LayoutGrid, ShieldCheck],
+    phone: false,
+    visual: "services",
+  },
+];
 
   const changeSlide = (direction) => {
     setActiveSlide((current) =>
@@ -104,11 +107,31 @@ const serviceCategories = [
     description: "Financial solutions for your needs",
     icon: Landmark,
     services: [
-      { name: "Housing Loan", icon: Building2 },
-      { name: "Property Loan", icon: Building2 },
-      { name: "Personal Loan", icon: CreditCard },
-      { name: "Business Loan – Secured", icon: ShieldCheck },
-      { name: "Business Loan – Unsecured", icon: BadgeCheck },
+      {
+  name: "Housing Loan",
+  icon: Building2,
+  image: `${import.meta.env.BASE_URL}images/housing-loan.jpeg`,
+},
+      {
+  name: "Property Loan",
+  icon: Building2,
+  image: `${import.meta.env.BASE_URL}images/property-loan.jpeg`,
+},
+      {
+  name: "Personal Loan",
+  icon: Building2,
+  image: `${import.meta.env.BASE_URL}images/personal-loan.jpeg`,
+},
+      {
+  name: "Business Loan – Secured",
+  icon: Building2,
+  image: `${import.meta.env.BASE_URL}images/bl-secured.jpeg`,
+},
+     {
+  name: "Business Loan – Unsecured",
+  icon: Building2,
+  image: `${import.meta.env.BASE_URL}images/bl-unsecured.jpeg`,
+}, 
     ],
   },
   {
@@ -148,12 +171,16 @@ const serviceCategories = [
     ],
   },
   {
-    title: "Jaytrade Times & Technologies",
-    description: "Media and technology solutions",
-    icon: Newspaper,
-    services: [],
-    comingSoon: true,
-  },
+  title: "Jaytrade Times & Technologies",
+  description: "Business growth and technology packages",
+  icon: Newspaper,
+  services: [
+    { name: "Growup Package", icon: BriefcaseBusiness },
+    { name: "Standard Package", icon: BadgeCheck },
+    { name: "Premium Package", icon: Star },
+    { name: "Corporate Package", icon: Building2 },
+  ],
+},
 ];
 
 
@@ -289,6 +316,78 @@ const serviceCategories = [
                   </div>
                 </div>
               )}
+
+              {/* FINANCIAL SERVICES ILLUSTRATION */}
+{slide.visual === "finance" && (
+  <div className="indipay-hero-feature-visual finance-visual">
+
+    <div className="finance-main-card">
+      <div className="finance-card-top">
+        <span>Financial Services</span>
+        <Landmark size={22} />
+      </div>
+
+      <div className="finance-card-balance">
+        <small>Smart financial solutions</small>
+        <strong>₹ Your Future</strong>
+      </div>
+
+      <div className="finance-card-bottom">
+        <span><CreditCard size={17} /> Loans</span>
+        <span><BadgeCheck size={17} /> Trusted</span>
+      </div>
+    </div>
+
+    <div className="finance-floating finance-float-one">
+      <Wallet size={25} />
+    </div>
+
+    <div className="finance-floating finance-float-two">
+      <span>₹</span>
+    </div>
+
+    <div className="finance-floating finance-float-three">
+      <ShieldCheck size={25} />
+    </div>
+
+  </div>
+)}
+
+{/* BUSINESS AND DOCUMENT SERVICES ILLUSTRATION */}
+{slide.visual === "services" && (
+  <div className="indipay-hero-feature-visual services-visual">
+
+    <div className="services-main-card">
+      <div className="services-document-icon">
+        <FileText size={42} />
+      </div>
+
+      <div className="services-document-lines">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+
+      <div className="services-check-row">
+        <BadgeCheck size={22} />
+        <strong>Verified Services</strong>
+      </div>
+    </div>
+
+    <div className="services-floating services-float-one">
+      <BriefcaseBusiness size={25} />
+    </div>
+
+    <div className="services-floating services-float-two">
+      <UsersRound size={25} />
+    </div>
+
+    <div className="services-floating services-float-three">
+      <ShieldCheck size={25} />
+    </div>
+
+  </div>
+)}
 
               <div className="indipay-floating-icon float-home">
   <HomeIcon size={25} />
@@ -435,8 +534,16 @@ const serviceCategories = [
                           key={service.name}
                         >
                           <div className="indipay-service-icon">
-                            <ServiceIcon size={30} strokeWidth={1.8} />
-                          </div>
+  {service.image ? (
+    <img
+      src={service.image}
+      alt={service.name}
+      className="indipay-custom-service-image"
+    />
+  ) : (
+    <ServiceIcon size={30} strokeWidth={1.8} />
+  )}
+</div>
 
                           <h3>{service.name}</h3>
                         </div>

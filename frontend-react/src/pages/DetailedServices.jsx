@@ -30,6 +30,7 @@ import {
   Globe,
   Users,
   ChevronRight,
+  Star,
 } from "lucide-react";
 
 import "./Home.css";
@@ -47,18 +48,38 @@ function DetailedServices({ onBack }) {
   ];
 
   const categories = [
-    {
-      id: "financial-services",
-      title: "Financial Services",
-      description: "Financial solutions for individuals and businesses.",
-      icon: Landmark,
-      services: [
-        { name: "Housing Loan", icon: Building2 },
-        { name: "Property Loan", icon: Building },
-        { name: "Personal Loan", icon: CreditCard },
-        { name: "Business Loan – Secured", icon: ShieldCheck },
-        { name: "Business Loan – Unsecured", icon: BadgeCheck },
-      ],
+  {
+    id: "financial-services",
+    title: "Financial Services",
+    description: "Financial solutions for your needs",
+    icon: Landmark,
+    services: [
+      {
+  name: "Housing Loan",
+  icon: Building2,
+  image: `${import.meta.env.BASE_URL}images/housing-loan.jpeg`,
+},
+      {
+  name: "Property Loan",
+  icon: Building2,
+  image: `${import.meta.env.BASE_URL}images/property-loan.jpeg`,
+},
+      {
+  name: "Personal Loan",
+  icon: Building2,
+  image: `${import.meta.env.BASE_URL}images/personal-loan.jpeg`,
+},
+      {
+  name: "Business Loan – Secured",
+  icon: Building2,
+  image: `${import.meta.env.BASE_URL}images/bl-secured.jpeg`,
+},
+     {
+  name: "Business Loan – Unsecured",
+  icon: Building2,
+  image: `${import.meta.env.BASE_URL}images/bl-unsecured.jpeg`,
+}, 
+    ],
     },
     {
       id: "legal-services",
@@ -108,13 +129,17 @@ function DetailedServices({ onBack }) {
       ],
     },
     {
-      id: "jaytrade-times",
-      title: "Jaytrade Times & Technologies",
-      description: "Media, advertising and technology solutions.",
-      icon: Newspaper,
-      comingSoon: true,
-      services: [],
-    },
+  id: "jaytrade-times",
+  title: "Jaytrade Times & Technologies",
+  description: "Media, advertising and technology solutions.",
+  icon: Newspaper,
+  services: [
+    { name: "Growup Package", icon: BriefcaseBusiness },
+    { name: "Standard Package", icon: BadgeCheck },
+    { name: "Premium Package", icon: Star },
+    { name: "Corporate Package", icon: Building2 },
+  ],
+},
   ];
 
   const totalServices = categories.reduce(
@@ -347,8 +372,16 @@ function DetailedServices({ onBack }) {
                           key={service.name}
                         >
                           <span className="indipay-detail-service-icon">
-                            <ServiceIcon size={24} strokeWidth={1.8} />
-                          </span>
+  {service.image ? (
+    <img
+      src={service.image}
+      alt={service.name}
+      className="indipay-custom-service-image"
+    />
+  ) : (
+    <ServiceIcon size={24} strokeWidth={1.8} />
+  )}
+</span>
 
                           <h3>{service.name}</h3>
 
