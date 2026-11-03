@@ -1,0 +1,1791 @@
+/* =================================
+   INDIPAY HOMEPAGE - DESIGN TOKENS
+================================= */
+
+.indipay-home {
+  --ip-blue: #0866f5;
+  --ip-blue-dark: #0054d8;
+  --ip-dark-blue: #092b61;
+  --ip-text: #0a2450;
+  --ip-muted: #52709f;
+  --ip-pale-blue: #e8f3ff;
+  --ip-border: #e0edfc;
+  --ip-white: #ffffff;
+
+  min-height: 100vh;
+  background: var(--ip-white);
+  color: var(--ip-text);
+  font-family: "Segoe UI", Arial, sans-serif;
+}
+
+.indipay-home *,
+.indipay-home *::before,
+.indipay-home *::after {
+  box-sizing: border-box;
+}
+
+.indipay-home a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.indipay-home button {
+  font: inherit;
+  cursor: pointer;
+}
+
+.indipay-home button:focus-visible,
+.indipay-home a:focus-visible {
+  outline: 3px solid rgba(8, 102, 245, 0.35);
+  outline-offset: 3px;
+}
+
+/* =================================
+   NAVBAR
+================================= */
+
+.indipay-topbar {
+  position: relative;
+  z-index: 100;
+  min-height: 73px;
+  padding: 0 3.1%;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 25px;
+
+  background: var(--ip-white);
+  border-bottom: 1px solid #edf2f9;
+}
+
+/* BRAND */
+
+.indipay-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+
+  color: #0b2b5b;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -1.3px;
+}
+
+.indipay-brand-mark {
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 12px;
+  background: var(--ip-pale-blue);
+  color: var(--ip-blue);
+
+  font-size: 30px;
+  font-weight: 800;
+  font-style: italic;
+}
+
+.indipay-brand-blue {
+  color: var(--ip-blue);
+}
+
+/* DESKTOP NAVIGATION */
+
+.indipay-main-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 0 auto;
+}
+
+.indipay-nav-link {
+  padding: 12px 17px;
+  border-radius: 30px;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+
+  white-space: nowrap;
+  font-size: 14px;
+  font-weight: 650;
+
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.indipay-nav-icon {
+  font-size: 19px;
+  line-height: 1;
+}
+
+.indipay-nav-link:hover,
+.indipay-nav-link.active {
+  background: var(--ip-pale-blue);
+  color: var(--ip-blue);
+}
+
+/* PROFILE DROPDOWN */
+
+.indipay-profile-dropdown {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.indipay-profile-trigger {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0;
+
+  border: 0;
+  background: transparent;
+  color: var(--ip-dark-blue);
+}
+
+.indipay-profile-circle {
+  width: 43px;
+  height: 43px;
+  border-radius: 50%;
+
+  border: 2px solid var(--ip-blue);
+  background: #e5f2ff;
+  color: var(--ip-blue);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 25px;
+}
+
+.indipay-profile-label {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.indipay-chevron {
+  display: inline-block;
+  transition: transform 0.2s ease;
+}
+
+.indipay-chevron.rotated {
+  transform: rotate(180deg);
+}
+
+/* PROFILE MENU */
+
+.indipay-profile-menu {
+  position: absolute;
+  z-index: 1000;
+  top: calc(100% + 14px);
+  right: 0;
+  width: 260px;
+  min-width: 260px;
+  padding: 8px;
+  background: var(--ip-white);
+  border: 1px solid var(--ip-border);
+  border-radius: 13px;
+  box-shadow: 0 12px 35px rgba(9, 43, 97, 0.15);
+}
+
+.indipay-profile-heading {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 13px 12px;
+}
+
+.indipay-profile-heading strong {
+  font-size: 14px;
+}
+
+.indipay-profile-heading small {
+  color: var(--ip-muted);
+  font-size: 12px;
+}
+
+.indipay-profile-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  padding: 12px;
+  border-radius: 8px;
+
+  color: var(--ip-text);
+  font-size: 13px;
+
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.indipay-profile-item svg {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  color: var(--ip-blue);
+}
+
+.indipay-profile-item span {
+  width: auto;
+  flex: 1;
+  min-width: 0;
+  color: var(--ip-blue);
+  font-size: 15px;
+  text-align: left;
+  white-space: nowrap;
+}
+
+/* MOBILE MENU BUTTON */
+
+.indipay-menu-button {
+  display: none;
+  border: 0;
+  background: transparent;
+  color: var(--ip-dark-blue);
+  font-size: 25px;
+}
+
+/* =================================
+   TEMPORARY HOMEPAGE PLACEHOLDER
+================================= */
+
+.indipay-page-container {
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 30px 2.45%;
+}
+
+.indipay-home-placeholder {
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+
+  background: var(--ip-pale-blue);
+  border-radius: 14px;
+}
+
+.indipay-home-placeholder h1 {
+  color: var(--ip-dark-blue);
+}
+
+.indipay-home-placeholder p {
+  color: var(--ip-muted);
+}
+
+.indipay-home-placeholder button {
+  padding: 11px 18px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--ip-blue);
+  color: white;
+}
+
+/* =================================
+   RESPONSIVE
+================================= */
+
+@media (max-width: 900px) {
+  .indipay-topbar {
+    gap: 15px;
+  }
+
+  .indipay-nav-link {
+    padding: 10px 11px;
+    font-size: 13px;
+  }
+
+  .indipay-profile-label {
+    display: none;
+  }
+}
+
+@media (max-width: 700px) {
+  .indipay-topbar {
+    min-height: 65px;
+    padding: 0 18px;
+    gap: 12px;
+  }
+
+  .indipay-menu-button {
+    display: block;
+    order: 0;
+  }
+
+  .indipay-brand {
+    margin-right: auto;
+    font-size: 21px;
+  }
+
+  .indipay-brand-mark {
+    width: 37px;
+    height: 37px;
+    font-size: 26px;
+  }
+
+  .indipay-main-nav {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+
+    padding: 12px 18px 18px;
+    background: var(--ip-white);
+    border-bottom: 1px solid var(--ip-border);
+    box-shadow: 0 12px 20px rgba(9, 43, 97, 0.08);
+
+    flex-direction: column;
+    align-items: stretch;
+    gap: 5px;
+  }
+
+  .indipay-main-nav.mobile-open {
+    display: flex;
+  }
+
+  .indipay-nav-link {
+    padding: 13px 15px;
+    border-radius: 9px;
+  }
+
+  .indipay-profile-circle {
+    width: 39px;
+    height: 39px;
+  }
+
+  .indipay-profile-menu {
+    right: 0;
+    width: 230px;
+  }
+
+  .indipay-page-container {
+    padding: 18px 14px;
+  }
+}
+
+
+/* =================================
+   HOMEPAGE - GENERAL LAYOUT
+================================= */
+
+.indipay-page-container {
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 8px 2.45% 30px;
+}
+
+/* =================================
+   HERO CAROUSEL
+================================= */
+
+.indipay-hero-banner {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+
+  min-height: 300px;
+  height: clamp(300px, 29.3vw, 430px);
+
+  border-radius: 13px;
+  background: linear-gradient(
+    112deg,
+    #d4eaff,
+    #eaf5ff 48%,
+    #b7dcff
+  );
+}
+
+.indipay-hero-slide {
+  position: absolute;
+  inset: 0;
+
+  display: flex;
+  align-items: center;
+  padding: 35px 9.8%;
+
+  background:
+    radial-gradient(
+      ellipse at 76% 48%,
+      rgba(255, 255, 255, 0.75),
+      transparent 31%
+    ),
+    linear-gradient(112deg, #d4eaff, #eaf5ff 48%, #b7dcff);
+
+  animation: indipay-slide-in 0.4s ease;
+}
+
+@keyframes indipay-slide-in {
+  from {
+    opacity: 0.4;
+    transform: translateX(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.indipay-hero-copy {
+  position: relative;
+  z-index: 4;
+  width: 58%;
+}
+
+.indipay-eyebrow {
+  display: block;
+  margin-bottom: 10px;
+
+  color: #487bb8;
+  font-size: 12px;
+  letter-spacing: 1.3px;
+  font-weight: 750;
+}
+
+.indipay-hero-copy h1 {
+  margin: 0 0 12px;
+
+  color: #092951;
+  font-size: clamp(30px, 3.65vw, 48px);
+  line-height: 1.13;
+  letter-spacing: -1.4px;
+  font-weight: 800;
+}
+
+.indipay-hero-copy h1 span {
+  color: #0866f5;
+}
+
+.indipay-hero-description {
+  max-width: 470px;
+  margin: 0 0 20px;
+
+  color: #0b2852;
+  font-size: clamp(14px, 1.55vw, 17px);
+  line-height: 1.6;
+}
+
+.indipay-primary-button {
+  min-height: 45px;
+  padding: 0 23px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+
+  border: 0;
+  border-radius: 9px;
+
+  color: white;
+  background: #0866f5;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  transition: background 0.2s, transform 0.2s;
+}
+
+.indipay-primary-button:hover {
+  background: #0054d8;
+  color: white;
+  transform: translateY(-2px);
+}
+
+.indipay-primary-button span {
+  font-size: 19px;
+}
+
+/* =================================
+   HERO DECORATIVE ART
+================================= */
+
+.indipay-hero-art {
+  position: absolute;
+  right: 9%;
+  top: 0;
+  width: 35%;
+  height: 100%;
+}
+
+.indipay-art-orbit {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(81, 159, 255, 0.09);
+}
+
+.indipay-art-orbit.orbit-one {
+  width: 220px;
+  height: 220px;
+  top: 19%;
+  left: 15%;
+}
+
+.indipay-art-orbit.orbit-two {
+  width: 155px;
+  height: 155px;
+  top: 30%;
+  left: 30%;
+}
+
+.indipay-phone-mockup {
+  position: absolute;
+  z-index: 2;
+
+  width: 35%;
+  min-width: 105px;
+  max-width: 160px;
+  height: 82%;
+
+  top: 9%;
+  left: 39%;
+
+  transform: rotate(8deg);
+
+  border: 5px solid #163b77;
+  border-radius: 26px;
+  background: white;
+  padding: 7px;
+
+  box-shadow: 8px 12px 22px rgba(16, 57, 116, 0.23);
+}
+
+.indipay-phone-screen {
+  height: 100%;
+  border-radius: 17px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  background: linear-gradient(145deg, #fff, #e5f3ff);
+  text-align: center;
+}
+
+.indipay-phone-logo {
+  margin-bottom: 6px;
+  font-size: 40px;
+  color: #0866f5;
+}
+
+.indipay-phone-wordmark {
+  font-size: 20px;
+  font-weight: 850;
+  color: #092b61;
+  letter-spacing: -1px;
+}
+
+.indipay-phone-wordmark span {
+  color: #0866f5;
+}
+
+.indipay-phone-screen p {
+  max-width: 90px;
+  color: #52709f;
+  font-size: 9px;
+  line-height: 1.5;
+}
+
+.indipay-floating-icon {
+  position: absolute;
+  z-index: 3;
+
+  width: clamp(46px, 6.7vw, 76px);
+  height: clamp(46px, 6.7vw, 76px);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 17px;
+  background: rgba(255, 255, 255, 0.94);
+
+  box-shadow: 0 8px 24px rgba(28, 89, 166, 0.12);
+
+  color: #0866f5;
+  font-size: clamp(24px, 3vw, 36px);
+}
+
+.indipay-floating-icon.float-home {
+  top: 17%;
+  left: 4%;
+}
+
+.indipay-floating-icon.float-bank {
+  top: 39%;
+  right: 0;
+}
+
+.indipay-floating-icon.float-doc {
+  bottom: 20%;
+  left: 8%;
+}
+
+.indipay-floating-icon.float-shield {
+  bottom: 10%;
+  right: 22%;
+}
+
+/* =================================
+   HERO ARROWS AND DOTS
+================================= */
+
+.indipay-hero-arrow {
+  position: absolute;
+  z-index: 6;
+  top: 50%;
+  transform: translateY(-50%);
+
+  width: 39px;
+  height: 39px;
+
+  border: 0;
+  border-radius: 50%;
+
+  background: rgba(29, 112, 211, 0.65);
+  color: white;
+
+  font-size: 29px;
+  line-height: 1;
+
+  transition: background 0.2s;
+}
+
+.indipay-hero-arrow:hover {
+  background: #0866f5;
+}
+
+.indipay-hero-arrow.hero-prev {
+  left: 16px;
+}
+
+.indipay-hero-arrow.hero-next {
+  right: 16px;
+}
+
+.indipay-hero-dots {
+  position: absolute;
+  z-index: 7;
+
+  bottom: 19px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.indipay-dot {
+  width: 15px;
+  height: 7px;
+  padding: 0;
+
+  border: 0;
+  border-radius: 10px;
+  background: #9ec5ed;
+
+  transition: width 0.25s, background 0.25s;
+}
+
+.indipay-dot.selected {
+  width: 25px;
+  background: #0866f5;
+}
+
+/* TEMPORARY BACK BUTTON */
+
+.indipay-back-button {
+  margin-top: 20px;
+  padding: 10px 16px;
+
+  border: 1px solid #e0edfc;
+  border-radius: 8px;
+
+  background: white;
+  color: #092b61;
+}
+
+/* =================================
+   RESPONSIVE HERO
+================================= */
+
+@media (max-width: 700px) {
+  .indipay-hero-banner {
+    min-height: 520px;
+    height: 520px;
+  }
+
+  .indipay-hero-slide {
+    align-items: flex-start;
+    padding: 45px 9% 260px;
+  }
+
+  .indipay-hero-copy {
+    width: 100%;
+  }
+
+  .indipay-hero-copy h1 {
+    font-size: clamp(29px, 7vw, 38px);
+  }
+
+  .indipay-hero-description {
+    max-width: 100%;
+    font-size: 14px;
+  }
+
+  .indipay-hero-art {
+    width: 75%;
+    height: 250px;
+    right: 12%;
+    top: auto;
+    bottom: 0;
+  }
+
+  .indipay-art-orbit.orbit-one {
+    width: 190px;
+    height: 190px;
+    left: 15%;
+    top: 10%;
+  }
+
+  .indipay-art-orbit.orbit-two {
+    width: 135px;
+    height: 135px;
+    left: 28%;
+    top: 20%;
+  }
+
+  .indipay-phone-mockup {
+    height: 190px;
+    width: 105px;
+    left: 40%;
+    top: 12%;
+  }
+
+  .indipay-hero-arrow {
+    top: 45%;
+    width: 32px;
+    height: 32px;
+  }
+
+  .indipay-hero-arrow.hero-prev {
+    left: 7px;
+  }
+
+  .indipay-hero-arrow.hero-next {
+    right: 7px;
+  }
+
+  .indipay-hero-dots {
+    bottom: 13px;
+  }
+}
+
+@media (max-width: 380px) {
+  .indipay-hero-banner {
+    min-height: 550px;
+    height: 550px;
+  }
+
+  .indipay-hero-slide {
+    padding-left: 8%;
+    padding-right: 8%;
+  }
+
+  .indipay-hero-copy h1 {
+    font-size: 28px;
+  }
+
+  .indipay-primary-button {
+    padding: 0 15px;
+    font-size: 12px;
+  }
+}
+
+
+/* =================================
+   FEATURE STRIP
+================================= */
+
+.indipay-feature-strip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+
+  margin: 18px 0 29px;
+}
+
+.indipay-feature-card {
+  min-height: 79px;
+  padding: 14px 18px;
+
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  background: #ffffff;
+  border: 1px solid #e0edfc;
+  border-radius: 11px;
+
+  box-shadow: 0 5px 18px rgba(9, 43, 97, 0.045);
+
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.indipay-feature-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 9px 24px rgba(9, 43, 97, 0.09);
+}
+
+.indipay-feature-icon {
+  flex-shrink: 0;
+
+  width: 46px;
+  height: 46px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 12px;
+  background: #e8f3ff;
+
+  color: #0866f5;
+  font-size: 25px;
+}
+
+.indipay-feature-card h3 {
+  margin: 0 0 5px;
+
+  color: #092b61;
+  font-size: 14px;
+  font-weight: 750;
+}
+
+.indipay-feature-card p {
+  margin: 0;
+
+  color: #52709f;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* FEATURE STRIP RESPONSIVENESS */
+
+@media (max-width: 1000px) {
+  .indipay-feature-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 500px) {
+  .indipay-feature-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 14px;
+  }
+
+  .indipay-feature-card {
+    min-height: 100px;
+    padding: 12px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 9px;
+  }
+
+  .indipay-feature-icon {
+    width: 38px;
+    height: 38px;
+    font-size: 21px;
+  }
+
+  .indipay-feature-card h3 {
+    font-size: 12px;
+  }
+
+  .indipay-feature-card p {
+    font-size: 11px;
+  }
+}
+
+
+/* =================================
+   WALLET BANNER
+================================= */
+
+.indipay-wallet-banner {
+  min-height: 177px;
+  margin: 8px 0 25px;
+  padding: 23px 2.7%;
+
+  position: relative;
+  overflow: hidden;
+
+  border: 1px solid #e0edfc;
+  border-radius: 13px;
+
+  display: grid;
+  grid-template-columns: 1.5fr 0.85fr 1fr;
+  align-items: center;
+  gap: 20px;
+
+  background: linear-gradient(
+    110deg,
+    #e1f1ff,
+    #edf7ff 56%,
+    #e0f0ff
+  );
+}
+
+/* LEFT CONTENT */
+
+.indipay-wallet-copy {
+  position: relative;
+  z-index: 2;
+}
+
+.indipay-wallet-label {
+  display: inline-block;
+  margin-bottom: 9px;
+  padding: 6px 12px;
+
+  border-radius: 7px;
+  color: white;
+  background: #0866f5;
+
+  font-size: 10px;
+  font-weight: 750;
+  letter-spacing: 0.3px;
+}
+
+.indipay-wallet-copy h2 {
+  margin: 0 0 7px;
+
+  color: #092b61;
+  font-size: clamp(18px, 2.3vw, 24px);
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  line-height: 1.35;
+}
+
+.indipay-wallet-copy p {
+  margin: 0 0 14px;
+
+  color: #183d70;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.indipay-wallet-button {
+  min-height: 40px;
+  padding: 0 17px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+
+  border-radius: 8px;
+  background: #0866f5;
+  color: white;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  transition: background 0.2s, transform 0.2s;
+}
+
+.indipay-wallet-button:hover {
+  background: #0054d8;
+  color: white;
+  transform: translateY(-2px);
+}
+
+.indipay-wallet-button span {
+  font-size: 18px;
+}
+
+/* CENTRE ILLUSTRATION */
+
+.indipay-wallet-art {
+  position: relative;
+  height: 135px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #0866f5;
+}
+
+.indipay-wallet-main-icon {
+  font-size: clamp(75px, 9vw, 112px);
+  filter: drop-shadow(0 10px 9px rgba(17, 92, 196, 0.16));
+}
+
+.indipay-wallet-card-icon {
+  position: absolute;
+  top: 10px;
+  right: 12%;
+
+  color: #ffb647;
+  font-size: 40px;
+  transform: rotate(13deg);
+}
+
+.indipay-wallet-coin-icon {
+  position: absolute;
+  bottom: 0;
+  right: 10%;
+
+  width: 42px;
+  height: 42px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 3px solid #ffad35;
+  border-radius: 50%;
+
+  color: #ffad35;
+  background: white;
+  font-size: 23px;
+  font-weight: 800;
+}
+
+/* RIGHT BENEFITS */
+
+.indipay-wallet-benefits {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  position: relative;
+  z-index: 2;
+}
+
+.indipay-wallet-benefits div {
+  min-height: 39px;
+  padding: 10px 12px;
+
+  display: flex;
+  align-items: center;
+  gap: 11px;
+
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.9);
+
+  color: #173866;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.indipay-wallet-benefits span {
+  flex-shrink: 0;
+  color: #0866f5;
+  font-size: 18px;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 850px) {
+  .indipay-wallet-banner {
+    grid-template-columns: 1.2fr 0.8fr;
+    padding: 20px;
+    gap: 12px;
+  }
+
+  .indipay-wallet-copy {
+    grid-column: 1 / -1;
+  }
+
+  .indipay-wallet-art {
+    height: 100px;
+  }
+}
+
+@media (max-width: 500px) {
+  .indipay-wallet-banner {
+    grid-template-columns: 1fr 1fr;
+    padding: 17px;
+    gap: 10px;
+  }
+
+  .indipay-wallet-copy {
+    grid-column: 1 / -1;
+  }
+
+  .indipay-wallet-copy h2 {
+    font-size: 21px;
+  }
+
+  .indipay-wallet-copy p {
+    font-size: 12px;
+  }
+
+  .indipay-wallet-art {
+    height: 90px;
+  }
+
+  .indipay-wallet-main-icon {
+    font-size: 75px;
+  }
+
+  .indipay-wallet-card-icon {
+    font-size: 28px;
+  }
+
+  .indipay-wallet-benefits div {
+    min-height: 34px;
+    padding: 7px;
+    gap: 7px;
+    font-size: 9px;
+  }
+
+  .indipay-wallet-benefits span {
+    font-size: 15px;
+  }
+}
+
+/* =================================
+   REWARDS AND OFFERS BANNER
+================================= */
+
+.indipay-promo-banner {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  min-height: 260px;
+  margin: 24px 0;
+  padding: 32px 2.7%;
+
+  display: grid;
+  grid-template-columns: 1.5fr 0.8fr 1fr;
+  align-items: center;
+  gap: 28px;
+
+  border: 1px solid #dceaff;
+  border-radius: 18px;
+  color: #092b61;
+}
+
+.indipay-rewards-banner {
+  background: linear-gradient(
+    115deg,
+    #e6f0ff,
+    #f3f5ff 60%,
+    #e9eaff
+  );
+}
+
+.indipay-promo-copy {
+  min-width: 0;
+  position: relative;
+  z-index: 2;
+}
+
+.indipay-promo-label {
+  display: inline-block;
+  margin-bottom: 16px;
+  padding: 9px 15px;
+
+  border-radius: 8px;
+  background: #0866f5;
+  color: white;
+
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.4px;
+}
+
+.indipay-promo-copy h2 {
+  margin: 0 0 12px;
+  color: #092b61;
+
+  font-size: clamp(23px, 2vw, 32px);
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.indipay-promo-copy p {
+  margin: 0 0 22px;
+  color: #52709f;
+
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.indipay-promo-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+
+  padding: 15px 23px;
+  border-radius: 12px;
+
+  background: #0866f5;
+  color: white;
+
+  font-weight: 750;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.indipay-promo-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(8, 102, 245, 0.2);
+  color: white;
+}
+
+.indipay-promo-button span {
+  font-size: 22px;
+}
+
+/* ILLUSTRATION */
+
+.indipay-promo-visual {
+  min-width: 0;
+  min-height: 170px;
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.indipay-gift-box {
+  width: 125px;
+  height: 125px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.75);
+  box-shadow: 0 15px 30px rgba(9, 43, 97, 0.08);
+
+  font-size: 66px;
+  transform: rotate(-5deg);
+}
+
+.indipay-promo-floating-tag {
+  position: absolute;
+  top: 8px;
+  right: 0;
+
+  padding: 11px 14px;
+  border-radius: 10px;
+
+  background: white;
+  color: #0866f5;
+
+  font-size: 11px;
+  font-weight: 800;
+  box-shadow: 0 8px 20px rgba(9, 43, 97, 0.08);
+}
+
+.indipay-promo-floating-circle {
+  position: absolute;
+  bottom: 4px;
+  right: 8px;
+
+  width: 55px;
+  height: 55px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 3px solid #ffb63e;
+  border-radius: 50%;
+
+  color: #ff9d19;
+  background: white;
+
+  font-size: 27px;
+  font-weight: 800;
+}
+
+/* BENEFITS */
+
+.indipay-promo-points {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  min-width: 0;
+}
+
+.indipay-promo-points > div {
+  display: flex;
+  align-items: center;
+
+  min-height: 52px;
+  padding: 12px 15px;
+
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.85);
+
+  color: #173866;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 850px) {
+  .indipay-promo-banner {
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 18px;
+    padding: 24px;
+  }
+
+  .indipay-promo-copy {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 500px) {
+  .indipay-promo-banner {
+    grid-template-columns: 1fr;
+    gap: 18px;
+    padding: 20px;
+  }
+
+  .indipay-promo-copy {
+    grid-column: auto;
+  }
+
+  .indipay-promo-copy h2 {
+    font-size: 23px;
+  }
+
+  .indipay-promo-copy p {
+    font-size: 13px;
+  }
+
+  .indipay-promo-visual {
+    min-height: 145px;
+  }
+
+  .indipay-promo-points > div {
+    min-height: 43px;
+    padding: 10px 12px;
+    font-size: 12px;
+  }
+}
+
+
+/* =================================
+   REFER AND EARN BANNER
+================================= */
+
+.indipay-referral-banner {
+  background: linear-gradient(
+    115deg,
+    #e2f8f1,
+    #edfaff 60%,
+    #e0f0ff
+  );
+
+  border-color: #d0eee5;
+}
+
+/* Green label and button */
+
+.indipay-referral-banner .indipay-promo-label {
+  background: #087e72;
+}
+
+.indipay-referral-banner .indipay-promo-button {
+  background: #087e72;
+}
+
+.indipay-referral-banner .indipay-promo-button:hover {
+  box-shadow: 0 8px 20px rgba(8, 126, 114, 0.2);
+}
+
+/* People illustration */
+
+.indipay-people-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 125px;
+  height: 125px;
+
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 15px 30px rgba(9, 43, 97, 0.08);
+
+  font-size: 66px;
+  transform: rotate(5deg);
+}
+
+/* Referral reward coin */
+
+.indipay-referral-coin {
+  position: absolute;
+  bottom: 4px;
+  right: 8px;
+
+  width: 55px;
+  height: 55px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 3px solid #087e72;
+  border-radius: 50%;
+
+  color: #087e72;
+  background: white;
+
+  font-size: 27px;
+  font-weight: 800;
+}
+
+/* Floating reward tag */
+
+.indipay-referral-bubble {
+  position: absolute;
+  top: 8px;
+  right: 0;
+
+  padding: 11px 14px;
+  border-radius: 10px;
+
+  background: white;
+  color: #087e72;
+
+  font-size: 11px;
+  font-weight: 800;
+
+  box-shadow: 0 8px 20px rgba(9, 43, 97, 0.08);
+}
+
+
+/* =================================
+   FOOTER
+================================= */
+
+.indipay-footer {
+  padding: 22px 15px;
+  text-align: center;
+  color: #52709f;
+  font-size: 12px;
+}
+
+.indipay-footer p {
+  margin: 0;
+}
+
+/* =================================
+   LUCIDE ICON ALIGNMENT
+================================= */
+
+.indipay-home svg {
+  flex-shrink: 0;
+}
+
+.indipay-nav-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.indipay-profile-circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.indipay-profile-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.indipay-profile-item svg {
+  color: var(--blue);
+}
+
+.indipay-feature-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--blue);
+}
+
+/* =================================
+   LUCIDE ICON ALIGNMENT - BANNERS
+================================= */
+
+.indipay-wallet-main-icon,
+.indipay-wallet-card-icon,
+.indipay-wallet-benefits span,
+.indipay-promo-visual,
+.indipay-gift-box,
+.indipay-people-icon,
+.indipay-promo-floating-circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.indipay-wallet-benefits span {
+  color: var(--blue);
+}
+
+.indipay-promo-points > div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.indipay-promo-points > div svg {
+  color: var(--blue);
+}
+
+.indipay-referral-banner .indipay-promo-points > div svg {
+  color: #087e72;
+}
+
+.indipay-referral-coin {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ================================
+   HOMEPAGE SERVICES SECTION
+================================ */
+
+.indipay-services-section {
+  width: 100%;
+  margin: 42px 0;
+  color: #172b4d;
+}
+
+.indipay-service-category {
+  margin-bottom: 42px;
+}
+
+.indipay-category-heading {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.indipay-category-symbol {
+  width: 62px;
+  height: 62px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  background: #e9f2ff;
+  color: #1769df;
+  border-radius: 50%;
+}
+
+.indipay-category-title {
+  flex: 1;
+  min-width: 0;
+}
+
+.indipay-category-title h2 {
+  margin: 0 0 5px;
+  font-size: 19px;
+  font-weight: 750;
+  color: #172b4d;
+}
+
+.indipay-category-title p {
+  margin: 0;
+  font-size: 12px;
+  color: #7b8798;
+}
+
+.indipay-see-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 13px;
+  border: 1px solid #d8e6fa;
+  border-radius: 7px;
+  background: #ffffff;
+  color: #1769df;
+  font-size: 13px;
+  font-weight: 650;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: 0.2s ease;
+}
+
+.indipay-see-more:hover {
+  background: #1769df;
+  border-color: #1769df;
+  color: #ffffff;
+}
+
+.indipay-service-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.indipay-service-item {
+  min-height: 140px;
+  padding: 17px 9px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border-radius: 11px;
+  background: #ffffff;
+  border: 1px solid #e7edf5;
+  transition: 0.25s ease;
+}
+
+.indipay-service-item:hover {
+  transform: translateY(-4px);
+  border-color: #b9d3ff;
+  box-shadow: 0 8px 22px rgba(23, 105, 223, 0.08);
+}
+
+.indipay-service-icon {
+  width: 55px;
+  height: 55px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: #edf4ff;
+  color: #1769df;
+  margin-bottom: 12px;
+}
+
+.indipay-service-item h3 {
+  margin: 0;
+  color: #263c5b;
+  font-size: 12px;
+  font-weight: 650;
+  line-height: 1.5;
+}
+
+.indipay-service-coming-soon {
+  min-height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed #cbd8eb;
+  border-radius: 11px;
+  background: #ffffff;
+  color: #718096;
+  font-size: 13px;
+}
+
+@media (max-width: 1000px) {
+  .indipay-service-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 650px) {
+  .indipay-services-section {
+    margin: 30px 0;
+  }
+
+  .indipay-service-category {
+    margin-bottom: 32px;
+  }
+
+  .indipay-category-symbol {
+    width: 49px;
+    height: 49px;
+  }
+
+  .indipay-category-title h2 {
+    font-size: 15px;
+  }
+
+  .indipay-category-title p {
+    font-size: 10px;
+  }
+
+  .indipay-see-more {
+    padding: 8px;
+    font-size: 11px;
+  }
+
+  .indipay-service-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 9px;
+  }
+
+  .indipay-service-item {
+    min-height: 125px;
+    padding: 12px 6px;
+  }
+
+  .indipay-service-icon {
+    width: 46px;
+    height: 46px;
+  }
+
+  .indipay-service-item h3 {
+    font-size: 10px;
+  }
+}
+
+.indipay-brand {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.indipay-logo-image {
+  display: block;
+  width: 155px;
+  height: 50px;
+  object-fit: contain;
+  object-position: left center;
+}
+
+/* Account dropdown layout fix */
+.indipay-account-dropdown {
+  width: 260px;
+  min-width: 260px;
+}
+
+.indipay-account-dropdown a,
+.indipay-account-dropdown button {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  white-space: nowrap;
+  flex-wrap: nowrap;
+}
+
+.indipay-account-dropdown a span,
+.indipay-account-dropdown button span {
+  white-space: nowrap;
+}

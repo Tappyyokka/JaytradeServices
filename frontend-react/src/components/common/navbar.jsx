@@ -1,5 +1,4 @@
 
-import blueLogo from "../../assets/images/logo-blue.jpeg";
 import transparentLogo from "../../assets/images/logo-transparent.png";
 
 function Navbar() {
