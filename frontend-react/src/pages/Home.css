@@ -3,14 +3,14 @@
 ================================= */
 
 .indipay-home {
-  --ip-blue: #0866f5;
-  --ip-blue-dark: #0054d8;
-  --ip-dark-blue: #092b61;
-  --ip-text: #0a2450;
-  --ip-muted: #52709f;
-  --ip-pale-blue: #e8f3ff;
-  --ip-border: #e0edfc;
-  --ip-white: #ffffff;
+  --ip-blue: #F28C28;
+  --ip-blue-dark: #D87517;
+  --ip-dark-blue: #101D36;
+  --ip-text: #17243A;
+  --ip-muted: #69758A;
+  --ip-pale-blue: #FFF0DF;
+  --ip-border: #E8DCCF;
+  --ip-white: #FFFFFF;
 
   min-height: 100vh;
   background: var(--ip-white);
@@ -2037,4 +2037,318 @@
   height: 100%;
   object-fit: contain;
   border-radius: 50%;
+}
+
+/* =========================================
+   INDIPAY NAVY & ORANGE THEME
+   ========================================= */
+
+.indipay-home {
+  background: #FFF8F0;
+  color: #17243A;
+  font-family: 'DM Sans', sans-serif;
+}
+
+/* NAVIGATION */
+
+.indipay-home .indipay-topbar {
+  background: #101D36;
+  border-bottom: 1px solid #263650;
+}
+
+.indipay-home .indipay-brand {
+  color: #FFFFFF;
+}
+
+.indipay-home .indipay-brand-blue {
+  color: #F28C28;
+}
+
+.indipay-home .indipay-nav-link {
+  color: #D5DCE8;
+}
+
+.indipay-home .indipay-nav-link:hover,
+.indipay-home .indipay-nav-link.active {
+  background: rgba(242, 140, 40, 0.14);
+  color: #F28C28;
+}
+
+.indipay-home .indipay-profile-trigger,
+.indipay-home .indipay-menu-button {
+  color: #FFFFFF;
+}
+
+.indipay-home .indipay-profile-circle {
+  background: rgba(242, 140, 40, 0.12);
+  border-color: #F28C28;
+  color: #F28C28;
+}
+
+.indipay-home .indipay-profile-menu {
+  background: #FFFFFF;
+  border-color: #E8DCCF;
+}
+
+.indipay-home .indipay-profile-item svg,
+.indipay-home .indipay-profile-item span {
+  color: #D87517;
+}
+
+/* PAGE BACKGROUND */
+
+.indipay-home .indipay-page-container,
+.indipay-home .indipay-services-page-container {
+  background: #FFF8F0;
+}
+
+/* HERO */
+
+.indipay-home .indipay-hero-banner {
+  background: #001638;
+}
+
+.indipay-home .indipay-hero-slide {
+  background:
+    radial-gradient(
+      ellipse at 76% 48%,
+      rgba(242, 140, 40, 0.12),
+      transparent 35%
+    ),
+    linear-gradient(115deg, #001638, #101D36 65%, #1D3557);
+}
+
+.indipay-home .indipay-eyebrow {
+  color: #F28C28;
+}
+
+.indipay-home .indipay-hero-copy h1 {
+  color: #FFFFFF;
+}
+
+.indipay-home .indipay-hero-copy h1 span {
+  color: #F28C28;
+}
+
+.indipay-home .indipay-hero-description {
+  color: #D5DCE8;
+}
+
+.indipay-home .indipay-primary-button,
+.indipay-home .indipay-wallet-button,
+.indipay-home .indipay-promo-button {
+  background: #F28C28;
+  color: #101D36;
+}
+
+.indipay-home .indipay-primary-button:hover,
+.indipay-home .indipay-wallet-button:hover,
+.indipay-home .indipay-promo-button:hover {
+  background: #FFAA50;
+  color: #101D36;
+}
+
+.indipay-home .indipay-hero-arrow {
+  background: rgba(242, 140, 40, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #FFFFFF;
+}
+
+.indipay-home .indipay-hero-arrow:hover {
+  background: #F28C28;
+  color: #101D36;
+}
+
+.indipay-home .indipay-dot.selected {
+  background: #F28C28;
+}
+
+.indipay-home .indipay-dot {
+  background: #69758A;
+}
+
+/* HERO DECORATIVE ICONS */
+
+.indipay-home .indipay-floating-icon {
+  color: #F28C28;
+}
+
+.indipay-home .indipay-phone-mockup {
+  border-color: #F28C28;
+}
+
+.indipay-home .indipay-phone-wordmark span,
+.indipay-home .indipay-phone-logo {
+  color: #F28C28;
+}
+
+/* FEATURE CARDS */
+
+.indipay-home .indipay-feature-strip {
+  background: transparent;
+}
+
+.indipay-home .indipay-feature-card {
+  background: #FFFFFF;
+  border-color: #E8DCCF;
+}
+
+.indipay-home .indipay-feature-icon {
+  background: #FFF0DF;
+  color: #D87517;
+}
+
+.indipay-home .indipay-feature-card h3 {
+  color: #101D36;
+}
+
+.indipay-home .indipay-feature-card p {
+  color: #69758A;
+}
+
+/* SERVICE CATEGORIES */
+
+.indipay-home .indipay-services-section {
+  color: #101D36;
+}
+
+.indipay-home .indipay-category-symbol,
+.indipay-home .indipay-service-icon {
+  background: #FFF0DF;
+  color: #D87517;
+}
+
+.indipay-home .indipay-category-title h2 {
+  color: #101D36;
+}
+
+.indipay-home .indipay-category-title p {
+  color: #69758A;
+}
+
+.indipay-home .indipay-see-more {
+  background: #101D36;
+  border-color: #101D36;
+  color: #FFFFFF;
+}
+
+.indipay-home .indipay-see-more:hover {
+  background: #F28C28;
+  border-color: #F28C28;
+  color: #101D36;
+}
+
+.indipay-home .indipay-service-item {
+  background: #FFFFFF;
+  border-color: #E8DCCF;
+}
+
+.indipay-home .indipay-service-item:hover {
+  border-color: #F28C28;
+  box-shadow: 0 8px 22px rgba(16, 29, 54, 0.1);
+}
+
+.indipay-home .indipay-service-item h3 {
+  color: #17243A;
+}
+
+/* WALLET BANNER */
+
+.indipay-home .indipay-wallet-banner {
+  background: linear-gradient(115deg, #001638, #101D36 65%, #1D3557);
+  border-color: #263650;
+}
+
+.indipay-home .indipay-wallet-label {
+  background: #F28C28;
+  color: #101D36;
+}
+
+.indipay-home .indipay-wallet-copy h2 {
+  color: #FFFFFF;
+}
+
+.indipay-home .indipay-wallet-copy p {
+  color: #D5DCE8;
+}
+
+.indipay-home .indipay-wallet-art,
+.indipay-home .indipay-wallet-main-icon {
+  color: #F28C28;
+}
+
+.indipay-home .indipay-wallet-benefits {
+  color: #FFFFFF;
+}
+
+.indipay-home .indipay-wallet-benefits span {
+  color: #F28C28;
+}
+
+/* PROMOTIONAL BANNERS */
+
+.indipay-home .indipay-promo-banner {
+  background: #FFFFFF;
+  border-color: #E8DCCF;
+}
+
+.indipay-home .indipay-promo-label {
+  background: #FFF0DF;
+  color: #D87517;
+}
+
+.indipay-home .indipay-promo-copy h2 {
+  color: #101D36;
+}
+
+.indipay-home .indipay-promo-copy p {
+  color: #69758A;
+}
+
+.indipay-home .indipay-promo-button {
+  background: #101D36;
+  color: #FFFFFF;
+}
+
+.indipay-home .indipay-promo-button:hover {
+  background: #F28C28;
+  color: #101D36;
+}
+
+.indipay-home .indipay-promo-points > div svg {
+  color: #D87517;
+}
+
+/* REFERRAL BANNER - USE BRAND ORANGE */
+
+.indipay-home .indipay-referral-banner {
+  border-color: #E8DCCF;
+}
+
+.indipay-home .indipay-referral-banner .indipay-promo-label,
+.indipay-home .indipay-referral-banner .indipay-promo-button {
+  background: #F28C28;
+  color: #101D36;
+}
+
+.indipay-home .indipay-referral-banner .indipay-promo-points > div svg {
+  color: #D87517;
+}
+
+/* FOOTER */
+
+.indipay-home .indipay-footer {
+  background: #101D36;
+  color: #D5DCE8;
+}
+
+.indipay-home .indipay-footer p {
+  color: #D5DCE8;
+}
+
+/* KEYBOARD FOCUS */
+
+.indipay-home a:focus-visible,
+.indipay-home button:focus-visible {
+  outline-color: rgba(242, 140, 40, 0.65);
 }
