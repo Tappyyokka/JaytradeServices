@@ -460,3 +460,1067 @@
     justify-content: center;
   }
 }
+
+
+/* HOUSING LOAN - DOCUMENT GROUPS */
+
+.indipay-document-groups {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.indipay-document-group {
+  padding: 26px;
+  background: var(--brand-white, #ffffff);
+  border: 1px solid var(--brand-border, #e8dccf);
+  border-radius: 18px;
+  box-shadow: 0 8px 24px rgba(16, 29, 54, 0.05);
+}
+
+.indipay-document-group-heading {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid var(--brand-pale-orange, #fff0df);
+}
+
+.indipay-document-group-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  border-radius: 11px;
+  background: var(--brand-navy, #101d36);
+  color: white;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.indipay-document-group-heading h3 {
+  margin: 0;
+  color: var(--brand-navy, #101d36);
+  font-size: 19px;
+  font-weight: 700;
+}
+
+.indipay-document-group-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.indipay-document-group-list .indipay-detail-document {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  padding: 0;
+  background: transparent;
+  border: none;
+}
+
+.indipay-document-group-list .indipay-detail-document svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--brand-orange, #f28c28);
+}
+
+.indipay-document-group-list .indipay-detail-document span {
+  color: var(--brand-text, #17243a);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+@media (max-width: 700px) {
+  .indipay-document-groups {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .indipay-document-group {
+    padding: 20px;
+  }
+
+  .indipay-document-group-heading h3 {
+    font-size: 17px;
+  }
+}
+
+/* HOUSING LOAN TYPES */
+
+.indipay-housing-types {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 10px;
+}
+
+.indipay-housing-type-card {
+  position: relative;
+  min-height: 255px;
+  padding: 27px 22px;
+  overflow: hidden;
+  background: #101D36;
+  border: 1px solid rgba(242, 140, 40, 0.15);
+  border-radius: 18px;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
+}
+
+.indipay-housing-type-card::after {
+  content: "";
+  position: absolute;
+  width: 140px;
+  height: 140px;
+  right: -65px;
+  bottom: -65px;
+  border-radius: 50%;
+  background: rgba(242, 140, 40, 0.09);
+  transition: transform 0.4s ease;
+}
+
+.indipay-housing-type-card:hover {
+  transform: translateY(-8px);
+  border-color: #F28C28;
+  box-shadow: 0 16px 32px rgba(16, 29, 54, 0.16);
+}
+
+.indipay-housing-type-card:hover::after {
+  transform: scale(1.5);
+}
+
+.indipay-housing-type-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 58px;
+  height: 58px;
+  margin-bottom: 24px;
+  border-radius: 15px;
+  background: rgba(242, 140, 40, 0.14);
+  color: #FFAA50;
+  transition: transform 0.3s ease;
+}
+
+.indipay-housing-type-card:hover .indipay-housing-type-icon {
+  transform: rotate(-6deg) scale(1.08);
+}
+
+.indipay-housing-type-number {
+  position: absolute;
+  top: 27px;
+  right: 22px;
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.indipay-housing-type-card h3 {
+  position: relative;
+  z-index: 1;
+  margin: 0 0 12px;
+  color: #FFFFFF;
+  font-size: 18px;
+  line-height: 1.4;
+}
+
+.indipay-housing-type-card p {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  color: #C5CDDA;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+/* TABLET */
+
+@media (max-width: 1050px) {
+  .indipay-housing-types {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+  .indipay-housing-types {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .indipay-housing-type-card {
+    min-height: auto;
+    padding: 22px;
+    display: grid;
+    grid-template-columns: 58px 1fr;
+    column-gap: 17px;
+    align-items: center;
+    border-radius: 16px;
+  }
+
+  .indipay-housing-type-icon {
+    grid-row: span 2;
+    margin: 0;
+    width: 54px;
+    height: 54px;
+  }
+
+  .indipay-housing-type-card h3 {
+    align-self: end;
+    margin: 0 28px 5px 0;
+    font-size: 16px;
+  }
+
+  .indipay-housing-type-card p {
+    align-self: start;
+    font-size: 12px;
+    line-height: 1.6;
+  }
+
+  .indipay-housing-type-number {
+    top: 18px;
+    right: 18px;
+    font-size: 11px;
+  }
+
+  .indipay-housing-type-card:hover {
+    transform: translateY(-3px);
+  }
+}
+
+
+/* STORYBOARD CAROUSEL */
+
+.indipay-storyboard-section {
+  width: 100%;
+  margin-bottom: 55px;
+}
+
+.indipay-storyboard-slider {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 6;
+  overflow: hidden;
+  border-radius: 24px;
+  background: #101D36;
+}
+
+.indipay-storyboard-slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+.indipay-storyboard-slide.active {
+  opacity: 1;
+  visibility: visible;
+  z-index: 1;
+}
+
+.indipay-storyboard-image {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.indipay-storyboard-arrow {
+  position: absolute;
+  top: 50%;
+  z-index: 3;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 50%;
+  background: rgba(16, 29, 54, 0.8);
+  color: #FFFFFF;
+  cursor: pointer;
+  transition: background 0.25s ease, transform 0.25s ease;
+}
+
+.indipay-storyboard-arrow:hover {
+  background: #F28C28;
+  color: #101D36;
+}
+
+.storyboard-prev {
+  left: 18px;
+}
+
+.storyboard-next {
+  right: 18px;
+}
+
+.indipay-storyboard-dots {
+  position: absolute;
+  z-index: 3;
+  bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.indipay-storyboard-dots button {
+  width: 9px;
+  height: 9px;
+  padding: 0;
+  border: none;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.65);
+  cursor: pointer;
+  transition: width 0.3s ease, background 0.3s ease;
+}
+
+.indipay-storyboard-dots button.active {
+  width: 26px;
+  background: #F28C28;
+}
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+  .indipay-storyboard-section {
+    margin-bottom: 35px;
+  }
+
+  .indipay-storyboard-slider {
+    aspect-ratio: 4 / 3;
+    border-radius: 16px;
+  }
+
+  .indipay-storyboard-arrow {
+    width: 36px;
+    height: 36px;
+  }
+
+  .storyboard-prev {
+    left: 10px;
+  }
+
+  .storyboard-next {
+    right: 10px;
+  }
+
+  .indipay-storyboard-dots {
+    bottom: 12px;
+  }
+}
+
+/* APPLY NOW BUTTON */
+
+.indipay-apply-section {
+  display: flex;
+  justify-content: center;
+  padding: 10px 0 45px;
+}
+
+.indipay-apply-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 16px 42px;
+  border: none;
+  border-radius: 12px;
+  background: #F28C28;
+  color: #101D36;
+  font-size: 17px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.indipay-apply-button:hover {
+  background: #FFAA50;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(242, 140, 40, 0.2);
+}
+
+@media (max-width: 600px) {
+  .indipay-apply-section {
+    padding-bottom: 30px;
+  }
+
+  .indipay-apply-button {
+    width: 100%;
+  }
+}
+
+/* REFINED DOCUMENTS LAYOUT */
+
+.indipay-document-groups {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: 20px;
+}
+
+.indipay-document-group {
+  height: fit-content;
+  padding: 22px 24px;
+  border: 1px solid #E8DCCF;
+  border-radius: 16px;
+  background: #FFFFFF;
+  box-shadow: 0 5px 18px rgba(16, 29, 54, 0.035);
+  transition: box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.indipay-document-group:hover {
+  border-color: rgba(242, 140, 40, 0.55);
+  box-shadow: 0 8px 22px rgba(16, 29, 54, 0.07);
+}
+
+.indipay-document-group-heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 17px;
+  padding-bottom: 13px;
+  border-bottom: 1px solid #F2E5D8;
+}
+
+.indipay-document-group-number {
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  font-size: 12px;
+}
+
+.indipay-document-group-heading h3 {
+  font-size: 17px;
+  line-height: 1.4;
+}
+
+.indipay-document-group-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.indipay-document-group-list .indipay-detail-document {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.indipay-document-group-list .indipay-detail-document svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: #F28C28;
+}
+
+.indipay-document-group-list .indipay-detail-document span {
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: #17243A;
+}
+
+@media (max-width: 700px) {
+  .indipay-document-groups {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .indipay-document-group {
+    padding: 19px;
+  }
+
+  .indipay-document-group-heading h3 {
+    font-size: 16px;
+  }
+
+  .indipay-document-group-list {
+    gap: 11px;
+  }
+}
+
+/* =========================================
+   INTERACTIVE DOCUMENT CHECKLIST
+========================================= */
+
+.indipay-checklist-section {
+  margin-top: 55px;
+}
+
+/* PROGRESS */
+
+.indipay-checklist-progress {
+  padding: 20px 22px;
+  margin-bottom: 22px;
+  border: 1px solid #E8DCCF;
+  border-radius: 15px;
+  background: #FFFFFF;
+}
+
+.indipay-checklist-progress-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 13px;
+  color: #101D36;
+  font-size: 14px;
+}
+
+.indipay-checklist-progress-info strong {
+  font-weight: 750;
+}
+
+.indipay-checklist-progress-info span {
+  color: #69758A;
+  font-size: 12px;
+}
+
+.indipay-checklist-progress-track {
+  width: 100%;
+  height: 8px;
+  overflow: hidden;
+  border-radius: 20px;
+  background: #F1E8DE;
+}
+
+.indipay-checklist-progress-fill {
+  height: 100%;
+  border-radius: 20px;
+  background: #F28C28;
+  transition: width 0.3s ease;
+}
+
+/* MAIN LAYOUT */
+
+.indipay-checklist-layout {
+  display: grid;
+  grid-template-columns: 235px minmax(0, 1fr);
+  align-items: start;
+  gap: 20px;
+}
+
+/* CATEGORY NAVIGATION */
+
+.indipay-checklist-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.indipay-checklist-nav-item {
+  width: 100%;
+  min-height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px 15px;
+  border: 1px solid transparent;
+  border-radius: 11px;
+  background: transparent;
+  color: #17243A;
+  text-align: left;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 650;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.indipay-checklist-nav-item:hover {
+  background: #FFF0DF;
+}
+
+.indipay-checklist-nav-item.active {
+  border-color: #F28C28;
+  border-left: 4px solid #F28C28;
+  background: #FFFFFF;
+  color: #101D36;
+}
+
+.indipay-checklist-nav-item small {
+  flex-shrink: 0;
+  padding: 4px 8px;
+  border-radius: 20px;
+  background: #F1E8DE;
+  color: #69758A;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.indipay-checklist-nav-item.active small {
+  background: #FFF0DF;
+  color: #D87517;
+}
+
+/* DOCUMENT PANEL */
+
+.indipay-checklist-panel {
+  min-width: 0;
+  padding: 25px;
+  border: 1px solid #E8DCCF;
+  border-radius: 17px;
+  background: #FFFFFF;
+  box-shadow: 0 8px 25px rgba(16, 29, 54, 0.045);
+}
+
+.indipay-checklist-panel-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid #F0E4D9;
+}
+
+.indipay-checklist-panel-heading h3 {
+  margin: 0 0 5px;
+  color: #101D36;
+  font-size: 20px;
+  font-weight: 750;
+}
+
+.indipay-checklist-panel-heading p {
+  margin: 0;
+  color: #69758A;
+  font-size: 12px;
+}
+
+.indipay-checklist-count {
+  padding: 6px 11px;
+  border-radius: 20px;
+  background: #FFF0DF;
+  color: #D87517;
+  font-size: 12px;
+  font-weight: 750;
+}
+
+/* CHECKLIST ITEMS */
+
+.indipay-checklist-items {
+  display: flex;
+  flex-direction: column;
+  margin-top: 8px;
+}
+
+.indipay-checklist-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  min-height: 54px;
+  padding: 12px 5px;
+  border-bottom: 1px solid #F1E9E1;
+  cursor: pointer;
+}
+
+.indipay-checklist-item:last-child {
+  border-bottom: none;
+}
+
+.indipay-checklist-item input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.indipay-checklist-custom-check {
+  width: 21px;
+  height: 21px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #B9AFA4;
+  border-radius: 50%;
+  color: #FFFFFF;
+  transition: all 0.2s ease;
+}
+
+.indipay-checklist-item:hover .indipay-checklist-custom-check {
+  border-color: #F28C28;
+}
+
+.indipay-checklist-item.checked .indipay-checklist-custom-check {
+  border-color: #F28C28;
+  background: #F28C28;
+}
+
+.indipay-checklist-item input:focus-visible
+  + .indipay-checklist-custom-check {
+  outline: 3px solid rgba(242, 140, 40, 0.3);
+  outline-offset: 3px;
+}
+
+.indipay-checklist-document-name {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  color: #17243A;
+  font-size: 13px;
+  font-weight: 550;
+  line-height: 1.6;
+}
+
+.indipay-checklist-item.checked
+  .indipay-checklist-document-name {
+  color: #69758A;
+  text-decoration: line-through;
+}
+
+/* OPTIONAL LABEL */
+
+.indipay-optional-tag {
+  display: inline-flex;
+  padding: 3px 8px;
+  border-radius: 20px;
+  background: #FFF0DF;
+  color: #D87517;
+  font-size: 10px;
+  font-weight: 750;
+  text-decoration: none;
+}
+
+/* PANEL FOOTER */
+
+.indipay-checklist-footer {
+  margin-top: 12px;
+  padding-top: 16px;
+  border-top: 1px solid #F0E4D9;
+  color: #69758A;
+  font-size: 12px;
+}
+
+/* TABLET */
+
+@media (max-width: 800px) {
+  .indipay-checklist-layout {
+    grid-template-columns: 190px minmax(0, 1fr);
+    gap: 14px;
+  }
+
+  .indipay-checklist-panel {
+    padding: 20px;
+  }
+}
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+  .indipay-checklist-layout {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .indipay-checklist-nav {
+    flex-direction: row;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    scrollbar-width: thin;
+    scrollbar-color: #F28C28 #F1E8DE;
+  }
+
+  .indipay-checklist-nav-item {
+    width: auto;
+    min-width: max-content;
+    min-height: 42px;
+    padding: 9px 13px;
+    border: 1px solid #E8DCCF;
+    border-radius: 30px;
+    background: #FFFFFF;
+    font-size: 12px;
+  }
+
+  .indipay-checklist-nav-item.active {
+    border: 1px solid #F28C28;
+    border-left: 3px solid #F28C28;
+    background: #101D36;
+    color: #FFFFFF;
+  }
+
+  .indipay-checklist-nav-item.active small {
+    background: rgba(242, 140, 40, 0.16);
+    color: #FFAA50;
+  }
+
+  .indipay-checklist-panel {
+    padding: 18px;
+    border-radius: 14px;
+  }
+
+  .indipay-checklist-panel-heading h3 {
+    font-size: 17px;
+  }
+
+  .indipay-checklist-item {
+    min-height: 51px;
+  }
+
+  .indipay-checklist-document-name {
+    font-size: 12px;
+  }
+}
+.indipay-storyboard-slider {
+  width: 100%;
+  height: 420px;
+  aspect-ratio: auto;
+  overflow: hidden;
+  background: #101D36;
+  border-radius: 28px;
+}
+
+.indipay-storyboard-slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.indipay-storyboard-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+}
+
+@media (max-width: 600px) {
+  .indipay-storyboard-slider {
+    height: 300px;
+  }
+}
+
+/* =====================================
+   THREE-PANEL STORYBOARD CAROUSEL
+   ===================================== */
+
+.indipay-storyboard-slider {
+  position: relative;
+  width: 100%;
+  height: 430px;
+  aspect-ratio: auto;
+  overflow: hidden;
+  background: #FFF8F0;
+  border-radius: 24px;
+}
+
+.indipay-storyboard-panels {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 18px;
+}
+
+.indipay-storyboard-panel {
+  min-width: 0;
+  height: 330px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 16px;
+  background: #101D36;
+  box-shadow: 0 10px 25px rgba(16, 29, 54, 0.12);
+  transition: height 0.35s ease, transform 0.35s ease;
+}
+
+.indipay-storyboard-panel.center-panel {
+  height: 390px;
+  box-shadow: 0 15px 35px rgba(16, 29, 54, 0.18);
+}
+
+.indipay-storyboard-panel img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+}
+
+.indipay-storyboard-arrow {
+  position: absolute;
+  top: 50%;
+  z-index: 5;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #E8DCCF;
+  border-radius: 50%;
+  background: #FFFFFF;
+  color: #101D36;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(16, 29, 54, 0.15);
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+.indipay-storyboard-arrow:hover {
+  background: #F28C28;
+  color: #FFFFFF;
+}
+
+.indipay-storyboard-arrow.storyboard-prev {
+  left: 8px;
+}
+
+.indipay-storyboard-arrow.storyboard-next {
+  right: 8px;
+}
+
+.indipay-storyboard-dots {
+  position: absolute;
+  bottom: 14px;
+  left: 0;
+  right: 0;
+  z-index: 6;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 9px;
+}
+
+.indipay-storyboard-dots button {
+  width: 9px;
+  height: 9px;
+  padding: 0;
+  border: none;
+  border-radius: 20px;
+  background: #AAB1BC;
+  cursor: pointer;
+  transition: width 0.3s ease, background 0.3s ease;
+}
+
+.indipay-storyboard-dots button.active {
+  width: 27px;
+  background: #F28C28;
+}
+
+/* TABLET */
+@media (max-width: 800px) {
+  .indipay-storyboard-slider {
+    height: 340px;
+  }
+
+  .indipay-storyboard-panels {
+    gap: 10px;
+  }
+
+  .indipay-storyboard-panel {
+    height: 260px;
+  }
+
+  .indipay-storyboard-panel.center-panel {
+    height: 310px;
+  }
+}
+
+/* MOBILE */
+@media (max-width: 560px) {
+  .indipay-storyboard-slider {
+    height: auto;
+    aspect-ratio: auto;
+    overflow: visible;
+    background: transparent;
+    border-radius: 16px;
+    padding-bottom: 38px;
+  }
+
+  .indipay-storyboard-panels {
+    display: block;
+    height: auto;
+  }
+
+  .indipay-storyboard-panel.side-panel {
+    display: none;
+  }
+
+  .indipay-storyboard-panel.center-panel {
+    display: flex;
+    width: 100%;
+    height: 320px;
+    border-radius: 14px;
+  }
+
+  .indipay-storyboard-arrow {
+    width: 38px;
+    height: 38px;
+  }
+
+  .indipay-storyboard-arrow.storyboard-prev {
+    left: 8px;
+  }
+
+  .indipay-storyboard-arrow.storyboard-next {
+    right: 8px;
+  }
+
+  .indipay-storyboard-dots {
+    bottom: 8px;
+  }
+}
+
+/* Storyboard panel background */
+.indipay-storyboard-panel {
+  background: #FFF8F0;
+  box-shadow: none;
+}
+
+.indipay-storyboard-panel.center-panel {
+  box-shadow: none;
+}
+/* Storyboard navigation dots */
+.indipay-storyboard-slider {
+  position: relative;
+}
+
+.indipay-storyboard-dots {
+  position: absolute;
+  left: 50%;
+  right: auto;
+  bottom: 12px;
+  transform: translateX(-50%);
+  width: max-content;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  z-index: 10;
+}
+
+.indipay-storyboard-dots button {
+  display: block;
+  flex: 0 0 10px;
+  width: 10px;
+  height: 10px;
+  min-width: 10px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: #AAB1BC;
+  cursor: pointer;
+}
+
+.indipay-storyboard-dots button.active {
+  flex-basis: 26px;
+  width: 26px;
+  border-radius: 20px;
+  background: #F28C28;
+}

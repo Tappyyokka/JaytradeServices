@@ -395,9 +395,19 @@ function DetailedServices({ onBack, onSelectService }) {
       }
     }}
   >
-    <span className="indipay-detail-service-icon">
-      <ServiceIcon size={24} strokeWidth={1.8} />
-    </span>
+    
+<span className="indipay-detail-service-icon">
+  {service.image ? (
+    <img
+      src={service.image}
+      alt={service.name}
+      className="indipay-detail-service-image"
+    />
+  ) : (
+    <ServiceIcon size={24} strokeWidth={1.8} />
+  )}
+</span>
+
 
     <h3>{service.name}</h3>
 

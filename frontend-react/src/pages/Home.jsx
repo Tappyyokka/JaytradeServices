@@ -532,26 +532,37 @@ const serviceCategories = [
                     {category.services.map((service) => {
                       const ServiceIcon = service.icon;
 
-                      return (
-                        <div
-                          className="indipay-service-item"
-                          key={service.name}
-                        >
-                          <div className="indipay-service-icon">
-  {service.image ? (
-    <img
-      src={service.image}
-      alt={service.name}
-      className="indipay-custom-service-image"
-    />
-  ) : (
-    <ServiceIcon size={30} strokeWidth={1.8} />
-  )}
-</div>
+                      
+return (
+  <div
+    className="indipay-service-item"
+    key={service.name}
+    onClick={() => onSelectService?.(service)}
+    role="button"
+    tabIndex={0}
+    onKeyDown={(event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        onSelectService?.(service);
+      }
+    }}
+  >
+    <div className="indipay-service-icon">
+      {service.image ? (
+        <img
+          src={service.image}
+          alt={service.name}
+          className="indipay-custom-service-image"
+        />
+      ) : (
+        <ServiceIcon size={30} strokeWidth={1.8} />
+      )}
+    </div>
 
-                          <h3>{service.name}</h3>
-                        </div>
-                      );
+    <h3>{service.name}</h3>
+  </div>
+);
+
                     })}
 
                   </div>
