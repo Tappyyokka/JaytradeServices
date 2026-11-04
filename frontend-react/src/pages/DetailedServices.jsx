@@ -437,9 +437,6 @@ function DetailedServices({ onBack, onSelectService }) {
 
       </main>
 
-      <footer className="indipay-footer" id="about">
-        <p>© 2026 Indipay. All rights reserved.</p>
-      </footer>
 
     </div>
   );

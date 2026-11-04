@@ -41,7 +41,12 @@ import {
 
 import "./Home.css";
 
-function Home({ onBack, onOpenServices, onSelectService }) {
+function Home({
+  onBack,
+  onOpenServices,
+  onOpenAnnouncements,
+  onSelectService,
+}) {
   const [profileOpen, setProfileOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeSlide, setActiveSlide] = useState(0);
@@ -100,12 +105,88 @@ function Home({ onBack, onOpenServices, onSelectService }) {
 
   const slide = slides[activeSlide];
 
+  const footerSections = [
+  {
+    title: "Home",
+    links: [
+      { label: "Home", href: "#home" },
+      { label: "Our Services", href: "#services" },
+      { label: "Contact Us", href: "#contact" },
+    ],
+  },
+  {
+    title: "Financial",
+    links: [
+      "Housing Loan",
+      "Property Loan",
+      "Personal Loan",
+      "Business Loan – Secured",
+      "Business Loan – Unsecured",
+    ],
+  },
+  {
+    title: "Legal",
+    links: [
+      "CIBIL Report",
+      "MSME",
+      "Mudra Project Report",
+      "GST Registration",
+      "ITR – Income Tax Filing",
+      "FSSAI Services",
+      "Import Export Code",
+      "ISO Certificate",
+    ],
+  },
+  {
+    title: "Jobs",
+    links: [
+      "Udyog Registration",
+      "Basic Registration",
+      "Udyog Plus Registration",
+      "Standard Registration",
+      "Corporate Plus",
+    ],
+  },
+  {
+    title: "Times",
+    links: [
+      "Growup Package",
+      "Standard Package",
+      "Premium Package",
+      "Corporate Package",
+    ],
+  },
+  {
+    title: "Business Development",
+    links: [
+      "Business Associate",
+      "Premium Franchise",
+      "Normal Franchise",
+      "Virtual Franchise",
+    ],
+  },
+  {
+    title: "Wallet",
+    links: [
+      { label: "My Wallet", href: "#wallet" },
+    ],
+  },
+  {
+    title: "About Us",
+    links: [
+      { label: "About Us", href: "#about" },
+      { label: "Contact Us", href: "#contact" },
+    ],
+  },
+];
+
   
 const serviceCategories = [
   {
     title: "Financial Services",
     description: "Financial solutions for your needs",
     icon: Landmark,
+     background: "financial.jpg",
     services: [
       {
   name: "Housing Loan",
@@ -138,6 +219,8 @@ const serviceCategories = [
     title: "Legal Services",
     description: "Documentation and registration support",
     icon: FileText,
+    background: "legal.jpg",
+
     services: [
       { name: "CIBIL Report", icon: FileCheck },
       { name: "MSME", icon: Building2 },
@@ -151,6 +234,7 @@ const serviceCategories = [
     title: "Business Development",
     description: "Partnership and business opportunities",
     icon: BriefcaseBusiness,
+    background: "business-development.jpg",
     services: [
       { name: "Business Associate", icon: Users },
       { name: "Premium Franchise", icon: Building2 },
@@ -162,6 +246,7 @@ const serviceCategories = [
     title: "Jaytrade Jobs",
     description: "Registration services and opportunities",
     icon: GraduationCap,
+    background: "jobs.jpg",
     services: [
       { name: "Udyog Registration", icon: FileCheck },
       { name: "Basic Registration", icon: FileText },
@@ -174,6 +259,7 @@ const serviceCategories = [
   title: "Jaytrade Times & Technologies",
   description: "Business growth and technology packages",
   icon: Newspaper,
+  background: "times.jpg",
   services: [
     { name: "Growup Package", icon: BriefcaseBusiness },
     { name: "Standard Package", icon: BadgeCheck },
@@ -277,6 +363,37 @@ const serviceCategories = [
           )}
         </div>
       </header>
+      {/* ANNOUNCEMENT TICKER */}
+<div className="indipay-announcement-bar">
+  <div className="indipay-announcement-label">
+    <span className="announcement-live-dot"></span>
+    ANNOUNCEMENTS
+  </div>
+
+  <div className="indipay-announcement-window">
+    <div className="indipay-announcement-track">
+      <span>
+        Welcome to Indipay! Stay tuned for the latest updates and announcements.
+      </span>
+      <span className="announcement-separator">✦</span>
+      <span>
+        New services and exciting opportunities are coming soon!
+      </span>
+      <span className="announcement-separator">✦</span>
+      <span>
+        Welcome to Indipay! Stay tuned for the latest updates and announcements.
+      </span>
+    </div>
+  </div>
+
+  <button
+    className="indipay-announcement-view"
+    type="button"
+    onClick={onOpenAnnouncements}
+  >
+    View All →
+  </button>
+</div>
 
       <main className="indipay-page-container">
         {/* HERO CAROUSEL */}
@@ -527,6 +644,12 @@ const serviceCategories = [
                     More services coming soon
                   </div>
                 ) : (
+                  <div
+  className="indipay-services-card"
+  style={{
+    "--service-bg-image": `url("${import.meta.env.BASE_URL}images/service-backgrounds/${category.background}")`,
+  }}
+>
                   <div className="indipay-service-grid">
 
                     {category.services.map((service) => {
@@ -561,10 +684,12 @@ return (
 
     <h3>{service.name}</h3>
   </div>
+  
 );
 
                     })}
 
+                  </div>
                   </div>
                 )}
 
@@ -739,11 +864,8 @@ return (
           ← Back to Existing Page
         </button>
       </main>
-      
-      {/* FOOTER */}
-      <footer className="indipay-footer" id="about">
-        <p>© 2026 Indipay. All rights reserved.</p>
-      </footer>
+    
+
 
     </div>
   );

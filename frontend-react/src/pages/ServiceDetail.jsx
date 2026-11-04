@@ -761,9 +761,7 @@ function ServiceDetail({ service, onBack }) {
         </section>
       </main>
 
-      <footer className="indipay-footer">
-        <p>© 2026 Indipay. All rights reserved.</p>
-      </footer>
+      
     </div>
   );
 }
