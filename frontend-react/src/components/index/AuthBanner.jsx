@@ -1,5 +1,5 @@
 
-function AuthBanner() {
+function AuthBanner({ onRegister, onLogin }) {
   return (
     <section className="auth-banner-section">
       <div className="auth-banner-container">
@@ -21,13 +21,21 @@ function AuthBanner() {
           </p>
 
           <div className="auth-banner-buttons">
-            <a href="/register" className="auth-register-btn">
+            <button
+              type="button"
+              className="auth-register-btn"
+              onClick={onRegister}
+            >
               Create an Account <span>↗</span>
-            </a>
+            </button>
 
-            <a href="/login" className="auth-login-btn">
+            <button
+              type="button"
+              className="auth-login-btn"
+              onClick={onLogin}
+            >
               Already a member? Login
-            </a>
+            </button>
           </div>
 
           <div className="auth-banner-note">

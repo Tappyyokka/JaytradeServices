@@ -1,0 +1,51 @@
+
+@import "./Login.css";
+
+.register-page .auth-layout {
+  padding-top: 35px;
+  padding-bottom: 35px;
+}
+
+.register-form-card {
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
+
+.register-form-card .auth-form-heading {
+  margin-bottom: 22px;
+}
+
+.register-form-card .auth-form-icon {
+  margin-bottom: 15px;
+}
+
+.register-form-card .auth-field {
+  margin-bottom: 14px;
+}
+
+.auth-terms {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  margin: 20px 0;
+  color: #788397;
+  font-size: 11px;
+  line-height: 1.6;
+  cursor: pointer;
+}
+
+.auth-terms input {
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 550px) {
+  .register-page .auth-layout {
+    padding-top: 25px;
+    padding-bottom: 25px;
+  }
+
+  .register-form-card {
+    padding: 25px 19px;
+  }
+}

@@ -14,6 +14,10 @@ import WhyChooseUs from "./components/index/WhyChooseUs";
 import HowItWorks from "./components/index/HowItWorks";
 import AuthBanner from "./components/index/AuthBanner";
 import Announcements from "./pages/Announcements";
+import ApplicationForm from "./pages/ApplicationForm";
+import ApplicationStatus from "./pages/ApplicationStatus";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 
 import Home from "./pages/Home";
 import DetailedServices from "./pages/DetailedServices";
@@ -28,50 +32,136 @@ function App() {
     setCurrentPage("service-detail");
     window.scrollTo(0, 0);
   };
+  const handleApplyNow = (service) => {
+  console.log("APPLY NOW CLICKED:", service);
 
-  let pageContent;
+  setSelectedService(service);
+  setCurrentPage("application-form");
+  window.scrollTo(0, 0);
+};
 
-  if (currentPage === "announcements") {
+   let pageContent;
+
+   if (currentPage === "login") {
   pageContent = (
-    <Announcements
+    <Login
       onBack={() => {
+        setCurrentPage("existing");
+        window.scrollTo(0, 0);
+      }}
+      onRegister={() => {
+        setCurrentPage("register");
+        window.scrollTo(0, 0);
+      }}
+      onSuccess={() => {
         setCurrentPage("home");
         window.scrollTo(0, 0);
       }}
     />
   );
-} else
+} else if (currentPage === "register") {
+  pageContent = (
+    <Register
+      onBack={() => {
+        setCurrentPage("existing");
+        window.scrollTo(0, 0);
+      }}
+      onLogin={() => {
+        setCurrentPage("login");
+        window.scrollTo(0, 0);
+      }}
+      onSuccess={() => {
+        setCurrentPage("home");
+        window.scrollTo(0, 0);
+      }}
+    />
+  );
+} else if (currentPage === "announcements"){
+    pageContent = (
+      <Announcements
+        onBack={() => {
+          setCurrentPage("home");
+          window.scrollTo(0, 0);
+        }}
+      />
+    );
 
-  if (currentPage === "service-detail") {
+      } else if (currentPage === "application-status") {
+    pageContent = (
+      <ApplicationStatus
+        onBack={() => {
+          setCurrentPage("home");
+          window.scrollTo(0, 0);
+        }}
+      />
+    );
+  } else if (currentPage === "application-form") {
+    pageContent = (
+      <ApplicationForm
+        initialService={selectedService?.name || ""}
+        onBack={() => {
+          setCurrentPage("service-detail");
+          window.scrollTo(0, 0);
+        }}
+      />
+      
+    );
+  } else if (currentPage === "service-detail") {
     pageContent = (
       <ServiceDetail
         service={selectedService}
-        onBack={() => setCurrentPage("services")}
+        onBack={() => {
+          setCurrentPage("services");
+          window.scrollTo(0, 0);
+        }}
+        onApplyNow={handleApplyNow}
       />
     );
   } else if (currentPage === "services") {
     pageContent = (
       <DetailedServices
-        onBack={() => setCurrentPage("home")}
-        onSelectService={handleSelectService}
-      />
-    );
-  } else if (currentPage === "home") {
-    pageContent = (
-      <Home
-  onBack={() => setCurrentPage("existing")}
-  onOpenServices={() => {
-    setCurrentPage("services");
-    window.scrollTo(0, 0);
-  }}
-  onOpenAnnouncements={() => {
-    setCurrentPage("announcements");
+  onBack={() => {
+    setCurrentPage("home");
     window.scrollTo(0, 0);
   }}
   onSelectService={handleSelectService}
+  onOpenApplicationStatus={() => {
+    setCurrentPage("application-status");
+    window.scrollTo(0, 0);
+  }}
 />
     );
-  } else {
+  } else if (currentPage === "home") {
+  pageContent = (
+    <Home
+      onBack={() => {
+        setCurrentPage("existing");
+        window.scrollTo(0, 0);
+      }}
+      onOpenServices={() => {
+        setCurrentPage("services");
+        window.scrollTo(0, 0);
+      }}
+      onOpenAnnouncements={() => {
+        setCurrentPage("announcements");
+        window.scrollTo(0, 0);
+      }}
+      onSelectService={handleSelectService}
+      onOpenApplicationStatus={() => {
+        setCurrentPage("application-status");
+        window.scrollTo(0, 0);
+      }}
+      onLogin={() => {
+        setCurrentPage("login");
+        window.scrollTo(0, 0);
+      }}
+      onRegister={() => {
+        setCurrentPage("register");
+        window.scrollTo(0, 0);
+      }}
+    />
+  );
+} else {
     pageContent = (
       <>
         <button
@@ -97,36 +187,65 @@ function App() {
           Open New Home Page →
         </button>
 
-        <Navbar />
+        <Navbar
+  onLogin={() => {
+    setCurrentPage("login");
+    window.scrollTo(0, 0);
+  }}
+  onRegister={() => {
+    setCurrentPage("register");
+    window.scrollTo(0, 0);
+  }}
+/>
         <IndexHero />
         <AboutSection />
         <FeaturedStories />
         <ServicesOverview />
         <WhyChooseUs />
         <HowItWorks />
-        <AuthBanner />
+        <AuthBanner
+  onRegister={() => {
+    setCurrentPage("register");
+    window.scrollTo(0, 0);
+  }}
+  onLogin={() => {
+    setCurrentPage("login");
+    window.scrollTo(0, 0);
+  }}
+/>
       </>
     );
   }
 
-  return (
+  const isAuthPage =
+  currentPage === "login" || currentPage === "register";
+
+return (
   <>
     {pageContent}
 
-    <Footer onSelectService={handleSelectService} />
+    {!isAuthPage && (
+      <>
+        <Footer onSelectService={handleSelectService} />
 
-    <a
-      href="https://wa.me/916238398343?text=Hello%20Jay%20Trade,%20I'm%20interested%20in%20your%20services.%20Could%20you%20please%20assist%20me?"
-      className="whatsapp-float"
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label="Chat with Jay Trade on WhatsApp"
-    >
-      <span className="whatsapp-icon">
-  <MessageCircle size={32} strokeWidth={2.2} />
-  <Phone size={15} strokeWidth={3} className="whatsapp-phone" />
-</span>
-    </a>
+        <a
+          href="https://wa.me/916238398343?text=Hello%20Jay%20Trade,%20I'm%20interested%20in%20your%20services.%20Could%20you%20please%20assist%20me?"
+          className="whatsapp-float"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Chat with Jay Trade on WhatsApp"
+        >
+          <span className="whatsapp-icon">
+            <MessageCircle size={32} strokeWidth={2.2} />
+            <Phone
+              size={15}
+              strokeWidth={3}
+              className="whatsapp-phone"
+            />
+          </span>
+        </a>
+      </>
+    )}
   </>
 );
 }

@@ -2701,3 +2701,28 @@
     font-size: 10px;
   }
 }
+
+
+/* Remove default button borders and backgrounds in account dropdown */
+.indipay-home .indipay-profile-menu button.indipay-profile-item {
+  appearance: none;
+  -webkit-appearance: none;
+  border: none;
+  outline: none;
+  box-shadow: none;
+  background: transparent;
+  font-family: inherit;
+  text-align: left;
+}
+
+/* Subtle hover effect */
+.indipay-home .indipay-profile-menu .indipay-profile-item:hover {
+  background: #FFF0DF;
+  border: none;
+}
+
+/* Keep keyboard accessibility */
+.indipay-home .indipay-profile-menu button.indipay-profile-item:focus-visible {
+  outline: 2px solid #F28C28;
+  outline-offset: 2px;
+}

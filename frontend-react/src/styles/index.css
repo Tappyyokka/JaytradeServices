@@ -2280,7 +2280,7 @@
   }
 
   .hero-portrait-2 {
-    height: 75%;
+    height: 100%;
   }
 
   .hero-portrait-3 {
@@ -2333,3 +2333,4 @@
     height: 380px;
   }
 }
+

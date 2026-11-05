@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import graySuit from "../../assets/images/gray-suit.png";
-import burgundySuit from "../../assets/images/burgundy-suit.png";
+import burgundySuit from "../../assets/images/Banner-2-img.png";
 
 const slides = [
   {
@@ -20,7 +20,9 @@ const slides = [
     highlight: "Grow Bigger.",
     description:
       "From business registration to professional assistance, find the support you need to grow.",
-    button: "Explore Business Services",
+    
+      button: "Explore Business Services",
+      image: burgundySuit,
     imageAlt: "Burgundy suit portrait",
   },
   {

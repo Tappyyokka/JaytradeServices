@@ -36,7 +36,11 @@ import {
 import "./Home.css";
 import "./DetailedServices.css";
 
-function DetailedServices({ onBack, onSelectService }) {
+function DetailedServices({
+  onBack,
+  onSelectService,
+  onOpenApplicationStatus,
+}) {
   const [profileOpen, setProfileOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -101,6 +105,22 @@ function DetailedServices({ onBack, onSelectService }) {
         { name: "FSSAI Manufacture License", icon: ShieldCheck },
         { name: "Import Export Code", icon: Globe },
         { name: "ISO Certificate", icon: BadgeCheck },
+       { name: "Private Limited Company Registration", icon: Building2 },
+      { name: "Partnership Registration Only", icon: FileText },
+      { name: "Partnership Without Registration (PAN + Deed)", icon: FileText },
+      { name: "Partnership With Registration (REG + PAN + Deed)", icon: FileCheck },
+      { name: "Limited Liability Partnership Registration (LLP)", icon: Building2 },
+
+      { name: "Trademark - Individual, MSME (Without Track Records)", icon: BadgeCheck },
+      { name: "Trademark - Individual, MSME (With Track Records)", icon: BadgeCheck },
+      { name: "Trademark - LLP/Co/PS (Other Than MSME Without Track Records)", icon: ShieldCheck },
+      { name: "Trademark - LLP/Co/PS (Other Than MSME With Track Records)", icon: ShieldCheck },
+      { name: "Trademark - Ownership Change", icon: FileCheck },
+
+      { name: "PCC - Police Clearance Certificate", icon: FileCheck },
+      { name: "Vyapar Mithra", icon: BriefcaseBusiness },
+      { name: "Vyapar Mithra Plus", icon: BriefcaseBusiness },
+      { name: "Vyapar Mithra All In One", icon: BriefcaseBusiness },
       ],
     },
     {
@@ -239,14 +259,26 @@ function DetailedServices({ onBack, onSelectService }) {
               </a>
 
               <a href="#profile" className="indipay-profile-item">
-                <UserRound size={17} />
-                <span>My Profile</span>
-              </a>
+  <UserRound size={17} />
+  <span>My Profile</span>
+</a>
 
-              <a href="#settings" className="indipay-profile-item">
-                <Settings size={17} />
-                <span>Settings</span>
-              </a>
+<button
+  type="button"
+  className="indipay-profile-item"
+  onClick={() => {
+    setProfileOpen(false);
+    onOpenApplicationStatus?.();
+  }}
+>
+  <FileText size={17} />
+  <span>Application Status</span>
+</button>
+
+<a href="#settings" className="indipay-profile-item">
+  <Settings size={17} />
+  <span>Settings</span>
+</a>
             </div>
           )}
         </div>

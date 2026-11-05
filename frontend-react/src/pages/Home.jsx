@@ -45,7 +45,10 @@ function Home({
   onBack,
   onOpenServices,
   onOpenAnnouncements,
+  onOpenApplicationStatus,
   onSelectService,
+  onLogin,
+  onRegister,
 }) {
   const [profileOpen, setProfileOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -340,20 +343,45 @@ const serviceCategories = [
                 <small>Access your account</small>
               </div>
 
-              <a href="#login" className="indipay-profile-item">
+              <button
+  type="button"
+  className="indipay-profile-item"
+  onClick={() => {
+    setProfileOpen(false);
+    onLogin?.();
+  }}
+>
   <LogIn size={17} />
   <span>Log In</span>
-</a>
+</button>
 
-<a href="#register" className="indipay-profile-item">
+<button
+  type="button"
+  className="indipay-profile-item"
+  onClick={() => {
+    setProfileOpen(false);
+    onRegister?.();
+  }}
+>
   <UserPlus size={17} />
   <span>Create Account</span>
-</a>
+</button>
 
 <a href="#profile" className="indipay-profile-item">
   <UserRound size={17} />
   <span>My Profile</span>
 </a>
+<button
+  type="button"
+  className="indipay-profile-item"
+  onClick={() => {
+    setProfileOpen(false);
+    onOpenApplicationStatus?.();
+  }}
+>
+  <FileText size={17} />
+  <span>Application Status</span>
+</button>
 
 <a href="#settings" className="indipay-profile-item">
   <Settings size={17} />
@@ -714,9 +742,13 @@ return (
               Explore services and manage your next steps with ease.
             </p>
 
-            <a href="#register" className="indipay-wallet-button">
-              Get Started <span>→</span>
-            </a>
+    <button
+  type="button"
+  className="indipay-wallet-button"
+  onClick={onRegister}
+>
+  Get Started <span>→</span>
+</button>
           </div>
 
           

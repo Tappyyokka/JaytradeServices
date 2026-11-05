@@ -272,7 +272,7 @@ const serviceStoryboards = {
   ],
 };
 
-function ServiceDetail({ service, onBack }) {
+function ServiceDetail({ service, onBack, onApplyNow }) {
   const [activeStoryboard, setActiveStoryboard] = useState(0);
   const [activeDocumentCategory, setActiveDocumentCategory] = useState("");
   const [checkedDocuments, setCheckedDocuments] = useState({});
@@ -464,7 +464,6 @@ function ServiceDetail({ service, onBack }) {
         {/* SERVICE OVERVIEW */}
         <section className="indipay-detail-section">
           <div className="indipay-detail-section-heading">
-            <span>01 / OVERVIEW</span>
             <h2>About This Service</h2>
             <p>
               Learn more about the service and how our team can assist you.
@@ -488,7 +487,6 @@ function ServiceDetail({ service, onBack }) {
         {service.name === "Housing Loan" && (
           <section className="indipay-detail-section">
             <div className="indipay-detail-section-heading">
-              <span>02 / LOAN OPTIONS</span>
               <h2>Choose Your Housing Loan</h2>
               <p>
                 Explore different housing loan options to find the
@@ -552,7 +550,7 @@ function ServiceDetail({ service, onBack }) {
         {/* HIGHLIGHTS */}
         <section className="indipay-detail-section">
           <div className="indipay-detail-section-heading">
-            <span>02 / BENEFITS</span>
+            
             <h2>Key Highlights</h2>
             <p>Important features of this service.</p>
           </div>
@@ -572,7 +570,7 @@ function ServiceDetail({ service, onBack }) {
 <section className="indipay-detail-section indipay-checklist-section">
 
   <div className="indipay-detail-section-heading">
-    <span>03 / PREPARATION</span>
+    
     <h2>Documents Required</h2>
     <p>
       Tick off what you already have. Keep a clear scan or photo
@@ -702,7 +700,7 @@ function ServiceDetail({ service, onBack }) {
         {/* PROCESS */}
         <section className="indipay-detail-process">
           <div className="indipay-detail-section-heading">
-            <span>04 / THE PROCESS</span>
+            
             <h2>How It Works</h2>
             <p>A simple overview of the service journey.</p>
           </div>
@@ -734,6 +732,7 @@ function ServiceDetail({ service, onBack }) {
   <button
     type="button"
     className="indipay-apply-button"
+    onClick={() => onApplyNow?.(service)}
   >
     Apply Now
     <ArrowRight size={19} />

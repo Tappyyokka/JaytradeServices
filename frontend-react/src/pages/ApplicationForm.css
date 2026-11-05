@@ -1,0 +1,247 @@
+
+.indipay-application-page {
+  min-height: 100vh;
+  background: #f5f7fb;
+}
+
+.indipay-application-back {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: none;
+  background: transparent;
+  color: #16335f;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.indipay-application-container {
+  width: min(900px, calc(100% - 40px));
+  margin: 55px auto 90px;
+}
+
+.indipay-application-heading {
+  text-align: center;
+  margin-bottom: 35px;
+}
+
+.indipay-application-heading > span {
+  color: #ed8b32;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.indipay-application-heading h1 {
+  color: #142f57;
+  font-size: clamp(30px, 5vw, 43px);
+  margin: 12px 0;
+}
+
+.indipay-application-heading p {
+  color: #718096;
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.indipay-application-form {
+  background: #fff;
+  border: 1px solid #e7ebf1;
+  border-radius: 18px;
+  padding: 35px;
+  box-shadow: 0 12px 40px rgba(20, 47, 87, 0.06);
+}
+
+.indipay-application-form-title {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding-bottom: 25px;
+  border-bottom: 1px solid #edf0f5;
+  margin-bottom: 30px;
+}
+
+.indipay-application-form-title > div {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  background: #edf3ff;
+  color: #1763c6;
+  border-radius: 12px;
+}
+
+.indipay-application-form-title h2 {
+  color: #18365f;
+  font-size: 20px;
+  margin: 0 0 5px;
+}
+
+.indipay-application-form-title p {
+  color: #8290a4;
+  font-size: 13px;
+  margin: 0;
+}
+
+.indipay-application-section {
+  margin-bottom: 30px;
+}
+
+.indipay-application-section h3 {
+  color: #18365f;
+  font-size: 16px;
+  margin: 0 0 20px;
+}
+
+.indipay-application-section label {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  color: #34445d;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 18px;
+}
+
+.indipay-application-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 20px;
+}
+
+.indipay-application-section input,
+.indipay-application-section select,
+.indipay-application-section textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 13px 14px;
+  border: 1px solid #dce3ed;
+  border-radius: 9px;
+  background: #fff;
+  color: #263b59;
+  font: inherit;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.indipay-application-section input:focus,
+.indipay-application-section select:focus,
+.indipay-application-section textarea:focus {
+  border-color: #2875d6;
+  box-shadow: 0 0 0 3px rgba(40, 117, 214, 0.10);
+}
+
+.indipay-application-section textarea {
+  resize: vertical;
+}
+
+.indipay-application-upload {
+  min-height: 140px;
+  border: 2px dashed #d5dfed;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  color: #2870c9 !important;
+  background: #f8faff;
+  cursor: pointer;
+  text-align: center;
+}
+
+.indipay-application-upload strong {
+  font-size: 14px;
+}
+
+.indipay-application-upload span {
+  color: #8391a5;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.indipay-application-upload input {
+  display: none;
+}
+
+.indipay-application-files {
+  display: grid;
+  gap: 8px;
+}
+
+.indipay-application-files div {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: #42546e;
+  background: #f5f8fc;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+}
+
+.indipay-application-message {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 14px;
+  margin-bottom: 20px;
+  border-radius: 9px;
+  background: #fff7e9;
+  color: #895d18;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.indipay-application-submit {
+  border-top: 1px solid #edf0f5;
+  padding-top: 25px;
+  text-align: center;
+}
+
+.indipay-application-submit button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 15px 28px;
+  background: #1764c5;
+  color: #fff;
+  border: none;
+  border-radius: 9px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.indipay-application-submit button:hover {
+  background: #104e9c;
+  transform: translateY(-2px);
+}
+
+.indipay-application-submit p {
+  color: #8a96a8;
+  font-size: 12px;
+  margin-top: 13px;
+}
+
+@media (max-width: 650px) {
+  .indipay-application-container {
+    width: calc(100% - 26px);
+    margin: 35px auto 60px;
+  }
+
+  .indipay-application-form {
+    padding: 22px 17px;
+  }
+
+  .indipay-application-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .indipay-application-heading h1 {
+    font-size: 30px;
+  }
+}

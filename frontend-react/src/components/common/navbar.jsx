@@ -1,22 +1,19 @@
 
 import transparentLogo from "../../assets/images/logo-transparent.png";
 
-function Navbar() {
+function Navbar({ onLogin, onRegister }) {
   return (
     <header className="navbar">
       <div className="navbar-container">
 
-        {/* Brand - temporary logo comparison */}
+        {/* Brand */}
         <a href="#top" className="brand">
-        
-
-<img
-  src={transparentLogo}
-  alt="Indipay logo with transparent background"
-  className="logo-comparison"
-  style={{ height: "75px", width: "auto" }}
-/>
-          
+          <img
+            src={transparentLogo}
+            alt="Indipay logo"
+            className="logo-comparison"
+            style={{ height: "75px", width: "auto" }}
+          />
         </a>
 
         {/* Navigation */}
@@ -29,8 +26,19 @@ function Navbar() {
 
         {/* Account buttons */}
         <div className="nav-buttons">
-          <button className="login-btn">Login</button>
-          <button className="register-btn">
+          <button
+            type="button"
+            className="login-btn"
+            onClick={onLogin}
+          >
+            Login
+          </button>
+
+          <button
+            type="button"
+            className="register-btn"
+            onClick={onRegister}
+          >
             Get Started <span>↗</span>
           </button>
         </div>
