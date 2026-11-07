@@ -1,17 +1,21 @@
 
 import { useState } from "react";
+import indipayLogo from "../assets/images/logo-transparent2.png";
 
 import {
   Home as HomeIcon,
   LayoutGrid,
   Wallet,
   Info,
+  Bell,
   UserRound,
   ChevronDown,
   LogIn,
   UserPlus,
   Settings,
+  LogOut,
   Menu,
+  CircleHelp,
   X,
   ArrowRight,
   Landmark,
@@ -30,6 +34,8 @@ import {
   Globe,
   Users,
   ChevronRight,
+  BookOpen,
+Gift,
   Star,
 } from "lucide-react";
 
@@ -40,9 +46,13 @@ function DetailedServices({
   onBack,
   onSelectService,
   onOpenApplicationStatus,
+  onOpenAnnouncements,
+  onLogin,
+  onRegister,
 }) {
-  const [profileOpen, setProfileOpen] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
+  
+
+  
 
   const navItems = [
     { label: "Home", href: "#home", icon: HomeIcon },
@@ -50,6 +60,18 @@ function DetailedServices({
     { label: "Wallet", href: "#wallet", icon: Wallet },
     { label: "About Us", href: "#about", icon: Info },
   ];
+
+  const [profileOpen, setProfileOpen] = useState(false);
+const [activeTab, setActiveTab] = useState("Me");
+const [menuOpen, setMenuOpen] = useState(false);
+
+const handleBottomTab = (label) => {
+  setActiveTab(label);
+
+  if (label === "Me") {
+    setProfileOpen(true);
+  }
+};
 
   const categories = [
   {
@@ -82,6 +104,14 @@ function DetailedServices({
   name: "Business Loan – Unsecured",
   icon: Building2,
   image: `${import.meta.env.BASE_URL}images/bl-unsecured.jpeg`,
+},
+{
+  name: "Take Over Loan",
+  icon: Building2,
+},
+{
+  name: "MSME Loan",
+  icon: Building2,
 }, 
     ],
     },
@@ -170,119 +200,97 @@ function DetailedServices({
   return (
     <div className="indipay-home indipay-detailed-services">
 
-      {/* HEADER AND NAVIGATION */}
-      <header className="indipay-topbar">
+      <header className="indipay-services-plain-header">
 
-        <button
-          className="indipay-menu-button"
-          type="button"
-          aria-label="Toggle navigation"
-          aria-expanded={mobileOpen}
-          onClick={() => setMobileOpen(!mobileOpen)}
-        >
-          {mobileOpen ? <X size={23} /> : <Menu size={23} />}
-        </button>
+  {/* LEFT: BURGER MENU */}
+  <button
+    className="indipay-app-menu"
+    type="button"
+    aria-label="Open menu"
+    aria-expanded={menuOpen}
+    onClick={() => setMenuOpen((open) => !open)}
+  >
+    {menuOpen ? <X size={24} /> : <Menu size={25} />}
+  </button>
 
-        <a
-  href="#home"
-  className="indipay-brand"
-  onClick={(event) => {
-    event.preventDefault();
-    onBack?.();
-  }}
->
-  <img
-    src="/JaytradeServices/images/logo-blue.jpeg"
-    alt="Indipay"
-    className="indipay-logo-image"
-  />
-</a>
+  {/* RIGHT: HEADER ACTIONS */}
+  <div className="indipay-services-header-actions">
 
-        <nav className={`indipay-main-nav ${mobileOpen ? "mobile-open" : ""}`}>
-          {navItems.map((item) => (
-            <a
-              key={item.label}
-              href={item.href}
-              className={`indipay-nav-link ${
-                item.label === "Services" ? "active" : ""
-              }`}
-              onClick={() => {
-                setMobileOpen(false);
+    <button
+      className="indipay-header-icon"
+      type="button"
+      aria-label="Notifications"
+      onClick={onOpenAnnouncements}
+    >
+      <Bell size={21} />
+    </button>
 
-                if (item.label === "Home") {
-                  onBack();
-                }
-              }}
-            >
-              <span className="indipay-nav-icon">
-                <item.icon size={18} strokeWidth={1.9} />
-              </span>
-              {item.label}
-            </a>
-          ))}
-        </nav>
+    <button
+      className="indipay-header-icon"
+      type="button"
+      aria-label="Application Status"
+      onClick={onOpenApplicationStatus}
+    >
+      <FileText size={21} />
+    </button>
 
-        <div className="indipay-profile-dropdown">
-          <button
-            className="indipay-profile-trigger"
-            type="button"
-            aria-expanded={profileOpen}
-            onClick={() => setProfileOpen(!profileOpen)}
-          >
-            <span className="indipay-profile-circle">
-              <UserRound size={19} />
-            </span>
+  </div>
+</header>
 
-            <span className="indipay-profile-label">My Account</span>
+{menuOpen && (
+  <div
+    className="indipay-drawer-backdrop"
+    onClick={() => setMenuOpen(false)}
+  >
+    <nav
+      className="indipay-app-drawer"
+      onClick={(event) => event.stopPropagation()}
+    >
+      <div className="indipay-drawer-brand">
+        <img src={indipayLogo} alt="Jaytrade Logo" />
+      </div>
 
-            <ChevronDown
-              size={16}
-              className={`indipay-chevron ${profileOpen ? "rotated" : ""}`}
-            />
-          </button>
+      <button onClick={() => {
+        setMenuOpen(false);
+        onBack?.();
+      }}>
+        <HomeIcon size={18} /> Home
+      </button>
 
-          {profileOpen && (
-            <div className="indipay-profile-menu">
-              <div className="indipay-profile-heading">
-                <strong>Welcome to Indipay!</strong>
-                <small>Access your account</small>
-              </div>
+      <button onClick={() => setMenuOpen(false)}>
+        <LayoutGrid size={18} /> All Services
+      </button>
 
-              <a href="#login" className="indipay-profile-item">
-                <LogIn size={17} />
-                <span>Log In</span>
-              </a>
+      <button onClick={() => {
+        setMenuOpen(false);
+        onOpenApplicationStatus?.();
+      }}>
+        <FileText size={18} /> My Applications
+      </button>
 
-              <a href="#register" className="indipay-profile-item">
-                <UserPlus size={17} />
-                <span>Create Account</span>
-              </a>
+      <button onClick={() => {
+        setMenuOpen(false);
+        onOpenAnnouncements?.();
+      }}>
+        <Bell size={18} /> Notifications
+      </button>
 
-              <a href="#profile" className="indipay-profile-item">
-  <UserRound size={17} />
-  <span>My Profile</span>
-</a>
+      <button onClick={() => {
+        setMenuOpen(false);
+        onLogin?.();
+      }}>
+        <LogIn size={18} /> Login
+      </button>
 
-<button
-  type="button"
-  className="indipay-profile-item"
-  onClick={() => {
-    setProfileOpen(false);
-    onOpenApplicationStatus?.();
-  }}
->
-  <FileText size={17} />
-  <span>Application Status</span>
-</button>
-
-<a href="#settings" className="indipay-profile-item">
-  <Settings size={17} />
-  <span>Settings</span>
-</a>
-            </div>
-          )}
-        </div>
-      </header>
+      <button onClick={() => {
+        setMenuOpen(false);
+        onRegister?.();
+      }}>
+        <UserPlus size={18} /> Create Account
+      </button>
+    </nav>
+  </div>
+)}
 
       <main className="indipay-services-page-container">
 
@@ -468,6 +476,88 @@ function DetailedServices({
         </div>
 
       </main>
+
+      {activeTab !== "Me" && (
+  <div className="indipay-tab-placeholder">
+    <CircleHelp size={20} />
+    <div>
+      <strong>{activeTab}</strong>
+      <span>This section will be connected in a later update.</span>
+    </div>
+  </div>
+)}
+
+{profileOpen && (
+  <div
+    className="indipay-profile-overlay"
+    onClick={() => setProfileOpen(false)}
+  >
+    <section
+      className="indipay-profile-sheet"
+      onClick={(event) => event.stopPropagation()}
+    >
+      <div className="indipay-profile-sheet-handle" />
+
+      <div className="indipay-profile-sheet-heading">
+        <span><UserRound size={25} /></span>
+        <div>
+          <strong>Welcome to Indipay</strong>
+          <small>Sign in to access your account</small>
+        </div>
+        <button
+          onClick={() => setProfileOpen(false)}
+          aria-label="Close profile"
+        >
+          <X size={20} />
+        </button>
+      </div>
+
+      <button onClick={() => {
+        setProfileOpen(false);
+        onLogin?.();
+      }}>
+        <LogOut size={18} /> Login <ChevronRight size={17} />
+      </button>
+
+      <button onClick={() => {
+        setProfileOpen(false);
+        onRegister?.();
+      }}>
+        <UserRound size={18} /> Create Account <ChevronRight size={17} />
+      </button>
+
+      <button onClick={() => {
+        setProfileOpen(false);
+        setActiveTab("My Profile");
+      }}>
+        <Settings size={18} /> My Profile <ChevronRight size={17} />
+      </button>
+    </section>
+  </div>
+)}
+
+      <nav className="indipay-bottom-nav" aria-label="Main navigation">
+  {[
+    { label: "Me", icon: UserRound },
+    { label: "My Customers", icon: Users },
+    { label: "Rewards", icon: Gift },
+    { label: "Learn & Earn", icon: BookOpen },
+    { label: "About Us", icon: Info },
+  ].map((item) => {
+    const Icon = item.icon;
+
+    return (
+      <button
+        key={item.label}
+        className={activeTab === item.label ? "active" : ""}
+        onClick={() => handleBottomTab(item.label)}
+      >
+        <Icon size={20} strokeWidth={1.9} />
+        <span>{item.label}</span>
+      </button>
+    );
+  })}
+</nav>
 
 
     </div>

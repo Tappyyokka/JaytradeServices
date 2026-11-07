@@ -2,16 +2,19 @@ import { useState, useEffect } from "react";
 import{
   ArrowLeft,
   ArrowRight,
-  CheckCircle2,
-  FileText,
-  Clock3,
-  ShieldCheck,
-  Headset,
   Landmark,
-  Hammer,
-  House,
-  Building2,
-  Paintbrush,
+  UserRound,
+  Users,
+  Gift,
+  BookOpen,
+  Info,
+  Bell,
+ChevronDown,
+CircleHelp,
+X,
+LogOut,
+ChevronRight,
+Settings,
 } from "lucide-react";
 
 import "./Home.css";
@@ -272,11 +275,26 @@ const serviceStoryboards = {
   ],
 };
 
-function ServiceDetail({ service, onBack, onApplyNow }) {
+function ServiceDetail({ service,
+  onBack,
+  onApplyNow,
+  onOpenAnnouncements,
+  onLogin,
+  onRegister,}) {
   const [activeStoryboard, setActiveStoryboard] = useState(0);
-  const [activeDocumentCategory, setActiveDocumentCategory] = useState("");
-  const [checkedDocuments, setCheckedDocuments] = useState({});
-  const [isStoryboardPaused, setIsStoryboardPaused] = useState(false);
+  const [amount, setAmount] = useState("");
+const [termsAccepted, setTermsAccepted] = useState(false);
+const [activeTab, setActiveTab] = useState("Me");
+const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+const [profileOpen, setProfileOpen] = useState(false);
+
+const handleBottomTab = (label) => {
+  setActiveTab(label);
+
+  if (label === "Me") {
+    setProfileOpen(true);
+  }
+};
 
   const details = financialServices[service?.name];
 
@@ -286,483 +304,308 @@ function ServiceDetail({ service, onBack, onApplyNow }) {
     setActiveStoryboard(0);
   }, [service?.name]);
   useEffect(() => {
-  if (storyboardSlides.length <= 1 || isStoryboardPaused) return;
+  if (storyboardSlides.length <= 1) return;
 
   const interval = setInterval(() => {
-    setActiveStoryboard((current) =>
-      (current + 1) % storyboardSlides.length
-    );
+    setActiveStoryboard((current) => (current + 1) % storyboardSlides.length);
   }, 5000);
 
   return () => clearInterval(interval);
-}, [storyboardSlides.length, isStoryboardPaused, service?.name]);
+}, [storyboardSlides.length, service?.name]);
 
-  if (!details) {
-    return (
-      <div className="indipay-service-detail-page">
-        <p>Service details are not available yet.</p>
-        <button onClick={onBack}>Back to Services</button>
-      </div>
-    );
-  }
+  
+  const ServiceIcon = service?.icon || Landmark;
 
-  // DOCUMENT CHECKLIST DATA
-  const documentCategories = Object.entries(details.documents);
-
-  const allDocuments = documentCategories.flatMap(
-    ([category, documents]) =>
-      documents.map((document) => ({
-        category,
-        document,
-        key: `${service.name}::${category}::${document}`,
-      }))
-  );
-
-  const readyCount = allDocuments.filter(
-    (item) => checkedDocuments[item.key]
-  ).length;
-
-  const totalCount = allDocuments.length;
-
-  const selectedCategory =
-    documentCategories.find(
-      ([category]) => category === activeDocumentCategory
-    )?.[0] || documentCategories[0]?.[0];
-
-  const selectedDocuments =
-    documentCategories.find(
-      ([category]) => category === selectedCategory
-    )?.[1] || [];
-
-  const toggleDocument = (key) => {
-    setCheckedDocuments((previous) => ({
-      ...previous,
-      [key]: !previous[key],
-    }));
-  };
+  const description =
+    details?.description ||
+    `Explore ${service?.name || "this service"} with Jay Trade. Our team is here to help you understand the available options and guide you through the process.`;
 
   return (
     <div className="indipay-home indipay-service-detail-page">
       {/* HEADER */}
-      <header className="indipay-topbar">
-        <button
-          type="button"
-          className="indipay-detail-back"
-          onClick={onBack}
-        >
-          <ArrowLeft size={18} />
-          <span>Back to Services</span>
-        </button>
 
-        <img
-          src={`${import.meta.env.BASE_URL}images/logo-blue.jpeg`}
-          alt="Indipay"
-          className="indipay-logo-image"
-        />
-      </header>
-
-      <main className="indipay-detail-container">
-        {/* HERO */}
-        {/* THREE-PANEL STORYBOARD CAROUSEL */}
-<section className="indipay-storyboard-section">
-
-  {storyboardSlides.length > 0 && (
-    <div
-      className="indipay-storyboard-slider"
-      onMouseEnter={() => setIsStoryboardPaused(true)}
-      onMouseLeave={() => setIsStoryboardPaused(false)}
-    >
-
-      <div className="indipay-storyboard-panels">
-
-        {/* LEFT PANEL */}
-        <div className="indipay-storyboard-panel side-panel">
-          <img
-            src={
-              storyboardSlides[
-                (activeStoryboard - 1 + storyboardSlides.length) %
-                storyboardSlides.length
-              ].image
-            }
-            alt="Previous storyboard"
-          />
-        </div>
-
-        {/* CENTER PANEL */}
-        <div className="indipay-storyboard-panel center-panel">
-          <img
-            src={storyboardSlides[activeStoryboard].image}
-            alt={storyboardSlides[activeStoryboard].alt}
-          />
-        </div>
-
-        {/* RIGHT PANEL */}
-        <div className="indipay-storyboard-panel side-panel">
-          <img
-            src={
-              storyboardSlides[
-                (activeStoryboard + 1) % storyboardSlides.length
-              ].image
-            }
-            alt="Next storyboard"
-          />
-        </div>
-
-      </div>
-
-      {/* PREVIOUS BUTTON */}
-      {storyboardSlides.length > 1 && (
-        <>
-          <button
-            type="button"
-            className="indipay-storyboard-arrow storyboard-prev"
-            aria-label="Previous storyboard"
-            onClick={() =>
-              setActiveStoryboard(
-                (activeStoryboard - 1 + storyboardSlides.length) %
-                storyboardSlides.length
-              )
-            }
-          >
-            <ArrowLeft size={22} />
-          </button>
-
-          {/* NEXT BUTTON */}
-          <button
-            type="button"
-            className="indipay-storyboard-arrow storyboard-next"
-            aria-label="Next storyboard"
-            onClick={() =>
-              setActiveStoryboard(
-                (activeStoryboard + 1) % storyboardSlides.length
-              )
-            }
-          >
-            <ArrowRight size={22} />
-          </button>
-        </>
-      )}
-
-      {/* NAVIGATION DOTS */}
-      <div className="indipay-storyboard-dots">
-        {storyboardSlides.map((slide, index) => (
-          <button
-            key={index}
-            type="button"
-            aria-label={`Go to storyboard ${index + 1}`}
-            className={activeStoryboard === index ? "active" : ""}
-            onClick={() => setActiveStoryboard(index)}
-          />
-        ))}
-      </div>
-
-    </div>
-  )}
-
-</section>
-
-        {/* SERVICE OVERVIEW */}
-        <section className="indipay-detail-section">
-          <div className="indipay-detail-section-heading">
-            <h2>About This Service</h2>
-            <p>
-              Learn more about the service and how our team can assist you.
-            </p>
-          </div>
-
-          <div className="indipay-detail-overview-card">
-            <div className="indipay-detail-overview-icon">
-              <FileText size={28} />
-            </div>
-
-            <div>
-              <h3>{service.name}</h3>
-              <p>{details.description}</p>
-            </div>
-          </div>
-        </section>
-
-        
-        {/* HOUSING LOAN TYPES */}
-        {service.name === "Housing Loan" && (
-          <section className="indipay-detail-section">
-            <div className="indipay-detail-section-heading">
-              <h2>Choose Your Housing Loan</h2>
-              <p>
-                Explore different housing loan options to find the
-                right solution for your needs.
-              </p>
-            </div>
-
-            <div className="indipay-housing-types">
-              <div className="indipay-housing-type-card">
-                <div className="indipay-housing-type-icon">
-                  <Hammer size={32} />
-                </div>
-                <span className="indipay-housing-type-number">01</span>
-                <h3>Construction Loan</h3>
-                <p>
-                  Financial support for constructing your
-                  dream home on your own land.
-                </p>
-              </div>
-
-              <div className="indipay-housing-type-card">
-                <div className="indipay-housing-type-icon">
-                  <House size={32} />
-                </div>
-                <span className="indipay-housing-type-number">02</span>
-                <h3>Purchase Loan</h3>
-                <p>
-                  Get financial assistance to purchase
-                  your dream home.
-                </p>
-              </div>
-
-              <div className="indipay-housing-type-card">
-                <div className="indipay-housing-type-icon">
-                  <Building2 size={32} />
-                </div>
-                <span className="indipay-housing-type-number">03</span>
-                <h3>Purchase + Construction Loan</h3>
-                <p>
-                  Financial assistance for purchasing land
-                  and constructing a home.
-                </p>
-              </div>
-
-              <div className="indipay-housing-type-card">
-                <div className="indipay-housing-type-icon">
-                  <Paintbrush size={32} />
-                </div>
-                <span className="indipay-housing-type-number">04</span>
-                <h3>Repairing Loan</h3>
-                <p>
-                  Get support for repairing, renovating
-                  and improving your existing home.
-                </p>
-              </div>
-            </div>
-          </section>
-        )}
-
-
-        {/* HIGHLIGHTS */}
-        <section className="indipay-detail-section">
-          <div className="indipay-detail-section-heading">
-            
-            <h2>Key Highlights</h2>
-            <p>Important features of this service.</p>
-          </div>
-
-          <div className="indipay-detail-highlights">
-            {details.highlights.map((item, index) => (
-              <div className="indipay-detail-highlight" key={index}>
-                <CheckCircle2 size={22} />
-                <span>{item}</span>
-              </div>
-            ))}
-          </div>
-        </section>
-
-
-{/* INTERACTIVE DOCUMENT CHECKLIST */}
-<section className="indipay-detail-section indipay-checklist-section">
-
-  <div className="indipay-detail-section-heading">
-    
-    <h2>Documents Required</h2>
-    <p>
-      Tick off what you already have. Keep a clear scan or photo
-      of each document ready.
-    </p>
-  </div>
-
-  {/* PROGRESS */}
-  <div className="indipay-checklist-progress">
-    <div className="indipay-checklist-progress-info">
-      <strong>
-        {readyCount} of {totalCount} ready
-      </strong>
-      <span>{totalCount - readyCount} to go</span>
-    </div>
-
-    <div className="indipay-checklist-progress-track">
-      <div
-        className="indipay-checklist-progress-fill"
-        style={{
-          width: `${totalCount ? (readyCount / totalCount) * 100 : 0}%`,
-        }}
-      />
-    </div>
-  </div>
-
-  {/* CATEGORY NAVIGATION + DOCUMENT LIST */}
-  <div className="indipay-checklist-layout">
-
-    <nav className="indipay-checklist-nav">
-      {documentCategories.map(([category, documents], index) => {
-        const categoryReady = documents.filter((document) =>
-          checkedDocuments[
-            `${service.name}::${category}::${document}`
-          ]
-        ).length;
-
-        return (
-          <button
-            key={category}
-            type="button"
-            className={`indipay-checklist-nav-item ${
-              selectedCategory === category ? "active" : ""
-            }`}
-            onClick={() => setActiveDocumentCategory(category)}
-          >
-            <span>{category}</span>
-            <small>
-              {categoryReady}/{documents.length}
-            </small>
-          </button>
-        );
-      })}
-    </nav>
-
-    {/* ACTIVE CATEGORY */}
-    <div className="indipay-checklist-panel">
-
-      <div className="indipay-checklist-panel-heading">
-        <div>
-          <h3>{selectedCategory}</h3>
-          <p>
-            {selectedDocuments.length} documents in this category
-          </p>
-        </div>
-
-        <span className="indipay-checklist-count">
-          {selectedDocuments.filter((document) =>
-            checkedDocuments[
-              `${service.name}::${selectedCategory}::${document}`
-            ]
-          ).length}/{selectedDocuments.length}
-        </span>
-      </div>
-
-      <div className="indipay-checklist-items">
-        {selectedDocuments.map((document, index) => {
-          const key =
-            `${service.name}::${selectedCategory}::${document}`;
-
-          const isChecked = !!checkedDocuments[key];
-          const isOptional = /if any|optional/i.test(document);
-
-          return (
-            <label
-              key={key}
-              className={`indipay-checklist-item ${
-                isChecked ? "checked" : ""
-              }`}
-            >
-              <input
-                type="checkbox"
-                checked={isChecked}
-                onChange={() => toggleDocument(key)}
-              />
-
-              <span className="indipay-checklist-custom-check">
-                {isChecked && <CheckCircle2 size={18} />}
-              </span>
-
-              <span className="indipay-checklist-document-name">
-                {document}
-
-                {isOptional && (
-                  <small className="indipay-optional-tag">
-                    Optional
-                  </small>
-                )}
-              </span>
-            </label>
-          );
-        })}
-      </div>
-
-      <div className="indipay-checklist-footer">
-        <span>
-          {readyCount === totalCount
-            ? "All documents are ready!"
-            : "Keep checking off the documents you have."}
-        </span>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-        {/* PROCESS */}
-        <section className="indipay-detail-process">
-          <div className="indipay-detail-section-heading">
-            
-            <h2>How It Works</h2>
-            <p>A simple overview of the service journey.</p>
-          </div>
-
-          <div className="indipay-detail-steps">
-            <div>
-              <span>01</span>
-              <h3>Submit Enquiry</h3>
-              <p>Share your requirements with our team.</p>
-            </div>
-
-            <div>
-              <span>02</span>
-              <h3>Initial Review</h3>
-              <p>Our team reviews the information provided.</p>
-            </div>
-
-            <div>
-              <span>03</span>
-              <h3>Service Assistance</h3>
-              <p>Proceed with the next steps after confirmation.</p>
-            </div>
-          </div>
-        </section>
-
-        
-{/* APPLY NOW */}
-<section className="indipay-apply-section">
+      <header className="indipay-detail-header">
   <button
     type="button"
-    className="indipay-apply-button"
-    onClick={() => onApplyNow?.(service)}
+    className="indipay-detail-back"
+    onClick={onBack}
   >
-    Apply Now
-    <ArrowRight size={19} />
+    <ArrowLeft size={18} />
+    <span>Back to Services</span>
   </button>
-</section>
 
+  <div className="indipay-detail-header-actions">
+    <button
+      type="button"
+      className="indipay-detail-header-icon"
+      aria-label="Notifications"
+      onClick={onOpenAnnouncements}
+    >
+      <Bell size={21} />
+    </button>
 
-        {/* SUPPORT */}
-        <section className="indipay-detail-support">
-          <div className="indipay-detail-support-icon">
-            <Headset size={30} />
+    <div className="indipay-detail-profile">
+      <button
+        type="button"
+        className="indipay-detail-profile-trigger"
+        onClick={() => setProfileMenuOpen((open) => !open)}
+        aria-expanded={profileMenuOpen}
+      >
+        <UserRound size={20} />
+        <span>Profile</span>
+        <ChevronDown size={15} />
+      </button>
+
+      {profileMenuOpen && (
+        <div className="indipay-detail-profile-menu">
+          <button
+            onClick={() => {
+              setProfileMenuOpen(false);
+              onLogin?.();
+            }}
+          >
+            <UserRound size={17} />
+            Login
+          </button>
+
+          <button
+            onClick={() => {
+              setProfileMenuOpen(false);
+              onRegister?.();
+            }}
+          >
+            <Users size={17} />
+            Create Account
+          </button>
+        </div>
+      )}
+    </div>
+  </div>
+</header>
+      
+      <main className="indipay-detail-container">
+
+        {/* SERVICE INTRODUCTION */}
+        <section className="indipay-simple-service-intro">
+          <div className="indipay-simple-service-icon">
+            <ServiceIcon size={30} />
           </div>
 
           <div>
-            <h2>Need Help With This Service?</h2>
-            <p>
-              Our team can help you understand the service and its requirements.
-            </p>
+            <span className="indipay-simple-eyebrow">
+              JAY TRADE SERVICES
+            </span>
+            <h1>{service?.name}</h1>
+            <p>{description}</p>
+          </div>
+        </section>
+
+        {/* APPLICATION AMOUNT */}
+        <section className="indipay-simple-application">
+
+          <label htmlFor="service-amount">
+            Enter the amount
+          </label>
+
+          <div className="indipay-amount-input">
+            <span>₹</span>
+            <input
+              id="service-amount"
+              type="number"
+              min="1"
+              placeholder="Enter your amount"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+            />
           </div>
 
-          <button type="button" onClick={onBack}>
-            Back to Services
-            <ArrowRight size={17} />
+          {/* TERMS AND CONDITIONS */}
+          <label className="indipay-simple-terms">
+            <input
+              type="checkbox"
+              checked={termsAccepted}
+              onChange={(e) => setTermsAccepted(e.target.checked)}
+            />
+
+            <span>
+              I agree to the{" "}
+              <a href="#terms-and-conditions">
+                Terms and Conditions
+              </a>
+            </span>
+          </label>
+
+          {/* APPLY BUTTON */}
+          <button
+            type="button"
+            className="indipay-simple-apply"
+            disabled={!amount || Number(amount) <= 0 || !termsAccepted}
+            onClick={() =>
+              onApplyNow?.({
+                ...service,
+                amount: Number(amount),
+              })
+            }
+          >
+            Apply Now
+            <ArrowRight size={18} />
           </button>
         </section>
+
+        {/* STORYBOARD / BANNERS */}
+        <section className="indipay-simple-storyboard">
+
+          <div className="indipay-simple-storyboard-heading">
+            <h2>Explore Our Services</h2>
+            <p>Discover more about our offerings.</p>
+          </div>
+
+          {storyboardSlides.length > 0 ? (
+            <div className="indipay-simple-storyboard-slider">
+
+              <img
+                src={storyboardSlides[activeStoryboard].image}
+                alt={storyboardSlides[activeStoryboard].alt}
+              />
+
+              {storyboardSlides.length > 1 && (
+                <>
+                  <button
+                    type="button"
+                    className="indipay-simple-storyboard-arrow prev"
+                    aria-label="Previous banner"
+                    onClick={() =>
+                      setActiveStoryboard(
+                        (activeStoryboard - 1 + storyboardSlides.length) %
+                        storyboardSlides.length
+                      )
+                    }
+                  >
+                    <ArrowLeft size={20} />
+                  </button>
+
+                  <button
+                    type="button"
+                    className="indipay-simple-storyboard-arrow next"
+                    aria-label="Next banner"
+                    onClick={() =>
+                      setActiveStoryboard(
+                        (activeStoryboard + 1) % storyboardSlides.length
+                      )
+                    }
+                  >
+                    <ArrowRight size={20} />
+                  </button>
+
+                  <div className="indipay-simple-storyboard-dots">
+                    {storyboardSlides.map((slide, index) => (
+                      <button
+                        key={index}
+                        type="button"
+                        aria-label={`Go to banner ${index + 1}`}
+                        className={activeStoryboard === index ? "active" : ""}
+                        onClick={() => setActiveStoryboard(index)}
+                      />
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
+          ) : (
+            <div className="indipay-simple-storyboard-placeholder">
+              <Landmark size={35} />
+              <span>Our Banners / Storyboards</span>
+            </div>
+          )}
+
+        </section>
+
       </main>
 
-      
+      {activeTab !== "Me" && (
+  <div className="indipay-tab-placeholder">
+    <CircleHelp size={20} />
+    <div>
+      <strong>{activeTab}</strong>
+      <span>This section will be connected in a later update.</span>
+    </div>
+  </div>
+)}
+
+{profileOpen && (
+  <div
+    className="indipay-profile-overlay"
+    onClick={() => setProfileOpen(false)}
+  >
+    <section
+      className="indipay-profile-sheet"
+      onClick={(event) => event.stopPropagation()}
+    >
+      <div className="indipay-profile-sheet-handle" />
+
+      <div className="indipay-profile-sheet-heading">
+        <span><UserRound size={25} /></span>
+        <div>
+          <strong>Welcome to Indipay</strong>
+          <small>Sign in to access your account</small>
+        </div>
+        <button
+          onClick={() => setProfileOpen(false)}
+          aria-label="Close profile"
+        >
+          <X size={20} />
+        </button>
+      </div>
+
+      <button onClick={() => {
+        setProfileOpen(false);
+        onLogin?.();
+      }}>
+        <LogOut size={18} /> Login <ChevronRight size={17} />
+      </button>
+
+      <button onClick={() => {
+        setProfileOpen(false);
+        onRegister?.();
+      }}>
+        <UserRound size={18} /> Create Account <ChevronRight size={17} />
+      </button>
+
+      <button onClick={() => {
+        setProfileOpen(false);
+        setActiveTab("My Profile");
+      }}>
+        <Settings size={18} /> My Profile <ChevronRight size={17} />
+      </button>
+    </section>
+  </div>
+)}
+
+      <nav className="indipay-bottom-nav" aria-label="Main navigation">
+  {[
+    { label: "Me", icon: UserRound },
+    { label: "My Customers", icon: Users },
+    { label: "Rewards", icon: Gift },
+    { label: "Learn & Earn", icon: BookOpen },
+    { label: "About Us", icon: Info },
+  ].map((item) => {
+    const Icon = item.icon;
+
+    return (
+      <button
+        key={item.label}
+        className={activeTab === item.label ? "active" : ""}
+        onClick={() => handleBottomTab(item.label)}
+      >
+        <Icon size={20} strokeWidth={1.9} />
+        <span>{item.label}</span>
+      </button>
+    );
+  })}
+</nav>
     </div>
   );
+
 }
 
 export default ServiceDetail;

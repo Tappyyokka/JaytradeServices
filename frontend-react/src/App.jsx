@@ -109,13 +109,25 @@ function App() {
   } else if (currentPage === "service-detail") {
     pageContent = (
       <ServiceDetail
-        service={selectedService}
-        onBack={() => {
-          setCurrentPage("services");
-          window.scrollTo(0, 0);
-        }}
-        onApplyNow={handleApplyNow}
-      />
+  service={selectedService}
+  onBack={() => {
+    setCurrentPage("services");
+    window.scrollTo(0, 0);
+  }}
+  onApplyNow={handleApplyNow}
+  onOpenAnnouncements={() => {
+    setCurrentPage("announcements");
+    window.scrollTo(0, 0);
+  }}
+  onLogin={() => {
+    setCurrentPage("login");
+    window.scrollTo(0, 0);
+  }}
+  onRegister={() => {
+    setCurrentPage("register");
+    window.scrollTo(0, 0);
+  }}
+/>
     );
   } else if (currentPage === "services") {
     pageContent = (
@@ -129,6 +141,18 @@ function App() {
     setCurrentPage("application-status");
     window.scrollTo(0, 0);
   }}
+  onLogin={() => {
+    setCurrentPage("login");
+    window.scrollTo(0, 0);
+  }}
+  onRegister={() => {
+    setCurrentPage("register");
+    window.scrollTo(0, 0);
+  }}
+  onOpenAnnouncements={() => {
+  setCurrentPage("announcements");
+  window.scrollTo(0, 0);
+}}
 />
     );
   } else if (currentPage === "home") {
@@ -226,7 +250,11 @@ return (
 
     {!isAuthPage && (
       <>
-        <Footer onSelectService={handleSelectService} />
+        {currentPage !== "home" &&
+ currentPage !== "service-detail" &&
+ currentPage !== "services" && (
+  <Footer onSelectService={handleSelectService} />
+)}
 
         <a
           href="https://wa.me/916238398343?text=Hello%20Jay%20Trade,%20I'm%20interested%20in%20your%20services.%20Could%20you%20please%20assist%20me?"

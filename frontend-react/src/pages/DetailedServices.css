@@ -787,3 +787,74 @@
   object-fit: cover;
   border-radius: inherit;
 }
+
+/* PLAIN HEADER FOR DETAILED SERVICES */
+
+.indipay-services-plain-header {
+  width: 100%;
+  height: 65px;
+  background: #ffffff;
+  border-bottom: 1px solid #e8edf3;
+}
+
+.indipay-services-plain-header {
+  width: 100%;
+  height: 65px;
+  padding: 0 5%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #ffffff;
+  border-bottom: 1px solid #e8edf3;
+  position: relative;
+  z-index: 100;
+}
+
+.indipay-services-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.indipay-services-header-actions .indipay-header-icon {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border: none;
+  border-radius: 50%;
+  background: #f5f7fa;
+  color: #101d36;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.indipay-services-header-actions .indipay-header-icon:hover {
+  background: #fff1e3;
+  color: #f28c28;
+}
+
+@media (max-width: 600px) {
+  .indipay-services-plain-header {
+    height: 58px;
+    padding: 0 14px;
+  }
+
+  .indipay-services-header-actions {
+    gap: 8px;
+  }
+}
+.indipay-services-plain-header .indipay-app-menu {
+  color: #101D36;
+  background: transparent;
+}
+
+.indipay-services-plain-header .indipay-app-menu svg {
+  color: #101D36;
+  stroke: #101D36;
+}
+
+.indipay-services-plain-header .indipay-app-menu:hover {
+  background: #FFF1E3;
+  color: #F28C28;
+}
