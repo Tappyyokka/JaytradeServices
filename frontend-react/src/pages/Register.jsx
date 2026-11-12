@@ -39,28 +39,59 @@ function Register({ onBack, onLogin, onSuccess }) {
     setMessage("");
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
+    setMessage("");
 
     if (formData.password.length < 8) {
-      setMessage("Password must contain at least 8 characters.");
-      return;
+        setMessage("Password must contain at least 8 characters.");
+        return;
     }
 
     if (formData.password !== formData.confirmPassword) {
-      setMessage("Passwords do not match.");
-      return;
+        setMessage("Passwords do not match.");
+        return;
     }
 
     if (!formData.terms) {
-      setMessage("Please accept the terms and conditions.");
-      return;
+        setMessage("Please accept the terms and conditions.");
+        return;
     }
 
-    if (onSuccess) {
-  onSuccess();
-}
-  };
+    try {
+        const response = await fetch(
+            "http://localhost:5000/api/auth/register",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                credentials: "include",
+                body: JSON.stringify({
+                    fullName: formData.fullName,
+                    mobile: formData.mobile,
+                    email: formData.email,
+                    password: formData.password,
+                }),
+            }
+        );
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+            setMessage(result.message || "Registration failed.");
+            return;
+        }
+
+        if (onSuccess) {
+            onSuccess(result.user);
+        }
+
+    } catch (error) {
+        console.error("Registration error:", error);
+        setMessage("Unable to connect to the server. Please try again.");
+    }
+};
 
   return (
     <main className="indipay-auth-page register-page">

@@ -1,5 +1,4 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import Navbar from "./components/common/navbar";
 import Footer from "./components/common/Footer";
@@ -16,6 +15,9 @@ import AuthBanner from "./components/index/AuthBanner";
 import Announcements from "./pages/Announcements";
 import ApplicationForm from "./pages/ApplicationForm";
 import ApplicationStatus from "./pages/ApplicationStatus";
+import Jobs from "./pages/Jobs";
+import Times from "./pages/Times";
+import AboutUs from "./pages/AboutUs";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 
@@ -25,17 +27,57 @@ import ServiceDetail from "./pages/ServiceDetail";
 
 function App() {
   const [currentPage, setCurrentPage] = useState("existing");
+  const [customer, setCustomer] = useState(null);
   const [selectedService, setSelectedService] = useState(null);
+  const [applicationReturnPage, setApplicationReturnPage] = useState("service-detail");
+  const [timesReturnPage, setTimesReturnPage] = useState("home");
 
+  useEffect(() => {
+    const checkCustomerSession = async () => {
+        try {
+            const response = await fetch(
+                "http://localhost:5000/api/auth/me",
+                {
+                    method: "GET",
+                    credentials: "include",
+                }
+            );
+
+            const result = await response.json();
+
+            if (response.ok && result.success) {
+                setCustomer(result.user);
+                setCurrentPage("home");
+            }
+
+        } catch (error) {
+            console.error("Session check failed:", error);
+        }
+    };
+
+    checkCustomerSession();
+}, []);
   const handleSelectService = (service) => {
     setSelectedService(service);
     setCurrentPage("service-detail");
     window.scrollTo(0, 0);
   };
+  const handleOpenJobs = () => {
+  setCurrentPage("jobs");
+  window.scrollTo(0, 0);
+};
+const handleOpenAboutUs = () => {
+  setCurrentPage("about-us");
+  window.scrollTo(0, 0);
+};
+const handleOpenTimes = () => {
+  setTimesReturnPage(currentPage);
+  setCurrentPage("times");
+  window.scrollTo(0, 0);
+};
   const handleApplyNow = (service) => {
-  console.log("APPLY NOW CLICKED:", service);
-
   setSelectedService(service);
+  setApplicationReturnPage(currentPage);
   setCurrentPage("application-form");
   window.scrollTo(0, 0);
 };
@@ -53,10 +95,11 @@ function App() {
         setCurrentPage("register");
         window.scrollTo(0, 0);
       }}
-      onSuccess={() => {
-        setCurrentPage("home");
-        window.scrollTo(0, 0);
-      }}
+      onSuccess={(user) => {
+    setCustomer(user);
+    setCurrentPage("home");
+    window.scrollTo(0, 0);
+}}
     />
   );
 } else if (currentPage === "register") {
@@ -70,10 +113,11 @@ function App() {
         setCurrentPage("login");
         window.scrollTo(0, 0);
       }}
-      onSuccess={() => {
-        setCurrentPage("home");
-        window.scrollTo(0, 0);
-      }}
+      onSuccess={(user) => {
+    setCustomer(user);
+    setCurrentPage("home");
+    window.scrollTo(0, 0);
+}}
     />
   );
 } else if (currentPage === "announcements"){
@@ -100,12 +144,32 @@ function App() {
       <ApplicationForm
         initialService={selectedService?.name || ""}
         onBack={() => {
-          setCurrentPage("service-detail");
-          window.scrollTo(0, 0);
-        }}
+  setCurrentPage(applicationReturnPage);
+  window.scrollTo(0, 0);
+}}
       />
       
     );
+
+    } else if (currentPage === "jobs") {
+  pageContent = (
+    <Jobs
+      onBack={() => {
+        setCurrentPage("services");
+        window.scrollTo(0, 0);
+      }}
+      onApplyNow={(packageItem) => {
+        setSelectedService(packageItem);
+        setCurrentPage("application-form");
+        window.scrollTo(0, 0);
+      }}
+       onLogin={() => {
+    setCurrentPage("login");
+    window.scrollTo(0, 0);
+  }}
+  onOpenAboutUs={handleOpenAboutUs}
+    />
+  );
   } else if (currentPage === "service-detail") {
     pageContent = (
       <ServiceDetail
@@ -127,6 +191,7 @@ function App() {
     setCurrentPage("register");
     window.scrollTo(0, 0);
   }}
+  onOpenAboutUs={handleOpenAboutUs}
 />
     );
   } else if (currentPage === "services") {
@@ -152,12 +217,32 @@ function App() {
   onOpenAnnouncements={() => {
   setCurrentPage("announcements");
   window.scrollTo(0, 0);
+  
 }}
+onOpenJobs={handleOpenJobs}
+onOpenTimes={handleOpenTimes}
+onOpenAboutUs={handleOpenAboutUs}
 />
     );
+    
   } else if (currentPage === "home") {
   pageContent = (
     <Home
+    customer={customer}
+    onLogout={async () => {
+  try {
+    await fetch("http://localhost:5000/api/auth/logout", {
+      method: "POST",
+      credentials: "include",
+    });
+  } catch (error) {
+    console.error("Logout failed:", error);
+  }
+
+  setCustomer(null);
+  setCurrentPage("existing");
+  window.scrollTo(0, 0);
+}}
       onBack={() => {
         setCurrentPage("existing");
         window.scrollTo(0, 0);
@@ -183,9 +268,41 @@ function App() {
         setCurrentPage("register");
         window.scrollTo(0, 0);
       }}
+      onOpenJobs={handleOpenJobs}
+      onOpenTimes={handleOpenTimes}
+      onOpenAboutUs={handleOpenAboutUs}
     />
   );
-} else {
+  
+} 
+else if (currentPage === "times") {
+  pageContent = (
+    <Times
+      onBack={() => {
+        setCurrentPage(timesReturnPage);
+        window.scrollTo(0, 0);
+      }}
+      onSelectPackage={handleApplyNow}
+      onLogin={() => {
+  setCurrentPage("login");
+  window.scrollTo(0, 0);
+}}
+onOpenAboutUs={handleOpenAboutUs}
+    />
+  );
+}
+
+else if (currentPage === "about-us") {
+  pageContent = (
+    <AboutUs
+      onBack={() => {
+        setCurrentPage("home");
+        window.scrollTo(0, 0);
+      }}
+    />
+  );
+}
+else {
     pageContent = (
       <>
         <button
@@ -252,7 +369,10 @@ return (
       <>
         {currentPage !== "home" &&
  currentPage !== "service-detail" &&
- currentPage !== "services" && (
+ currentPage !== "services" &&
+ currentPage !== "times" && 
+ currentPage !== "about-us" &&
+ currentPage !== "jobs" && (
   <Footer onSelectService={handleSelectService} />
 )}
 

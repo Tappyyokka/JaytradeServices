@@ -200,6 +200,150 @@ documents: {
 };
 
 
+const legalServices = {
+  "CIBIL Report": {
+    description:
+      "Get assistance with accessing your CIBIL credit report and understanding your credit profile for better financial planning.",
+  },
+
+  "MSME": {
+    description:
+      "Get assistance with MSME registration to establish your business identity and access applicable government schemes and business opportunities.",
+  },
+
+  "Mudra Project Report (up to ₹5 lakh)": {
+    description:
+      "Get a professionally prepared project report to support your Mudra loan application for funding requirements up to ₹5 lakh.",
+  },
+
+  "Mudra Project Report (above ₹5 lakh)": {
+    description:
+      "Get assistance preparing a detailed project report for Mudra loan applications involving funding requirements above ₹5 lakh.",
+  },
+
+  "GST Registration": {
+    description:
+      "Get assistance with GST registration and the documentation required to register your business under the Goods and Services Tax system.",
+  },
+
+  "ITR – Income Tax Filing": {
+    description:
+      "Get assistance preparing and filing your income tax return with the relevant financial and supporting documents.",
+  },
+
+  "FSSAI Registration Fee": {
+    description:
+      "Get assistance with the application process for FSSAI registration for eligible food businesses.",
+  },
+
+  "FSSAI License Fee": {
+    description:
+      "Get assistance with applying for the appropriate FSSAI licence for your food business.",
+  },
+
+  "FSSAI Registration Modification": {
+    description:
+      "Get assistance updating or modifying the details associated with your existing FSSAI registration.",
+  },
+
+  "FSSAI License Modification": {
+    description:
+      "Get assistance modifying the details of your existing FSSAI licence.",
+  },
+
+  "FSSAI Manufacture Registration": {
+    description:
+      "Get assistance with FSSAI registration requirements for eligible food manufacturing businesses.",
+  },
+
+  "FSSAI Manufacture License": {
+    description:
+      "Get assistance with the FSSAI licensing process for eligible food manufacturing operations.",
+  },
+
+  "Import Export Code": {
+    description:
+      "Get assistance obtaining an Import Export Code (IEC), which is generally required for businesses undertaking import or export activities.",
+  },
+
+  "ISO Certificate": {
+    description:
+      "Get assistance understanding ISO certification requirements and coordinating the certification process for your business.",
+  },
+
+  "Private Limited Company Registration": {
+    description:
+      "Get assistance with incorporating a Private Limited Company, including the required documentation and registration process.",
+  },
+
+  "Partnership Registration Only": {
+    description:
+      "Get assistance with registering your partnership firm and preparing the required registration documentation.",
+  },
+
+  "Partnership Without Registration (PAN + Deed)": {
+    description:
+      "Get assistance preparing the partnership deed and PAN-related documentation for a partnership operating without formal firm registration.",
+  },
+
+  "Partnership With Registration (REG + PAN + Deed)": {
+    description:
+      "Get assistance with partnership firm registration, PAN application and partnership deed documentation.",
+  },
+
+  "Limited Liability Partnership Registration (LLP)": {
+    description:
+      "Get assistance incorporating a Limited Liability Partnership (LLP), including documentation and statutory registration requirements.",
+  },
+
+  "Trademark - Individual, MSME (Without Track Records)": {
+    description:
+      "Get assistance with trademark application requirements for individuals and eligible MSMEs without prior track records.",
+  },
+
+  "Trademark - Individual, MSME (With Track Records)": {
+    description:
+      "Get assistance with trademark application requirements for individuals and eligible MSMEs with track records.",
+  },
+
+  "Trademark - LLP/Co/PS (Other Than MSME Without Track Records)": {
+    description:
+      "Get assistance with trademark applications for LLPs, companies and other eligible entities outside the MSME category without track records.",
+  },
+
+  "Trademark - LLP/Co/PS (Other Than MSME With Track Records)": {
+    description:
+      "Get assistance with trademark applications for LLPs, companies and other eligible entities outside the MSME category with track records.",
+  },
+
+  "Trademark - Ownership Change": {
+    description:
+      "Get assistance with trademark ownership transfer and updating the relevant ownership details with the trademark authorities.",
+  },
+
+  "PCC - Police Clearance Certificate": {
+    description:
+      "Get assistance with the application process and documentation required to obtain a Police Clearance Certificate.",
+  },
+
+  "Vyapar Mithra": {
+    description:
+      "Explore Vyapar Mithra, a business assistance service designed to help entrepreneurs with their business-related requirements.",
+  },
+
+  "Vyapar Mithra Plus": {
+    description:
+      "Explore Vyapar Mithra Plus for additional business assistance and support with your business requirements.",
+  },
+
+  "Vyapar Mithra All In One": {
+    description:
+      "Explore the Vyapar Mithra All In One package for a broader range of business assistance services through one platform.",
+  },
+};
+
+
+
 
 const serviceStoryboards = {
   "Housing Loan": [
@@ -296,7 +440,9 @@ const handleBottomTab = (label) => {
   }
 };
 
-  const details = financialServices[service?.name];
+ const details =
+  financialServices[service?.name] ||
+  legalServices[service?.name];
 
   const storyboardSlides = serviceStoryboards[service?.name] || [];
 

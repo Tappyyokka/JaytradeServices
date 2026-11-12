@@ -47,6 +47,8 @@ function DetailedServices({
   onSelectService,
   onOpenApplicationStatus,
   onOpenAnnouncements,
+  onOpenJobs,
+  onOpenTimes,
   onLogin,
   onRegister,
 }) {
@@ -172,7 +174,6 @@ const handleBottomTab = (label) => {
       icon: GraduationCap,
       services: [
         { name: "Udyog Registration", icon: FileCheck },
-        { name: "Basic Registration", icon: ClipboardCheck },
         { name: "Udyog Plus Registration", icon: BadgeCheck },
         { name: "Standard Registration", icon: FileText },
         { name: "Corporate Plus", icon: Building2 },
@@ -411,29 +412,40 @@ const handleBottomTab = (label) => {
     className="indipay-detail-service-item"
     key={service.name}
     onClick={
-      category.id === "financial-services"
-        ? () => onSelectService?.(service)
-        : undefined
+  category.id === "financial-services"
+    ? () => onSelectService?.(service)
+    : category.id === "jaytrade-jobs"
+    ? () => onOpenJobs?.()
+    : category.id === "jaytrade-times"
+    ? () => onOpenTimes?.()
+    : undefined
+}
+role={
+  ["financial-services", "jaytrade-jobs", "jaytrade-times"].includes(category.id)
+    ? "button"
+    : undefined
+}
+tabIndex={
+  ["financial-services", "jaytrade-jobs", "jaytrade-times"].includes(category.id)
+    ? 0
+    : undefined
+}
+onKeyDown={(event) => {
+  if (
+    ["financial-services", "jaytrade-jobs", "jaytrade-times"].includes(category.id) &&
+    (event.key === "Enter" || event.key === " ")
+  ) {
+    event.preventDefault();
+
+    if (category.id === "jaytrade-jobs") {
+      onOpenJobs?.();
+    } else if (category.id === "jaytrade-times") {
+      onOpenTimes?.();
+    } else {
+      onSelectService?.(service);
     }
-    role={
-      category.id === "financial-services"
-        ? "button"
-        : undefined
-    }
-    tabIndex={
-      category.id === "financial-services"
-        ? 0
-        : undefined
-    }
-    onKeyDown={(event) => {
-      if (
-        category.id === "financial-services" &&
-        (event.key === "Enter" || event.key === " ")
-      ) {
-        event.preventDefault();
-        onSelectService?.(service);
-      }
-    }}
+  }
+}}
   >
     
 <span className="indipay-detail-service-icon">

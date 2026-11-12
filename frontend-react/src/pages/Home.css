@@ -6187,3 +6187,218 @@
 .indipay-category-grid:active {
   cursor: grabbing;
 }
+
+/* Keep WhatsApp above the bottom navigation */
+.whatsapp-float {
+  bottom: 90px;
+}
+
+@media (max-width: 600px) {
+  .whatsapp-float {
+    bottom: 90px;
+  }
+}
+/* =========================================
+   HOME DASHBOARD - NAVY & ORANGE THEME
+========================================= */
+
+.indipay-app-home {
+  --app-navy: #101D36;
+  --app-orange: #F28C28;
+  --app-orange-dark: #D87517;
+  --app-bg: #FFF8F0;
+  --app-muted: #69758A;
+
+  background: var(--app-bg);
+  color: var(--app-navy);
+}
+
+/* TOP HEADER */
+.indipay-app-home .indipay-app-header {
+  background: linear-gradient(110deg, #101D36, #172B4B);
+  color: #FFFFFF;
+  box-shadow: 0 5px 18px rgba(16, 29, 54, .15);
+}
+
+/* ACCOUNT CARDS */
+.indipay-app-home .indipay-account-card {
+  background: linear-gradient(125deg, #101D36, #1D3557);
+  color: #FFFFFF;
+  box-shadow: 0 8px 22px rgba(16, 29, 54, .16);
+}
+
+.indipay-app-home .indipay-account-card.account-card-2 {
+  background: linear-gradient(125deg, #172B4B, #101D36);
+}
+
+.indipay-app-home .indipay-account-card.account-card-3 {
+  background: linear-gradient(125deg, #F28C28, #D87517);
+  color: #101D36;
+}
+
+/* ACCOUNT CARD LINKS */
+.indipay-app-home .indipay-account-card-links {
+  background: rgba(255,255,255,.08);
+}
+
+.indipay-app-home .indipay-account-card-links button {
+  color: #FFFFFF;
+}
+
+.indipay-app-home .indipay-account-card-links button:hover {
+  color: #F28C28;
+}
+
+/* QUICK ACTIONS */
+.indipay-app-home .indipay-quick-action {
+  border-color: #E8DCCF;
+  background: #FFFFFF;
+  color: #101D36;
+}
+
+.indipay-app-home .indipay-quick-action span {
+  color: #D87517;
+}
+
+/* MINI BANNERS */
+.indipay-app-home .indipay-mini-banner {
+  border-color: #E8DCCF;
+  background: #FFFFFF;
+}
+
+.indipay-app-home .indipay-mini-banner-icon {
+  background: #101D36;
+  color: #F28C28;
+}
+
+.indipay-app-home .indipay-mini-banner small {
+  color: #D87517;
+}
+
+/* SERVICE CATEGORY SECTION */
+.indipay-app-home .indipay-service-hub {
+  background: #FFFFFF;
+  border-color: #E8DCCF;
+}
+
+.indipay-app-home .indipay-category-tile {
+  background: #F7F8FA;
+  border-color: #E4E8EF;
+  color: #101D36;
+}
+
+.indipay-app-home .indipay-category-tile:hover,
+.indipay-app-home .indipay-category-tile.selected {
+  background: #FFF2E3;
+  border-color: #F28C28;
+}
+
+.indipay-app-home .indipay-category-tile-icon {
+  background: #101D36;
+  color: #F28C28;
+}
+
+/* SELECTED CATEGORY */
+.indipay-app-home .indipay-selected-category {
+  background: #FFFFFF;
+  border-color: #E8DCCF;
+}
+
+.indipay-app-home .indipay-selected-service {
+  background: #F7F8FA;
+  border-color: #E8DCCF;
+  color: #101D36;
+}
+
+.indipay-app-home .indipay-selected-service:hover {
+  border-color: #F28C28;
+  background: #FFF2E3;
+}
+
+.indipay-app-home .indipay-selected-service > span {
+  background: #101D36;
+  color: #FFFFFF;
+}
+
+/* BOTTOM NAVIGATION */
+.indipay-app-home .indipay-bottom-nav {
+  background: rgba(255,255,255,.98);
+  border-top: 1px solid #E8DCCF;
+}
+
+.indipay-app-home .indipay-bottom-nav button.active {
+  color: #D87517;
+  background: #FFF2E3;
+}
+
+/* DRAWER */
+.indipay-app-home .indipay-app-drawer {
+  background: #FFFFFF;
+}
+
+.indipay-app-home .indipay-app-drawer button:hover {
+  background: #FFF2E3;
+  color: #D87517;
+}
+
+/* PROFILE PANEL */
+.indipay-app-home .indipay-profile-sheet-heading > span {
+  background: #FFF2E3;
+  color: #D87517;
+}
+
+.indipay-app-home .indipay-profile-sheet > button:hover {
+  background: #FFF8F0;
+}
+
+/* SECTION LABELS AND LINKS */
+.indipay-app-home .indipay-section-heading span,
+.indipay-app-home .indipay-selected-category-heading span {
+  color: #D87517;
+}
+
+.indipay-app-home .indipay-section-heading > button {
+  color: #D87517;
+}
+
+.indipay-app-home .indipay-section-heading > button:hover {
+  color: #101D36;
+}
+/* Smaller, lighter category labels */
+.indipay-app-home .indipay-category-tile strong {
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 1.3;
+}
+
+@media (max-width: 380px) {
+  .indipay-app-home .indipay-category-tile strong {
+    font-size: 9px;
+    font-weight: 400;
+  }
+}
+/* Compact service category cards */
+.indipay-app-home .indipay-category-tile {
+  min-height: 65px;
+  height: 65px;
+  padding: 8px 6px;
+  border-radius: 11px;
+  gap: 4px;
+}
+
+/* Keep mobile cards compact */
+@media (max-width: 760px) {
+  .indipay-app-home .indipay-category-grid {
+    display: flex;
+    gap: 9px;
+    overflow-x: auto;
+  }
+
+  .indipay-app-home .indipay-category-tile {
+    flex: 0 0 110px;
+    width: 110px;
+    min-width: 110px;
+    min-height: 65px;
+    height: 65px;
+  }
+}

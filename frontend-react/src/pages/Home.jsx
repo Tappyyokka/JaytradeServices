@@ -10,6 +10,7 @@ import {
   BadgeCheck, Receipt, FileCheck, Globe
 } from "lucide-react";
 import "./Home.css";
+import BottomNav from "../components/common/BottomNav";
 
 const serviceCategories = [
   {
@@ -85,7 +86,6 @@ const serviceCategories = [
     background: "jobs.jpg",
     services: [
       { name: "Udyog Registration", icon: FileCheck },
-      { name: "Basic Registration", icon: FileText },
       { name: "Udyog Plus Registration", icon: BadgeCheck },
       { name: "Standard Registration", icon: FileCheck },
       { name: "Corporate Plus", icon: Building2 },
@@ -108,9 +108,14 @@ const serviceCategories = [
 function Home({
   onBack,
   onOpenServices,
+  customer,
+  onLogout,
   onOpenAnnouncements,
   onOpenApplicationStatus,
   onSelectService,
+  onOpenJobs,
+  onOpenTimes,
+  onOpenAboutUs,
   onLogin,
   onRegister,
 }) {
@@ -121,22 +126,14 @@ function Home({
   const [balanceVisible, setBalanceVisible] = useState(false);
   const [activeAccount, setActiveAccount] = useState(0);
 
-  const bottomItems = [
-    { label: "Me", icon: UserRound },
-    { label: "My Customers", icon: Users },
-    { label: "Rewards", icon: Gift },
-    { label: "Learn & Earn", icon: BookOpen },
-    { label: "Contact Us", icon: Headset },
-  ];
-
   const accountCards = [
     {
-      eyebrow: "MY INDIPAY ACCOUNT",
-      title: "Indipay Account",
-      number: "•••• •••• 5397",
-      detail: "Your account at a glance",
-      action: "Wallet Balance",
-    },
+    eyebrow: "MY INDIPAY ACCOUNT",
+    title: customer?.name || "My Account",
+    number: customer?.accountId || "Sign in to view",
+    detail: "Your personal Indipay Account ID",
+    action: "Wallet Balance",
+},
     {
       eyebrow: "MY APPLICATIONS",
       title: "Track your requests",
@@ -181,11 +178,14 @@ function Home({
 };
 
   const handleBottomTab = (label) => {
-    setActiveTab(label);
-    if (label === "Me") {
-      setProfileOpen(true);
-    }
-  };
+  setActiveTab(label);
+
+  if (label === "Me") {
+    setProfileOpen(true);
+  } else if (label === "About Us") {
+    onOpenAboutUs?.();
+  }
+};
 
   return (
     <div className="indipay-home indipay-app-home" id="home">
@@ -214,13 +214,19 @@ function Home({
           <Bell size={21} />
         </button>
         <button
-          className="indipay-header-icon"
-          type="button"
-          aria-label="Login"
-          onClick={onLogin}
-        >
-          <LogOut size={22} />
-        </button>
+  className="indipay-header-icon"
+  type="button"
+  aria-label={customer ? "My Profile" : "Login"}
+  onClick={() => {
+    if (customer) {
+      setProfileOpen(true);
+    } else {
+      onLogin?.();
+    }
+  }}
+>
+  {customer ? <UserRound size={22} /> : <LogOut size={22} />}
+</button>
       </header>
 
       {menuOpen && (
@@ -231,8 +237,39 @@ function Home({
             <button onClick={() => { setMenuOpen(false); onOpenServices?.(); }}><Wallet size={18} /> All Services</button>
             <button onClick={() => { setMenuOpen(false); onOpenApplicationStatus?.(); }}><ClipboardList size={18} /> My Applications</button>
             <button onClick={() => { setMenuOpen(false); onOpenAnnouncements?.(); }}><Bell size={18} /> Notifications</button>
-            <button onClick={() => { setMenuOpen(false); onLogin?.(); }}><LogOut size={18} /> Login</button>
-            <button onClick={() => { setMenuOpen(false); onRegister?.(); }}><UserRound size={18} /> Create Account</button>
+            {customer ? (
+  <>
+    <button onClick={() => {
+      setMenuOpen(false);
+      setProfileOpen(true);
+    }}>
+      <UserRound size={18} /> My Profile
+    </button>
+
+    <button onClick={() => {
+      setMenuOpen(false);
+      onLogout?.();
+    }}>
+      <LogOut size={18} /> Logout
+    </button>
+  </>
+) : (
+  <>
+    <button onClick={() => {
+      setMenuOpen(false);
+      onLogin?.();
+    }}>
+      <LogOut size={18} /> Login
+    </button>
+
+    <button onClick={() => {
+      setMenuOpen(false);
+      onRegister?.();
+    }}>
+      <UserRound size={18} /> Create Account
+    </button>
+  </>
+)}
           </nav>
         </div>
       )}
@@ -357,7 +394,17 @@ return (
       <button
         className="indipay-selected-service"
         key={service.name}
-        onClick={() => onSelectService?.(service)}
+        onClick={() => {
+  if (selectedCategory.title === "Jaytrade Jobs") {
+    onOpenJobs?.();
+  } else if (
+    selectedCategory.title === "Jaytrade Times & Technologies"
+  ) {
+    onOpenTimes?.();
+  } else {
+    onSelectService?.(service);
+  }
+}}
       >
         <span>
           {service.image ? (
@@ -389,35 +436,74 @@ return (
 
       {profileOpen && (
         <div className="indipay-profile-overlay" onClick={() => setProfileOpen(false)}>
-          <section className="indipay-profile-sheet" onClick={(event) => event.stopPropagation()}>
-            <div className="indipay-profile-sheet-handle" />
-            <div className="indipay-profile-sheet-heading">
-              <span><UserRound size={25} /></span>
-              <div><strong>Welcome to Indipay</strong><small>Sign in to access your account</small></div>
-              <button onClick={() => setProfileOpen(false)} aria-label="Close profile"><X size={20} /></button>
-            </div>
-            <button onClick={() => { setProfileOpen(false); onLogin?.(); }}><LogOut size={18} /> Login <ChevronRight size={17} /></button>
-            <button onClick={() => { setProfileOpen(false); onRegister?.(); }}><UserRound size={18} /> Create Account <ChevronRight size={17} /></button>
-            <button onClick={() => { setProfileOpen(false); setActiveTab("My Profile"); }}><Settings size={18} /> My Profile <ChevronRight size={17} /></button>
-          </section>
+          <section
+  className="indipay-profile-sheet"
+  onClick={(event) => event.stopPropagation()}
+>
+  <div className="indipay-profile-sheet-handle" />
+
+  <div className="indipay-profile-sheet-heading">
+    <span><UserRound size={25} /></span>
+
+    <div>
+      <strong>
+        {customer ? `Welcome, ${customer.name}` : "Welcome to Indipay"}
+      </strong>
+      <small>
+        {customer ? "Your Indipay account" : "Sign in to access your account"}
+      </small>
+    </div>
+
+    <button
+      onClick={() => setProfileOpen(false)}
+      aria-label="Close profile"
+    >
+      <X size={20} />
+    </button>
+  </div>
+
+  {customer ? (
+    <>
+      <div className="indipay-profile-details">
+        <p><strong>Account ID:</strong> {customer.accountId}</p>
+        <p><strong>Email:</strong> {customer.email}</p>
+        <p><strong>Mobile:</strong> {customer.phone}</p>
+      </div>
+
+      <button
+        onClick={() => {
+          setProfileOpen(false);
+          onLogout?.();
+        }}
+      >
+        <LogOut size={18} /> Logout <ChevronRight size={17} />
+      </button>
+    </>
+  ) : (
+    <>
+      <button onClick={() => {
+        setProfileOpen(false);
+        onLogin?.();
+      }}>
+        <LogOut size={18} /> Login <ChevronRight size={17} />
+      </button>
+
+      <button onClick={() => {
+        setProfileOpen(false);
+        onRegister?.();
+      }}>
+        <UserRound size={18} /> Create Account <ChevronRight size={17} />
+      </button>
+    </>
+  )}
+</section>
         </div>
       )}
 
-      <nav className="indipay-bottom-nav" aria-label="Main navigation">
-        {bottomItems.map((item) => {
-          const Icon = item.icon;
-          return (
-            <button
-              key={item.label}
-              className={activeTab === item.label ? "active" : ""}
-              onClick={() => handleBottomTab(item.label)}
-            >
-              <Icon size={20} strokeWidth={1.9} />
-              <span>{item.label}</span>
-            </button>
-          );
-        })}
-      </nav>
+      <BottomNav
+  activeTab={activeTab}
+  onNavigate={handleBottomTab}
+/>
     </div>
   );
 }

@@ -30,12 +30,41 @@ function Login({ onBack, onRegister, onSuccess  }) {
     }));
   };
 
-  const handleSubmit = (event) => {
-  event.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setMessage("");
 
-  if (onSuccess) {
-    onSuccess();
-  }
+    try {
+        const response = await fetch(
+            "http://localhost:5000/api/auth/login",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                credentials: "include",
+                body: JSON.stringify({
+                    email: formData.email,
+                    password: formData.password,
+                }),
+            }
+        );
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+            setMessage(result.message || "Login failed.");
+            return;
+        }
+
+        if (onSuccess) {
+            onSuccess(result.user);
+        }
+
+    } catch (error) {
+        console.error("Login error:", error);
+        setMessage("Unable to connect to the server. Please try again.");
+    }
 };
 
   return (
