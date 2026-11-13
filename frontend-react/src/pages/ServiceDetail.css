@@ -1934,3 +1934,26 @@
     padding: 8px;
   }
 }
+
+/* SQUARE STORYBOARD - SECURED BUSINESS LOAN */
+
+.indipay-simple-storyboard-slider.secured-storyboard {
+  width: min(850px, 100%);
+  aspect-ratio: 1 / 1;
+  height: auto;
+}
+
+.indipay-simple-storyboard-slider.secured-storyboard > img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .indipay-simple-storyboard-slider.secured-storyboard {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    height: auto;
+  }
+}

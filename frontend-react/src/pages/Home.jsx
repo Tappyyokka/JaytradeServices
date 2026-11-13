@@ -115,6 +115,7 @@ function Home({
   onSelectService,
   onOpenJobs,
   onOpenTimes,
+  onOpenBusinessDevelopment,
   onOpenAboutUs,
   onLogin,
   onRegister,
@@ -399,11 +400,15 @@ return (
     onOpenJobs?.();
   } else if (
     selectedCategory.title === "Jaytrade Times & Technologies"
-  ) {
+) {
     onOpenTimes?.();
-  } else {
+} else if (
+    selectedCategory.title === "Business Development"
+) {
+    onOpenBusinessDevelopment?.();
+} else {
     onSelectService?.(service);
-  }
+}
 }}
       >
         <span>

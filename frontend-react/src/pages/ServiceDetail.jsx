@@ -607,55 +607,20 @@ const handleBottomTab = (label) => {
           </div>
 
           {storyboardSlides.length > 0 ? (
-            <div className="indipay-simple-storyboard-slider">
+            <div
+  className={`indipay-simple-storyboard-slider ${
+    service?.name === "Business Loan – Secured"
+      ? "secured-storyboard"
+      : ""
+  }`}
+>
 
               <img
                 src={storyboardSlides[activeStoryboard].image}
                 alt={storyboardSlides[activeStoryboard].alt}
               />
 
-              {storyboardSlides.length > 1 && (
-                <>
-                  <button
-                    type="button"
-                    className="indipay-simple-storyboard-arrow prev"
-                    aria-label="Previous banner"
-                    onClick={() =>
-                      setActiveStoryboard(
-                        (activeStoryboard - 1 + storyboardSlides.length) %
-                        storyboardSlides.length
-                      )
-                    }
-                  >
-                    <ArrowLeft size={20} />
-                  </button>
-
-                  <button
-                    type="button"
-                    className="indipay-simple-storyboard-arrow next"
-                    aria-label="Next banner"
-                    onClick={() =>
-                      setActiveStoryboard(
-                        (activeStoryboard + 1) % storyboardSlides.length
-                      )
-                    }
-                  >
-                    <ArrowRight size={20} />
-                  </button>
-
-                  <div className="indipay-simple-storyboard-dots">
-                    {storyboardSlides.map((slide, index) => (
-                      <button
-                        key={index}
-                        type="button"
-                        aria-label={`Go to banner ${index + 1}`}
-                        className={activeStoryboard === index ? "active" : ""}
-                        onClick={() => setActiveStoryboard(index)}
-                      />
-                    ))}
-                  </div>
-                </>
-              )}
+              
             </div>
           ) : (
             <div className="indipay-simple-storyboard-placeholder">

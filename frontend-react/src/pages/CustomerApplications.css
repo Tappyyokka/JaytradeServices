@@ -1,0 +1,312 @@
+
+.customer-applications-page {
+  min-height: 75vh;
+  background: #f5f7fb;
+  padding: 35px 20px 70px;
+  color: #172b4d;
+}
+
+.customer-applications-container {
+  max-width: 1100px;
+  margin: auto;
+}
+
+.customer-applications-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 0;
+  background: transparent;
+  color: #1769e0;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 28px;
+}
+
+.customer-applications-heading > span {
+  color: #1769e0;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+
+.customer-applications-heading h1 {
+  font-size: clamp(26px, 4vw, 36px);
+  margin: 8px 0;
+}
+
+.customer-applications-heading p {
+  color: #718096;
+  margin: 0;
+}
+
+.customer-applications-list {
+  background: white;
+  border: 1px solid #e7ebf2;
+  border-radius: 16px;
+  padding: 25px;
+  margin-top: 30px;
+}
+
+.customer-applications-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 24px;
+}
+
+.customer-applications-toolbar h2 {
+  font-size: 19px;
+  margin: 0;
+}
+
+.customer-applications-toolbar button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 14px;
+  border: 1px solid #dfe5ef;
+  border-radius: 8px;
+  background: white;
+  color: #1769e0;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.customer-applications-toolbar button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.customer-applications-cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.customer-application-card {
+  border: 1px solid #e7ebf2;
+  border-radius: 13px;
+  padding: 21px;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.customer-application-card:hover {
+  box-shadow: 0 8px 25px rgba(20, 50, 90, 0.08);
+  transform: translateY(-2px);
+}
+
+.customer-application-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.customer-application-icon {
+  width: 43px;
+  height: 43px;
+  display: grid;
+  place-items: center;
+  border-radius: 11px;
+  background: #edf4ff;
+  color: #1769e0;
+}
+
+.customer-application-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.customer-application-card h3 {
+  margin: 18px 0 6px;
+  font-size: 18px;
+}
+
+.customer-application-id {
+  color: #718096;
+  font-size: 12px;
+  margin: 0 0 20px;
+}
+
+.customer-application-meta,
+.customer-application-sync {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 11px 0;
+  border-top: 1px solid #edf0f5;
+  font-size: 13px;
+}
+
+.customer-application-meta span,
+.customer-application-sync span {
+  color: #718096;
+}
+
+.customer-application-meta strong,
+.customer-application-sync strong {
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+.customer-application-sync strong {
+  color: #1769e0;
+}
+
+.customer-applications-empty {
+  text-align: center;
+  padding: 55px 15px;
+  color: #718096;
+}
+
+.customer-applications-empty h3 {
+  color: #172b4d;
+  margin-bottom: 5px;
+}
+
+.customer-applications-empty button {
+  margin-top: 10px;
+  padding: 9px 16px;
+  border: 0;
+  border-radius: 8px;
+  background: #1769e0;
+  color: white;
+  cursor: pointer;
+}
+
+@media (max-width: 650px) {
+  .customer-applications-list {
+    padding: 17px;
+  }
+
+  .customer-applications-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .customer-applications-toolbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .customer-application-card {
+    padding: 17px;
+  }
+}
+
+
+/* JAYTRADE LIVE APPLICATION TRACKING */
+
+.customer-jaytrade-tracking {
+  margin-top: 20px;
+  padding: 18px;
+  border-radius: 14px;
+  background: #f5f7fb;
+  border: 1px solid #e4e9f1;
+}
+
+.customer-jaytrade-heading {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: #172b4d;
+  margin-bottom: 16px;
+}
+
+.customer-jaytrade-heading h4 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.customer-jaytrade-detail,
+.customer-jaytrade-employee-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid #e1e6ee;
+  font-size: 13px;
+}
+
+.customer-jaytrade-detail span,
+.customer-jaytrade-employee-info span {
+  color: #6b7280;
+}
+
+.customer-jaytrade-detail strong,
+.customer-jaytrade-employee-info strong {
+  color: #172b4d;
+  text-align: right;
+}
+
+.customer-jaytrade-employee {
+  margin-top: 16px;
+  padding: 15px;
+  background: #ffffff;
+  border: 1px solid #e4e9f1;
+  border-radius: 11px;
+}
+
+.customer-jaytrade-employee-heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #172b4d;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.customer-jaytrade-employee-info a {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #e87920;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.customer-jaytrade-waiting {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  color: #b66b18;
+}
+
+.customer-jaytrade-waiting strong {
+  display: block;
+  font-size: 13px;
+  margin-bottom: 5px;
+}
+
+.customer-jaytrade-waiting p,
+.customer-jaytrade-message {
+  margin: 0;
+  color: #6b7280;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+@media (max-width: 480px) {
+  .customer-jaytrade-tracking {
+    padding: 14px;
+  }
+
+  .customer-jaytrade-detail,
+  .customer-jaytrade-employee-info {
+    align-items: flex-start;
+    font-size: 12px;
+  }
+
+  .customer-jaytrade-detail strong,
+  .customer-jaytrade-employee-info strong {
+    max-width: 60%;
+  }
+}

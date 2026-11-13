@@ -11,18 +11,18 @@ import {
 import { serviceOptions } from "../data/serviceOptions";
 import "./ApplicationForm.css";
 
-function ApplicationForm({ initialService, onBack }) {
+function ApplicationForm({ initialService, onApplicationSubmitted, onBack, customer }) {
   const [formData, setFormData] = useState({
-    fullName: "",
-    mobile: "",
-    email: "",
+    fullName: customer?.name || "",
+    mobile: customer?.phone || "",
+    email: customer?.email || "",
     service: initialService || "",
     address: "",
     district: "",
     state: "",
     pincode: "",
     remarks: "",
-  });
+});
 
   const [files, setFiles] = useState([]);
   const [message, setMessage] = useState("");
@@ -44,15 +44,16 @@ const handleSubmit = async (event) => {
 
     try {
         const response = await fetch(
-            "http://localhost:5000/api/applications",
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(formData),
-            }
-        );
+    "http://localhost:5000/api/applications",
+    {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(formData),
+    }
+);
 
         const result = await response.json();
 
@@ -63,8 +64,12 @@ const handleSubmit = async (event) => {
         }
 
         setMessage(
-            `Application submitted successfully! Reference: ${result.applicationId}`
-        );
+  `Application submitted successfully! Reference: ${result.applicationId}`
+);
+
+setTimeout(() => {
+  onApplicationSubmitted?.();
+}, 1200);
 
     } catch (error) {
         console.error(error);

@@ -34,7 +34,9 @@ function ApplicationStatus({ onBack }) {
       setLoading(true);
       setError("");
 
-      const response = await fetch(API_URL);
+      const response = await fetch(API_URL, {
+    credentials: "include",
+});
       const result = await response.json();
 
       if (!response.ok || !result.success) {
@@ -71,6 +73,7 @@ function ApplicationStatus({ onBack }) {
           headers: {
             "Content-Type": "application/json",
           },
+           credentials: "include",
           body: JSON.stringify({ status }),
         }
       );

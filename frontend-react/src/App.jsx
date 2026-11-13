@@ -12,11 +12,14 @@ import ServicesOverview from "./components/index/ServicesOverview";
 import WhyChooseUs from "./components/index/WhyChooseUs";
 import HowItWorks from "./components/index/HowItWorks";
 import AuthBanner from "./components/index/AuthBanner";
+import Chatbot from "./components/common/Chatbot";
 import Announcements from "./pages/Announcements";
 import ApplicationForm from "./pages/ApplicationForm";
 import ApplicationStatus from "./pages/ApplicationStatus";
+import CustomerApplications from "./pages/CustomerApplications";
 import Jobs from "./pages/Jobs";
 import Times from "./pages/Times";
+import BusinessDevelopment from "./pages/BusinessDevelopment";
 import AboutUs from "./pages/AboutUs";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -130,6 +133,15 @@ const handleOpenTimes = () => {
       />
     );
 
+ } else if (currentPage === "customer-applications") {
+    pageContent = (
+      <CustomerApplications
+        onBack={() => {
+          setCurrentPage("home");
+          window.scrollTo(0, 0);
+        }}
+      />
+    );   
       } else if (currentPage === "application-status") {
     pageContent = (
       <ApplicationStatus
@@ -147,6 +159,12 @@ const handleOpenTimes = () => {
   setCurrentPage(applicationReturnPage);
   window.scrollTo(0, 0);
 }}
+onApplicationSubmitted={() => {
+  setCurrentPage("customer-applications");
+  window.scrollTo(0, 0);
+}}
+  customer={customer}
+
       />
       
     );
@@ -203,9 +221,14 @@ const handleOpenTimes = () => {
   }}
   onSelectService={handleSelectService}
   onOpenApplicationStatus={() => {
+  if (customer?.role === "ADMIN") {
     setCurrentPage("application-status");
-    window.scrollTo(0, 0);
-  }}
+  } else {
+    setCurrentPage("customer-applications");
+  }
+
+  window.scrollTo(0, 0);
+}}
   onLogin={() => {
     setCurrentPage("login");
     window.scrollTo(0, 0);
@@ -257,9 +280,19 @@ onOpenAboutUs={handleOpenAboutUs}
       }}
       onSelectService={handleSelectService}
       onOpenApplicationStatus={() => {
+    if (customer?.role === "ADMIN") {
         setCurrentPage("application-status");
-        window.scrollTo(0, 0);
-      }}
+    } else {
+        setCurrentPage("customer-applications");
+    }
+
+    window.scrollTo(0, 0);
+}}
+
+onOpenBusinessDevelopment={() => {
+    setCurrentPage("business-development");
+    window.scrollTo(0, 0);
+}}
       onLogin={() => {
         setCurrentPage("login");
         window.scrollTo(0, 0);
@@ -274,7 +307,24 @@ onOpenAboutUs={handleOpenAboutUs}
     />
   );
   
-} 
+}
+
+else if (currentPage === "business-development") {
+  pageContent = (
+    <BusinessDevelopment
+      onBack={() => {
+        setCurrentPage("home");
+        window.scrollTo(0, 0);
+      }}
+      onSelectPackage={handleApplyNow}
+      onLogin={() => {
+        setCurrentPage("login");
+        window.scrollTo(0, 0);
+      }}
+      onOpenAboutUs={handleOpenAboutUs}
+    />
+  );
+}
 else if (currentPage === "times") {
   pageContent = (
     <Times
@@ -292,6 +342,7 @@ onOpenAboutUs={handleOpenAboutUs}
   );
 }
 
+
 else if (currentPage === "about-us") {
   pageContent = (
     <AboutUs
@@ -299,9 +350,34 @@ else if (currentPage === "about-us") {
         setCurrentPage("home");
         window.scrollTo(0, 0);
       }}
+      onOpenServices={() => {
+        setCurrentPage("services");
+        window.scrollTo(0, 0);
+      }}
+      onOpenApplicationStatus={() => {
+        if (customer?.role === "ADMIN") {
+          setCurrentPage("application-status");
+        } else {
+          setCurrentPage("customer-applications");
+        }
+        window.scrollTo(0, 0);
+      }}
+      onOpenAnnouncements={() => {
+        setCurrentPage("announcements");
+        window.scrollTo(0, 0);
+      }}
+      onLogin={() => {
+        setCurrentPage("login");
+        window.scrollTo(0, 0);
+      }}
+      onRegister={() => {
+        setCurrentPage("register");
+        window.scrollTo(0, 0);
+      }}
     />
   );
 }
+
 else {
     pageContent = (
       <>
@@ -365,6 +441,37 @@ return (
   <>
     {pageContent}
 
+    {["home", "services", "service-detail"].includes(currentPage) && (
+      <Chatbot
+        customer={customer}
+        currentService={
+          currentPage === "service-detail" ? selectedService : null
+        }
+        onOpenApplications={() => {
+          if (customer?.role === "ADMIN") {
+            setCurrentPage("application-status");
+          } else {
+            setCurrentPage("customer-applications");
+          }
+          window.scrollTo(0, 0);
+        }}
+        onLogin={() => {
+          setCurrentPage("login");
+          window.scrollTo(0, 0);
+        }}
+        onOpenCategory={(categoryId) => {
+  setCurrentPage("services");
+
+  setTimeout(() => {
+    document.getElementById(categoryId)?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  }, 200);
+}}
+      />
+    )}
+
     {!isAuthPage && (
       <>
         {currentPage !== "home" &&
@@ -372,6 +479,8 @@ return (
  currentPage !== "services" &&
  currentPage !== "times" && 
  currentPage !== "about-us" &&
+ currentPage !== "customer-applications" &&
+ currentPage !== "business-development" &&
  currentPage !== "jobs" && (
   <Footer onSelectService={handleSelectService} />
 )}
