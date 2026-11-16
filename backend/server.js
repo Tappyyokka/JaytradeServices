@@ -233,13 +233,27 @@ if (application.userId !== req.user.id) {
             },
         });
 
-        const result = await response.json();
+        const responseText = await response.text();
 
-        if (!response.ok || !result.success) {
-            throw new Error(
-                result.error || "Could not retrieve Jaytrade status."
-            );
-        }
+console.log("Jaytrade HTTP status:", response.status);
+console.log("Jaytrade Content-Type:", response.headers.get("content-type"));
+console.log("Jaytrade raw response:", responseText);
+
+let result;
+
+try {
+    result = JSON.parse(responseText);
+} catch (parseError) {
+    throw new Error(
+        `Jaytrade returned invalid JSON. HTTP ${response.status}`
+    );
+}
+
+if (!response.ok || !result.success) {
+    throw new Error(
+        result.error || result.message || "Could not retrieve Jaytrade status."
+    );
+}
 
         // 4. Return application and employee details
         return res.json({

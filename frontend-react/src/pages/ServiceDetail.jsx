@@ -609,10 +609,8 @@ const handleBottomTab = (label) => {
           {storyboardSlides.length > 0 ? (
             <div
   className={`indipay-simple-storyboard-slider ${
-    service?.name === "Business Loan – Secured"
-      ? "secured-storyboard"
-      : ""
-  }`}
+  financialServices[service?.name] ? "financial-storyboard" : ""
+}`}
 >
 
               <img
