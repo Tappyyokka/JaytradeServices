@@ -68,11 +68,12 @@ function Register({ onBack, onLogin, onSuccess }) {
                 },
                 credentials: "include",
                 body: JSON.stringify({
-                    fullName: formData.fullName,
-                    mobile: formData.mobile,
-                    email: formData.email,
-                    password: formData.password,
-                }),
+  fullName: formData.fullName,
+  mobile: formData.mobile,
+  email: formData.email,
+  password: formData.password,
+  referralCode: localStorage.getItem("indipay_referral_code") || "",
+}),
             }
         );
 
@@ -83,9 +84,12 @@ function Register({ onBack, onLogin, onSuccess }) {
             return;
         }
 
-        if (onSuccess) {
-            onSuccess(result.user);
-        }
+        // Clear the saved referral code after successful registration
+localStorage.removeItem("indipay_referral_code");
+
+if (onSuccess) {
+  onSuccess(result.user);
+}
 
     } catch (error) {
         console.error("Registration error:", error);

@@ -1,21 +1,21 @@
 
 import {
   UserRound,
-  Users,
   Gift,
   BookOpen,
   Headset,
+  Users,
 } from "lucide-react";
 
-function BottomNav({ activeTab, onNavigate }) {
-  const bottomItems = [
-    { label: "Me", icon: UserRound },
-    { label: "My Customers", icon: Users },
-    { label: "Rewards", icon: Gift },
-    { label: "Learn & Earn", icon: BookOpen },
-    { label: "About Us", icon: Headset },
-  ];
+const bottomItems = [
+  { label: "Me", icon: UserRound, page: "me" },
+  { label: "Refer", icon: Users, page: "refer" },
+  { label: "Rewards", icon: Gift, page: "rewards" },
+  { label: "Learn & Earn", icon: BookOpen, page: "learn-earn" },
+  { label: "About Us", icon: Headset, page: "about-us" },
+];
 
+function BottomNav({ activeTab, onNavigate }) {
   return (
     <nav className="indipay-bottom-nav" aria-label="Main navigation">
       {bottomItems.map((item) => {
@@ -24,8 +24,9 @@ function BottomNav({ activeTab, onNavigate }) {
         return (
           <button
             key={item.label}
+            type="button"
             className={activeTab === item.label ? "active" : ""}
-            onClick={() => onNavigate?.(item.label)}
+            onClick={() => onNavigate?.(item.page)}
           >
             <Icon size={20} strokeWidth={1.9} />
             <span>{item.label}</span>

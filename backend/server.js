@@ -4,11 +4,32 @@ const cors = require("cors");
 require("dotenv").config();
 
 const prisma = require("./src/config/prisma");
+const cookieParser = require("cookie-parser");
+const authRoutes = require("./routes/auth");
+const authenticateCustomer = authRoutes.authenticateCustomer;
+const chatbotRoutes = require("./routes/chatbot");
+function requireAdmin(req, res, next) {
+    if (req.user?.role !== "ADMIN") {
+        return res.status(403).json({
+            success: false,
+            message: "Access denied. Admin privileges required.",
+        });
+    }
+
+    next();
+}
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+    origin: "http://localhost:5173",
+    credentials: true
+}));
+
 app.use(express.json());
+app.use(cookieParser());
+app.use("/api/auth", authRoutes);
+app.use("/api/chatbot", chatbotRoutes);
 
 // Test route
 app.get("/", (req, res) => {
@@ -35,7 +56,7 @@ app.get("/api/db-test", async (req, res) => {
 });
 
 // CREATE APPLICATION + FORWARD TO JAYTRADE
-app.post("/api/applications", async (req, res) => {
+app.post("/api/applications", authenticateCustomer, async (req, res) => {
     try {
         const {
             fullName,
@@ -70,8 +91,9 @@ app.post("/api/applications", async (req, res) => {
         // 1. Save application in Indipay PostgreSQL
         const application = await prisma.application.create({
             data: {
-                applicationId,
-                fullName,
+    applicationId,
+    userId: req.user.id,
+    fullName,
                 mobile,
                 email,
                 service,
@@ -163,8 +185,114 @@ app.post("/api/applications", async (req, res) => {
     }
 });
 
+
+// GET APPLICATION STATUS FROM JAYTRADE
+app.get(
+    "/api/applications/:applicationId/jaytrade-status",
+    authenticateCustomer,
+    async (req, res) => {
+    try {
+        const { applicationId } = req.params;
+
+        // 1. Find the application in Indipay database
+        const application = await prisma.application.findUnique({
+            where: { applicationId },
+        });
+
+        if (!application) {
+            return res.status(404).json({
+                success: false,
+                message: "Application not found.",
+            });
+        }
+        // Make sure this application belongs to the logged-in customer
+if (application.userId !== req.user.id) {
+    return res.status(403).json({
+        success: false,
+        message: "You are not authorized to view this application.",
+    });
+}
+
+        // 2. Check whether the application was synced to Jaytrade
+        if (application.leadSyncStatus !== "SYNCED") {
+            return res.json({
+                success: true,
+                synced: false,
+                message: "Your application has not yet been transferred to Jaytrade.",
+            });
+        }
+
+        // 3. Request the latest status from Jaytrade
+        const jaytradeUrl =
+            `${process.env.JAYTRADE_STATUS_API_URL}/${encodeURIComponent(applicationId)}/status`;
+
+        const response = await fetch(jaytradeUrl, {
+            method: "GET",
+            headers: {
+                "X-API-Key": process.env.INDIPAY_API_KEY,
+            },
+        });
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+            throw new Error(
+                result.error || "Could not retrieve Jaytrade status."
+            );
+        }
+
+        // 4. Return application and employee details
+        return res.json({
+            success: true,
+            synced: true,
+            applicationId,
+            jaytrade: {
+                status: result.status,
+                customer_status: result.customer_status,
+                department: result.department,
+                assigned_employee: result.assigned_employee,
+            },
+        });
+
+    } catch (error) {
+        console.error("Jaytrade status lookup failed:", error.message);
+
+        return res.status(502).json({
+            success: false,
+            message: "Could not retrieve the latest application status.",
+        });
+    }
+});
+
+// GET LOGGED-IN CUSTOMER'S APPLICATIONS
+app.get("/api/my-applications", authenticateCustomer, async (req, res) => {
+    try {
+        const applications = await prisma.application.findMany({
+            where: {
+                userId: req.user.id,
+            },
+            orderBy: {
+                submittedAt: "desc",
+            },
+        });
+
+        return res.json({
+            success: true,
+            applications,
+        });
+
+    } catch (error) {
+        console.error("Could not retrieve customer applications:", error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Could not retrieve your applications.",
+        });
+    }
+});
+
 // GET ALL APPLICATIONS
-app.get("/api/applications", async (req, res) => {
+app.get("/api/applications", authenticateCustomer, requireAdmin, async (req, res) => {
     try {
         const applications = await prisma.application.findMany({
             orderBy: {
@@ -188,7 +316,7 @@ app.get("/api/applications", async (req, res) => {
 });
 
 // UPDATE APPLICATION STATUS
-app.patch("/api/applications/:applicationId/status", async (req, res) => {
+app.patch("/api/applications/:applicationId/status", authenticateCustomer, requireAdmin, async (req, res) => {
     try {
         const { status } = req.body;
 

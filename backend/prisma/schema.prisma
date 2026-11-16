@@ -1,3 +1,4 @@
+
 generator client {
   provider = "prisma-client-js"
   output   = "../generated/prisma"
@@ -8,19 +9,34 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  name      String
-  email     String   @unique
-  password  String
-  phone     String?  @unique
-  role      String   @default("CUSTOMER")
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id           String   @id @default(uuid())
+  accountId    String?  @unique @db.VarChar(12)
+  name         String
+  email        String   @unique
+  password     String
+  phone        String?  @unique
+  role         String   @default("CUSTOMER")
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  applications Application[]
+    // Referral system
+  referralCode String? @unique @db.VarChar(20)
+  referredById String?
+
+  referrer User?  @relation("UserReferrals", fields: [referredById], references: [id], onDelete: SetNull)
+  referrals User[] @relation("UserReferrals")
+
+  @@index([referredById])
 }
+
 model Application {
   id              String   @id @default(uuid())
   applicationId   String   @unique
+
+  userId          String?
+  user            User?    @relation(fields: [userId], references: [id], onDelete: Restrict)
 
   fullName        String
   mobile          String
@@ -38,4 +54,6 @@ model Application {
 
   leadId          String?
   leadSyncStatus  String   @default("PENDING")
+
+  @@index([userId])
 }

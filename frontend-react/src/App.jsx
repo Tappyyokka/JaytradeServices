@@ -16,7 +16,12 @@ import Chatbot from "./components/common/Chatbot";
 import Announcements from "./pages/Announcements";
 import ApplicationForm from "./pages/ApplicationForm";
 import ApplicationStatus from "./pages/ApplicationStatus";
+import BottomNav from "./components/common/BottomNav";
+import LearnAndEarn from "./pages/LearnAndEarn";
 import CustomerApplications from "./pages/CustomerApplications";
+import Wallet from "./pages/Wallet";
+import Rewards from "./pages/Rewards";
+import Refer from "./pages/Refer";
 import Jobs from "./pages/Jobs";
 import Times from "./pages/Times";
 import BusinessDevelopment from "./pages/BusinessDevelopment";
@@ -34,6 +39,41 @@ function App() {
   const [selectedService, setSelectedService] = useState(null);
   const [applicationReturnPage, setApplicationReturnPage] = useState("service-detail");
   const [timesReturnPage, setTimesReturnPage] = useState("home");
+
+  const handleBottomNavigation = (page) => {
+  if (page === "me") {
+    setCurrentPage(customer ? "home" : "login");
+  } else if (page === "refer") {
+    setCurrentPage(customer ? "refer" : "login");
+  } else {
+    setCurrentPage(page);
+  }
+
+  window.scrollTo(0, 0);
+};
+
+useEffect(() => {
+  const params = new URLSearchParams(window.location.search);
+  const referralCode = params.get("ref");
+
+  if (referralCode) {
+    localStorage.setItem(
+      "indipay_referral_code",
+      referralCode.toUpperCase()
+    );
+  }
+}, []);
+const pageToTab = {
+  home: "Me",
+  login: "Me",
+  refer: "Refer",
+  rewards: "Rewards",
+  times: "Learn & Earn",
+  "learn-earn": "Learn & Earn",
+  "about-us": "About Us",
+};
+
+const activeTab = pageToTab[currentPage] || "";
 
   useEffect(() => {
     const checkCustomerSession = async () => {
@@ -293,6 +333,10 @@ onOpenBusinessDevelopment={() => {
     setCurrentPage("business-development");
     window.scrollTo(0, 0);
 }}
+onOpenWallet={() => {
+  setCurrentPage("wallet");
+  window.scrollTo(0, 0);
+}}
       onLogin={() => {
         setCurrentPage("login");
         window.scrollTo(0, 0);
@@ -308,6 +352,63 @@ onOpenBusinessDevelopment={() => {
   );
   
 }
+else if (currentPage === "rewards") {
+  pageContent = (
+    <Rewards
+      customer={customer}
+      onBack={() => {
+        setCurrentPage("wallet");
+        window.scrollTo(0, 0);
+      }}
+    />
+  );
+}
+
+else if (currentPage === "wallet") {
+  pageContent = (
+    <Wallet
+      customer={customer}
+      onBack={() => {
+        setCurrentPage("home");
+        window.scrollTo(0, 0);
+      }}
+      onOpenServices={() => {
+        setCurrentPage("services");
+        window.scrollTo(0, 0);
+      }}
+      onOpenAnnouncements={() => {
+        setCurrentPage("announcements");
+        window.scrollTo(0, 0);
+      }}
+      onLogin={() => {
+        setCurrentPage("login");
+        window.scrollTo(0, 0);
+      }}
+      onOpenRewards={() => {
+  setCurrentPage("rewards");
+  window.scrollTo(0, 0);
+}}
+      onLogout={async () => {
+        try {
+          await fetch("http://localhost:5000/api/auth/logout", {
+            method: "POST",
+            credentials: "include",
+          });
+        } catch (error) {
+          console.error("Logout failed:", error);
+        }
+
+        setCustomer(null);
+        setCurrentPage("existing");
+        window.scrollTo(0, 0);
+      }}
+      onOpenProfile={() => {
+        setCurrentPage("home");
+        window.scrollTo(0, 0);
+      }}
+    />
+  );
+}
 
 else if (currentPage === "business-development") {
   pageContent = (
@@ -322,6 +423,20 @@ else if (currentPage === "business-development") {
         window.scrollTo(0, 0);
       }}
       onOpenAboutUs={handleOpenAboutUs}
+    />
+  );
+}
+
+else if (currentPage === "learn-earn") {
+  pageContent = (
+    <LearnAndEarn
+      customer={customer}
+      onBack={() => {
+        setCurrentPage("home");
+        window.scrollTo(0, 0);
+      }}
+      onSelectService={handleSelectService}
+      onApplyNow={handleApplyNow}
     />
   );
 }
@@ -342,7 +457,9 @@ onOpenAboutUs={handleOpenAboutUs}
   );
 }
 
-
+else if (currentPage === "refer") {
+  pageContent = <Refer customer={customer} />;
+}
 else if (currentPage === "about-us") {
   pageContent = (
     <AboutUs
@@ -439,7 +556,14 @@ else {
 
 return (
   <>
-    {pageContent}
+  {pageContent}
+
+  {!["existing", "login", "register"].includes(currentPage) && (
+    <BottomNav
+      activeTab={activeTab}
+      onNavigate={handleBottomNavigation}
+    />
+  )}
 
     {["home", "services", "service-detail"].includes(currentPage) && (
       <Chatbot
@@ -478,9 +602,12 @@ return (
  currentPage !== "service-detail" &&
  currentPage !== "services" &&
  currentPage !== "times" && 
- currentPage !== "about-us" &&
  currentPage !== "customer-applications" &&
  currentPage !== "business-development" &&
+ currentPage !== "wallet" &&
+ currentPage !== "refer" &&
+ currentPage !== "rewards" &&
+ currentPage !== "learn-earn" &&
  currentPage !== "jobs" && (
   <Footer onSelectService={handleSelectService} />
 )}

@@ -15,7 +15,6 @@ import {
 
 import "./Jobs.css";
 import { useState } from "react";
-import BottomNav from "../components/common/BottomNav";
 
 const industries = [
   "Optics",
@@ -258,11 +257,6 @@ function Jobs({ onBack, onApplyNow, onLogin, onOpenAboutUs }) {
           </div>
         </section>
       </main>
-
-      <BottomNav
-  activeTab={activeTab}
-  onNavigate={handleBottomNavigation}
-/>
     </div>
   );
 }

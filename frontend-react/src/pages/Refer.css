@@ -1,0 +1,308 @@
+.indipay-refer-page {
+  min-height: 100vh;
+  padding: 32px 5% 110px;
+  background: #f5f7fb;
+  color: #101d36;
+  font-family: "Poppins", sans-serif;
+}
+
+.refer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 30px;
+  border-radius: 22px;
+  color: white;
+  background: linear-gradient(120deg, #101d36, #263e66);
+}
+
+.refer-eyebrow {
+  display: block;
+  color: #f28c28;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+}
+
+.refer-header h1 {
+  margin: 8px 0;
+  font-size: clamp(28px, 4vw, 38px);
+}
+
+.refer-header p {
+  margin: 0;
+  color: #dce4f2;
+  font-size: 14px;
+}
+
+.refer-header-icon {
+  display: grid;
+  place-items: center;
+  width: 65px;
+  height: 65px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #f28c28;
+}
+
+.refer-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin: 25px 0;
+}
+
+.refer-stat-card,
+.refer-link-card,
+.refer-list-section {
+  padding: 24px;
+  border: 1px solid #e8edf4;
+  border-radius: 18px;
+  background: white;
+  box-shadow: 0 5px 20px rgba(16, 29, 54, 0.04);
+}
+
+.refer-stat-icon {
+  display: grid;
+  place-items: center;
+  width: 43px;
+  height: 43px;
+  margin-bottom: 14px;
+  border-radius: 12px;
+  background: #fff1e3;
+  color: #f28c28;
+}
+
+.refer-stat-card span {
+  display: block;
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.refer-stat-card strong {
+  display: block;
+  margin-top: 5px;
+  font-size: 29px;
+  color: #101d36;
+}
+
+.refer-card-heading,
+.refer-list-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+}
+
+.refer-card-heading > svg {
+  color: #f28c28;
+}
+
+.refer-link-card h2,
+.refer-list-heading h2 {
+  margin: 7px 0;
+  font-size: 21px;
+}
+
+.refer-link-card > p,
+.refer-list-heading p {
+  color: #737d8e;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.refer-link-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 22px 0 15px;
+  padding: 12px;
+  border: 1px solid #e3e8ef;
+  border-radius: 12px;
+  background: #f8fafc;
+}
+
+.refer-link-box span {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  color: #475569;
+  font-size: 13px;
+}
+
+.refer-link-box button,
+.refer-refresh-button {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 10px;
+  background: #fff1e3;
+  color: #e87916;
+  cursor: pointer;
+}
+
+.refer-share-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 12px;
+  background: #f28c28;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.refer-share-button:disabled,
+.refer-link-box button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.refer-list-section {
+  margin-top: 25px;
+}
+
+.refer-empty,
+.refer-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 45px 15px;
+  text-align: center;
+  color: #8490a1;
+}
+
+.refer-empty h3 {
+  margin: 15px 0 5px;
+  color: #101d36;
+}
+
+.refer-empty p {
+  max-width: 340px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.refer-list {
+  margin-top: 20px;
+}
+
+.refer-person {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 16px 0;
+  border-bottom: 1px solid #edf0f4;
+}
+
+.refer-person:last-child {
+  border-bottom: none;
+}
+
+.refer-person-avatar {
+  display: grid;
+  place-items: center;
+  width: 43px;
+  height: 43px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: #fff1e3;
+  color: #e87916;
+}
+
+.refer-person-info {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.refer-person-info strong {
+  font-size: 14px;
+}
+
+.refer-person-info span,
+.refer-person-date {
+  color: #8490a1;
+  font-size: 11px;
+}
+
+.refer-person-date {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+
+.refer-error {
+  margin-top: 25px;
+  padding: 20px;
+  border-radius: 12px;
+  background: #fff0f0;
+  color: #b42318;
+}
+
+.refer-error button {
+  padding: 9px 15px;
+  border: none;
+  border-radius: 8px;
+  background: #101d36;
+  color: white;
+  cursor: pointer;
+}
+
+.refer-spin {
+  animation: refer-spin 1s linear infinite;
+}
+
+@keyframes refer-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 600px) {
+  .indipay-refer-page {
+    padding: 18px 15px 105px;
+  }
+
+  .refer-header {
+    padding: 23px 19px;
+  }
+
+  .refer-header-icon {
+    width: 48px;
+    height: 48px;
+  }
+
+  .refer-stats {
+    gap: 10px;
+  }
+
+  .refer-stat-card,
+  .refer-link-card,
+  .refer-list-section {
+    padding: 17px;
+  }
+
+  .refer-stat-card strong {
+    font-size: 25px;
+  }
+
+  .refer-person {
+    gap: 9px;
+  }
+
+  .refer-person-date {
+    font-size: 10px;
+  }
+}

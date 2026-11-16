@@ -1,100 +1,158 @@
 
+import { useEffect, useState } from "react";
+import { X, ArrowUpRight } from "lucide-react";
+import "./FeaturedStories.css";
+
 const stories = [
   {
-    category: "FINANCIAL INSIGHTS",
-    title: "Making Financial Services More Accessible",
+    category: "FINANCIAL SERVICES",
+    name: "Mr. Nidheesh Kumar C P",
     description:
-      "Discover how the right financial solutions can help you move forward.",
-    date: "FEATURED STORY",
-    number: "01",
-    style: "story-one",
+      "A personal journey highlighting financial guidance, opportunities and support through Jaytrade.",
+    image: `${import.meta.env.BASE_URL}images/storyboards/secured-1.jpeg`,
+    imageAlt: "Nidheesh Kumar customer storyboard",
   },
   {
-    category: "BUSINESS",
-    title: "Building a Stronger Business Future",
+    category: "BUSINESS DEVELOPMENT",
+    name: "Featured Customer",
     description:
-      "Explore opportunities and professional support for your business.",
-    date: "LATEST UPDATE",
-    number: "02",
-    style: "story-two",
+      "A story showcasing personal experiences, business opportunities and professional support.",
+    image: `${import.meta.env.BASE_URL}images/storyboards/secured-2.jpeg`,
+    imageAlt: "Business development customer storyboard",
   },
   {
-    category: "INDIPAY UPDATES",
-    title: "One Platform. Multiple Solutions.",
+    category: "FINANCIAL ASSISTANCE",
+    name: "Mr. Abhishek",
     description:
-      "Stay connected with the latest services and announcements from Indipay.",
-    date: "COMPANY NEWS",
-    number: "03",
-    style: "story-three",
+      "A customer experience highlighting financial assistance and business support.",
+    image: `${import.meta.env.BASE_URL}images/storyboards/secured-3.jpeg`,
+    imageAlt: "Abhishek customer storyboard",
   },
 ];
 
 function FeaturedStories() {
-  return (
-    <section className="stories-section">
+  const [selectedStory, setSelectedStory] = useState(null);
 
+  useEffect(() => {
+    const handleEscape = (event) => {
+      if (event.key === "Escape") {
+        setSelectedStory(null);
+      }
+    };
+
+    window.addEventListener("keydown", handleEscape);
+
+    return () => {
+      window.removeEventListener("keydown", handleEscape);
+    };
+  }, []);
+
+  return (
+    <section className="stories-section" id="stories">
       <div className="stories-container">
 
+        {/* Section Heading */}
         <div className="stories-heading">
           <div>
-            <span className="section-tag">EXPLORE & DISCOVER</span>
-            <h2>Stories That <span>Matter.</span></h2>
+            <span className="section-tag">
+              THE INDIPAY STORYBOARD COLLECTION
+            </span>
+
+            <h2>
+              Real Stories. <span>Real Impact.</span>
+            </h2>
+
             <p>
-              Insights, updates and opportunities from
-              the world of finance and business.
+              Recognising the people and journeys behind our services.
             </p>
           </div>
 
-          <button className="stories-view-all">
-            View All Stories ↗
+          <button
+            className="stories-view-all"
+            type="button"
+          >
+            View All Stories <ArrowUpRight size={17} />
           </button>
         </div>
 
+        {/* Storyboard Cards */}
         <div className="stories-grid">
+          {stories.map((story, index) => (
+            
+<article className="story-card" key={story.image}>
 
-          {stories.map((story) => (
-            <article
-              className={`story-card ${story.style}`}
-              key={story.number}
-            >
+  <div className="story-visual">
+    <img
+      src={story.image}
+      alt={story.imageAlt}
+      className="story-background-image"
+    />
 
-              <div className="story-banner">
-                <span className="story-placeholder">
-                  IMAGE PLACEHOLDER
-                </span>
+    <span className="story-number">
+      {String(index + 1).padStart(2, "0")}
+    </span>
+  </div>
 
-                <span className="story-number">
-                  {story.number}
-                </span>
+  <div className="story-content">
 
-                <div className="story-banner-decoration">
-                  {story.number}
-                </div>
-              </div>
+    <div className="story-meta">
+      <span>{story.category}</span>
+      <small>
+        STORYBOARD {String(index + 1).padStart(2, "0")}
+      </small>
+    </div>
 
-              <div className="story-content">
+    <h3>{story.name}</h3>
 
-                <div className="story-meta">
-                  <span>{story.category}</span>
-                  <small>{story.date}</small>
-                </div>
+    <p>{story.description}</p>
 
-                <h3>{story.title}</h3>
+    <button
+      className="story-view-button"
+      type="button"
+      onClick={() => setSelectedStory(story)}
+    >
+      View Storyboard
+      <span>→</span>
+    </button>
 
-                <p>{story.description}</p>
+  </div>
+</article>
 
-                <a href="#stories">
-                  Read Story <span>→</span>
-                </a>
-
-              </div>
-
-            </article>
           ))}
-
         </div>
 
       </div>
+
+      {/* Full-size Storyboard Modal */}
+      {selectedStory && (
+        <div
+          className="story-modal"
+          onClick={() => setSelectedStory(null)}
+        >
+          <div
+            className="story-modal-content"
+            onClick={(event) => event.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-label={selectedStory.name + " storyboard"}
+          >
+            <button
+              className="story-modal-close"
+              type="button"
+              onClick={() => setSelectedStory(null)}
+              aria-label="Close storyboard"
+            >
+              <X size={24} />
+            </button>
+
+            <img
+              src={selectedStory.image}
+              alt={selectedStory.imageAlt}
+              className="story-modal-image"
+            />
+          </div>
+        </div>
+      )}
 
     </section>
   );

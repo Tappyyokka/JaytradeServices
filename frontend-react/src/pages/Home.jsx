@@ -10,7 +10,6 @@ import {
   BadgeCheck, Receipt, FileCheck, Globe
 } from "lucide-react";
 import "./Home.css";
-import BottomNav from "../components/common/BottomNav";
 
 const serviceCategories = [
   {
@@ -22,30 +21,31 @@ const serviceCategories = [
       {
   name: "Housing Loan",
   icon: Building2,
-  image: `${import.meta.env.BASE_URL}images/housing-loan.jpeg`,
+  image: `${import.meta.env.BASE_URL}images/icons/housing-loan.jpeg`,
 },
       {
   name: "Property Loan",
   icon: Building2,
-  image: `${import.meta.env.BASE_URL}images/property-loan.jpeg`,
+  image: `${import.meta.env.BASE_URL}images/icons/property-loan.jpeg`,
 },
       {
   name: "Personal Loan",
   icon: Building2,
-  image: `${import.meta.env.BASE_URL}images/personal-loan.jpeg`,
+  image: `${import.meta.env.BASE_URL}images/icons/personal-loan.jpeg`,
 },
       {
   name: "Business Loan – Secured",
   icon: Building2,
-  image: `${import.meta.env.BASE_URL}images/bl-secured.jpeg`,
+  image: `${import.meta.env.BASE_URL}images/icons/bl-secured.jpeg`,
 },
      {
   name: "Business Loan – Unsecured",
   icon: Building2,
-  image: `${import.meta.env.BASE_URL}images/bl-unsecured.jpeg`,
+  image: `${import.meta.env.BASE_URL}images/icons/bl-unsecured.jpeg`,
 }, 
 {
   name: "Take Over Loan",
+  image: `${import.meta.env.BASE_URL}images/icons/Takeover-loan.png`,
   icon: Building2,
 },
     ],
@@ -57,14 +57,30 @@ const serviceCategories = [
     background: "legal.jpg",
 
     services: [
-      { name: "CIBIL Report", icon: FileCheck },
-      { name: "MSME", icon: Building2 },
-      { name: "Mudra Project Report", icon: FileText },
-      { name: "GST Registration", icon: Receipt },
-      { name: "ITR – Income Tax Filing", icon: FileText },
-      { name: "FSSAI Services", icon: BadgeCheck },
-       { name: "ISO Certificate", icon: BadgeCheck },
-       { name: "Trademark - Individual, MSME (Without Track Records)", icon: BadgeCheck },
+      { name: "CIBIL Report", 
+        image: `${import.meta.env.BASE_URL}images/icons/Cibil.png`,
+        icon: FileCheck },
+      { name: "MSME", 
+        image: `${import.meta.env.BASE_URL}images/icons/MSME.png`,
+        icon: Building2 },
+      { name: "Mudra Project Report", 
+        image: `${import.meta.env.BASE_URL}images/icons/PR-above5.png`,
+        icon: FileText },
+      { name: "GST Registration", 
+        image: `${import.meta.env.BASE_URL}images/icons/GST.png`,
+        icon: Receipt },
+      { name: "ITR – Income Tax Filing", 
+        image: `${import.meta.env.BASE_URL}images/icons/ITR.png`,
+        icon: FileText },
+      { name: "FSSAI Services", 
+        image: `${import.meta.env.BASE_URL}images/icons/FSSAI.png`,
+        icon: BadgeCheck },
+       { name: "ISO Certificate", 
+        image: `${import.meta.env.BASE_URL}images/icons/ISO.png`,
+        icon: BadgeCheck },
+       { name: "Trademark - Individual, MSME (Without Track Records)", 
+        image: `${import.meta.env.BASE_URL}images/icons/Trademark.png`,
+        icon: BadgeCheck },
     ],
   },
   {
@@ -115,6 +131,7 @@ function Home({
   onSelectService,
   onOpenJobs,
   onOpenTimes,
+  onOpenWallet,
   onOpenBusinessDevelopment,
   onOpenAboutUs,
   onLogin,
@@ -126,12 +143,18 @@ function Home({
   const [activeTab, setActiveTab] = useState("Me");
   const [balanceVisible, setBalanceVisible] = useState(false);
   const [activeAccount, setActiveAccount] = useState(0);
+  const formatAccountId = (accountId) => {
+  const digits = String(accountId || "").replace(/\D/g, "");
+  return digits.replace(/(.{4})/g, "$1 ").trim();
+};
 
   const accountCards = [
     {
     eyebrow: "MY INDIPAY ACCOUNT",
     title: customer?.name || "My Account",
-    number: customer?.accountId || "Sign in to view",
+    number: customer?.accountId
+  ? formatAccountId(customer.accountId)
+  : "Sign in to view",
     detail: "Your personal Indipay Account ID",
     action: "Wallet Balance",
 },
@@ -235,7 +258,19 @@ function Home({
           <nav className="indipay-app-drawer" onClick={(event) => event.stopPropagation()}>
             <div className="indipay-drawer-brand"><img src={indipayLogo} alt="Jaytrade Logo" /></div>
             <button onClick={() => { setMenuOpen(false); onBack?.(); }}><HomeIcon size={18} /> Home</button>
-            <button onClick={() => { setMenuOpen(false); onOpenServices?.(); }}><Wallet size={18} /> All Services</button>
+            <button onClick={() => {
+  setMenuOpen(false);
+  onOpenServices?.();
+}}>
+  <Wallet size={18} /> All Services
+</button>
+
+<button onClick={() => {
+  setMenuOpen(false);
+  onOpenWallet?.();
+}}>
+  <CreditCard size={18} /> My Wallet
+</button>
             <button onClick={() => { setMenuOpen(false); onOpenApplicationStatus?.(); }}><ClipboardList size={18} /> My Applications</button>
             <button onClick={() => { setMenuOpen(false); onOpenAnnouncements?.(); }}><Bell size={18} /> Notifications</button>
             {customer ? (
@@ -289,35 +324,96 @@ function Home({
                 }
               }}
             >
-              {accountCards.map((card, index) => (
-                <article className={`indipay-account-card account-card-${index + 1}`} key={card.eyebrow}>
-                  <div className="indipay-account-card-top">
-                    <span>{card.eyebrow}</span>
-                    <img src={Jaytradelogo} alt="Jaytrade Logo" />
-                  </div>
-                  <h2>{card.title}</h2>
-                  <div className="indipay-account-number">
-                    {index === 0 && balanceVisible ? "₹ 0.00" : card.number}
-                  </div>
-                  {index === 0 && (
-                    <button className="indipay-balance-button" onClick={() => setBalanceVisible((visible) => !visible)}>
-                      {balanceVisible ? <EyeOff size={15} /> : <Eye size={15} />}
-                      {balanceVisible ? "Hide Balance" : card.action}
-                    </button>
-                  )}
-                  {index !== 0 && (
-                    <button className="indipay-balance-button" onClick={index === 1 ? onOpenApplicationStatus : onOpenServices}>
-                      {card.action} <ArrowRight size={15} />
-                    </button>
-                  )}
-                  <p>{card.detail}</p>
-                  <div className="indipay-account-card-links">
-                    <button onClick={() => handleShortcut("Statements")}>Statements</button>
-                    <button onClick={onOpenApplicationStatus}>Applications</button>
-                    <button onClick={onOpenAnnouncements}>Notifications</button>
-                  </div>
-                </article>
-              ))}
+              
+{accountCards.map((card, index) => (
+  <article
+    className={`indipay-account-card account-card-${index + 1}`}
+    key={card.eyebrow}
+    onClick={() => {
+      if (index === 0) onOpenWallet?.();
+    }}
+    role={index === 0 ? "button" : undefined}
+    tabIndex={index === 0 ? 0 : undefined}
+    onKeyDown={(event) => {
+      if (
+        index === 0 &&
+        (event.key === "Enter" || event.key === " ")
+      ) {
+        event.preventDefault();
+        onOpenWallet?.();
+      }
+    }}
+    style={{ cursor: index === 0 ? "pointer" : "default" }}
+  >
+    <div className="indipay-account-card-top">
+      <span>{card.eyebrow}</span>
+      <img src={Jaytradelogo} alt="Jaytrade Logo" />
+    </div>
+
+    <h2>{card.title}</h2>
+
+    <div className="indipay-account-number">
+      {index === 0 && balanceVisible
+        ? "₹ 0.00"
+        : card.number}
+    </div>
+
+    {index === 0 && (
+      <button
+        className="indipay-balance-button"
+        onClick={(event) => {
+          event.stopPropagation();
+          setBalanceVisible((visible) => !visible);
+        }}
+      >
+        {balanceVisible ? (
+          <EyeOff size={15} />
+        ) : (
+          <Eye size={15} />
+        )}
+        {balanceVisible ? "Hide Balance" : card.action}
+      </button>
+    )}
+
+    {index !== 0 && (
+      <button
+        className="indipay-balance-button"
+        onClick={(event) => {
+          event.stopPropagation();
+          index === 1
+            ? onOpenApplicationStatus?.()
+            : onOpenServices?.();
+        }}
+      >
+        {card.action} <ArrowRight size={15} />
+      </button>
+    )}
+
+    <p>{card.detail}</p>
+
+    <div className="indipay-account-card-links">
+      <button onClick={(event) => {
+        event.stopPropagation();
+        handleShortcut("Statements");
+      }}>
+        Statements
+      </button>
+      <button onClick={(event) => {
+        event.stopPropagation();
+        onOpenApplicationStatus?.();
+      }}>
+        Applications
+      </button>
+      <button onClick={(event) => {
+        event.stopPropagation();
+        onOpenAnnouncements?.();
+      }}>
+        Notifications
+      </button>
+    </div>
+  </article>
+))}
+
             </div>
           </div>
           <div className="indipay-account-carousel-controls">
@@ -378,7 +474,10 @@ return (
           </div>
 
           {selectedCategory && (
-            <div className="indipay-selected-category">
+            <div
+  className={`indipay-selected-category category-${serviceCategories
+    .findIndex((category) => category.title === selectedCategory.title) + 1}`}
+>
               <div className="indipay-selected-category-heading">
                 <div>
                   <span>SELECTED CATEGORY</span>
@@ -428,6 +527,16 @@ return (
           )}
         </section>
 
+        {/* Homepage Promotional Banner */}
+        <section className="indipay-home-banner">
+          <img
+            src={`${import.meta.env.BASE_URL}images/bottomads/indipayad.webp`}
+            alt="Indipay promotional banner"
+            className="indipay-home-banner-image"
+          />
+        </section>
+
+
         {activeTab !== "Me" && (
           <div className="indipay-tab-placeholder">
             <CircleHelp size={20} />
@@ -470,7 +579,7 @@ return (
   {customer ? (
     <>
       <div className="indipay-profile-details">
-        <p><strong>Account ID:</strong> {customer.accountId}</p>
+        <p><strong>Account ID:</strong> {formatAccountId(customer?.accountId)}</p>
         <p><strong>Email:</strong> {customer.email}</p>
         <p><strong>Mobile:</strong> {customer.phone}</p>
       </div>
@@ -504,11 +613,6 @@ return (
 </section>
         </div>
       )}
-
-      <BottomNav
-  activeTab={activeTab}
-  onNavigate={handleBottomTab}
-/>
     </div>
   );
 }

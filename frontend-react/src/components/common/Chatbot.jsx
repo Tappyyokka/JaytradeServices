@@ -487,7 +487,7 @@ function Chatbot({ customer, currentService, onOpenApplications, onLogin, onOpen
     aria-label="Open Indipay Assistant"
   >
     <MessageCircle size={26} />
-    <span>Chat with us</span>
+    <span>Talk To AI</span>
   </button>
 )}
     </>

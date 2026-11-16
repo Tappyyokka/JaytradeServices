@@ -16,7 +16,6 @@ import {
 
 import "./Times.css";
 import { useState } from "react";
-import BottomNav from "../components/common/BottomNav";
 
 const packages = [
   {
@@ -76,7 +75,7 @@ const packages = [
   },
 ];
 
-function Times({ onBack, onSelectPackage, onLogin, onOpenAboutUs }) {
+function Times({ onBack, onSelectPackage, onLogin, onOpenAboutUs,onOpenRewards }) {
   const [activeTab, setActiveTab] = useState("Me");
 
   const handleBottomNavigation = (label) => {
@@ -86,6 +85,8 @@ function Times({ onBack, onSelectPackage, onLogin, onOpenAboutUs }) {
     onLogin?.();
   } else if (label === "About Us") {
     onOpenAboutUs?.();
+  }else if (label === "Rewards") {
+    onOpenRewards?.();
   }
 };
 
@@ -219,10 +220,6 @@ function Times({ onBack, onSelectPackage, onLogin, onOpenAboutUs }) {
         </section>
       </main>
 
-      <BottomNav
-  activeTab={activeTab}
-  onNavigate={handleBottomNavigation}
-/>
     </div>
   );
 }

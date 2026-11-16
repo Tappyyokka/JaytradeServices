@@ -1,0 +1,451 @@
+
+/* =====================================
+   INDIPAY STORYBOARD COLLECTION
+===================================== */
+
+.stories-section {
+  width: 100%;
+  padding: 80px 6%;
+  background: #f5eee4;
+  font-family: "Poppins", sans-serif;
+}
+
+.stories-container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Heading */
+
+.stories-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 25px;
+  margin-bottom: 42px;
+}
+
+.section-tag {
+  display: inline-block;
+  color: #f28c28;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  margin-bottom: 13px;
+}
+
+.stories-heading h2 {
+  color: #101d36;
+  font-size: clamp(30px, 4vw, 44px);
+  font-weight: 700;
+  margin: 0 0 12px;
+}
+
+.stories-heading h2 span {
+  color: #e98220;
+}
+
+.stories-heading p {
+  color: #68758a;
+  font-size: 14px;
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* View All Stories */
+
+.stories-view-all {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: none;
+  background: #101d36;
+  color: #fff;
+  padding: 15px 23px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: 0.3s ease;
+}
+
+.stories-view-all:hover {
+  background: #f28c28;
+  transform: translateY(-2px);
+}
+
+/* Story Grid */
+
+.stories-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 25px;
+}
+
+
+
+/* =====================================
+   STORYBOARD GLASS CARDS - REFINED
+===================================== */
+
+.stories-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 25px;
+  align-items: stretch;
+}
+
+.stories-section .story-card {
+  position: relative;
+  isolation: isolate;
+  min-height: 530px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 18px;
+  background: #101d36;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 12px 35px rgba(16, 29, 54, 0.12);
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+.stories-section .story-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px rgba(16, 29, 54, 0.18);
+}
+
+/* Background poster */
+
+.stories-section .story-visual {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.stories-section .story-background-image {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center top;
+  transition: transform 0.6s ease;
+}
+
+.stories-section .story-card:hover .story-background-image {
+  transform: scale(1.04);
+}
+
+/* Subtle image shading */
+
+.stories-section .story-visual::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent 35%,
+    rgba(16, 29, 54, 0.08) 55%,
+    rgba(16, 29, 54, 0.25) 100%
+  );
+  pointer-events: none;
+}
+
+/* Story number */
+
+.stories-section .story-number {
+  position: absolute;
+  top: 17px;
+  left: 17px;
+  z-index: 3;
+  padding: 7px 12px;
+  border-radius: 30px;
+  color: #fff;
+  background: rgba(16, 29, 54, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+/* Glass information panel */
+
+.stories-section .story-content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  flex: 0 0 auto;
+  margin-top: auto;
+  padding: 25px 24px 25px;
+
+  display: flex;
+  flex-direction: column;
+
+  background: rgba(16, 29, 54, 0.42);
+  backdrop-filter: blur(9px) saturate(145%);
+  -webkit-backdrop-filter: blur(24px) saturate(145%);
+
+  border-top: 1px solid rgba(255, 255, 255, 0.55);
+  box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.10);
+}
+
+/* Category and number */
+
+.stories-section .story-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 19px;
+}
+
+.stories-section .story-meta span {
+  color: #ffad52;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.3px;
+}
+
+.stories-section .story-meta small {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 9px;
+  font-weight: 600;
+}
+
+/* Customer name */
+
+.stories-section .story-content h3 {
+  color: #fff !important;
+  font-size: 22px;
+  line-height: 1.4;
+  font-weight: 700;
+  margin: 0 0 12px;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Description */
+
+.stories-section .story-content p {
+  color: rgba(255, 255, 255, 0.92) !important;
+  font-size: 13px;
+  line-height: 1.8;
+  margin: 0 0 23px;
+  text-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
+}
+
+/* View Storyboard */
+
+.stories-section .story-view-button {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  align-self: flex-start;
+  margin-top: 4px;
+  padding: 15px 0 0;
+
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.35);
+  background: transparent;
+
+  color: #fff !important;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.stories-section .story-view-button span {
+  color: #ffad52;
+  font-size: 21px;
+  transition: transform 0.3s ease;
+}
+
+.stories-section .story-view-button:hover {
+  color: #ffbd78 !important;
+}
+
+.stories-section .story-view-button:hover span {
+  transform: translateX(6px);
+}
+
+/* =====================================
+   TABLET
+===================================== */
+
+@media (max-width: 1000px) {
+  .stories-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .stories-section .story-card {
+    min-height: 520px;
+  }
+}
+
+/* =====================================
+   MOBILE
+===================================== */
+
+@media (max-width: 650px) {
+  .stories-grid {
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+
+  .stories-section .story-card {
+    min-height: 520px;
+  }
+
+  .stories-section .story-content {
+    padding: 23px 20px 24px;
+  }
+
+  .stories-section .story-content h3 {
+    font-size: 21px;
+  }
+}
+
+
+
+/* =====================================
+   STORYBOARD IMAGE MODAL
+===================================== */
+
+.story-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 35px;
+  background: rgba(5, 12, 25, 0.92);
+  backdrop-filter: blur(7px);
+  animation: storyFadeIn 0.25s ease;
+}
+
+.story-modal-content {
+  position: relative;
+  max-width: 1000px;
+  max-height: 90vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.story-modal-image {
+  display: block;
+  max-width: 100%;
+  max-height: 88vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+}
+
+.story-modal-close {
+  position: absolute;
+  top: -18px;
+  right: -18px;
+  z-index: 2;
+  width: 42px;
+  height: 42px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  background: #f28c28;
+  color: white;
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+.story-modal-close:hover {
+  background: #fff;
+  color: #101d36;
+  transform: rotate(90deg);
+}
+
+@keyframes storyFadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+/* =====================================
+   TABLET
+===================================== */
+
+@media (max-width: 1000px) {
+  .stories-section {
+    padding: 65px 5%;
+  }
+
+  .stories-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .story-card:last-child {
+    grid-column: span 2;
+  }
+}
+
+/* =====================================
+   MOBILE
+===================================== */
+
+@media (max-width: 650px) {
+  .stories-section {
+    padding: 50px 18px;
+  }
+
+  .stories-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .stories-heading h2 {
+    font-size: 32px;
+  }
+
+  .stories-grid {
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+
+  .story-card:last-child {
+    grid-column: auto;
+  }
+
+  .story-modal {
+    padding: 18px;
+  }
+
+  .story-modal-content {
+    max-width: 100%;
+  }
+
+  .story-modal-image {
+    max-height: 82vh;
+  }
+
+  .story-modal-close {
+    top: -15px;
+    right: -8px;
+    width: 38px;
+    height: 38px;
+  }
+}

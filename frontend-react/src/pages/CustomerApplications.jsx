@@ -197,8 +197,9 @@ function CustomerApplications({ onBack }) {
 
               {applications.map((application) => {
                 const jaytrade = getJaytradeStatus(application);
-                const jaytradeData = jaytrade?.jaytrade;
-                const employee = jaytradeData?.assigned_employee;
+const jaytradeData = jaytrade?.jaytrade;
+const employee = jaytradeData?.assigned_employee;
+const customerStatus = jaytradeData?.customer_status;
 
                 return (
                   <article
@@ -250,6 +251,21 @@ function CustomerApplications({ onBack }) {
                         <Building2 size={19} />
                         <h4>Jaytrade Application Tracking</h4>
                       </div>
+                      {/* CUSTOMER APPLICATION MESSAGES */}
+{customerStatus === "Customer Follow-up" ? (
+  <div className="customer-jaytrade-message">
+    <CheckCircle2 size={20} />
+    <strong>
+      Congratulations! Your application has been taken.
+      We are working our best for you.
+    </strong>
+  </div>
+) : employee ? (
+  <div className="customer-jaytrade-message">
+    <Phone size={20} />
+    <strong>Our executive will call you now!</strong>
+  </div>
+) : null}
 
                       {application.leadSyncStatus !== "SYNCED" ? (
                         <p className="customer-jaytrade-message">

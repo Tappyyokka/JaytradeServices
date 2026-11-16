@@ -54,14 +54,7 @@ function DetailedServices({
 }) {
   
 
-  
 
-  const navItems = [
-    { label: "Home", href: "#home", icon: HomeIcon },
-    { label: "Services", href: "#financial-services", icon: LayoutGrid },
-    { label: "Wallet", href: "#wallet", icon: Wallet },
-    { label: "About Us", href: "#about", icon: Info },
-  ];
 
   const [profileOpen, setProfileOpen] = useState(false);
 const [activeTab, setActiveTab] = useState("Me");
@@ -85,30 +78,31 @@ const handleBottomTab = (label) => {
       {
   name: "Housing Loan",
   icon: Building2,
-  image: `${import.meta.env.BASE_URL}images/housing-loan.jpeg`,
+  image: `${import.meta.env.BASE_URL}images/icons/housing-loan.jpeg`,
 },
       {
   name: "Property Loan",
   icon: Building2,
-  image: `${import.meta.env.BASE_URL}images/property-loan.jpeg`,
+  image: `${import.meta.env.BASE_URL}images/icons/property-loan.jpeg`,
 },
       {
   name: "Personal Loan",
   icon: Building2,
-  image: `${import.meta.env.BASE_URL}images/personal-loan.jpeg`,
+  image: `${import.meta.env.BASE_URL}images/icons/personal-loan.jpeg`,
 },
       {
   name: "Business Loan – Secured",
   icon: Building2,
-  image: `${import.meta.env.BASE_URL}images/bl-secured.jpeg`,
+  image: `${import.meta.env.BASE_URL}images/icons/bl-secured.jpeg`,
 },
      {
   name: "Business Loan – Unsecured",
   icon: Building2,
-  image: `${import.meta.env.BASE_URL}images/bl-unsecured.jpeg`,
+  image: `${import.meta.env.BASE_URL}images/icons/bl-unsecured.jpeg`,
 },
 {
   name: "Take Over Loan",
+  image: `${import.meta.env.BASE_URL}images/icons/Takeover-loan.png`,
   icon: Building2,
 },
 {
@@ -123,33 +117,82 @@ const handleBottomTab = (label) => {
       description: "Documentation, registration and compliance services.",
       icon: FileText,
       services: [
-        { name: "CIBIL Report", icon: FileCheck },
-        { name: "MSME", icon: Building2 },
-        { name: "Mudra Project Report (up to ₹5 lakh)", icon: ClipboardCheck },
-        { name: "Mudra Project Report (above ₹5 lakh)", icon: ClipboardCheck },
-        { name: "GST Registration", icon: Receipt },
-        { name: "ITR – Income Tax Filing", icon: FileText },
-        { name: "FSSAI Registration Fee", icon: BadgeCheck },
-        { name: "FSSAI License Fee", icon: BadgeCheck },
-        { name: "FSSAI Registration Modification", icon: FileCheck },
-        { name: "FSSAI License Modification", icon: FileCheck },
-        { name: "FSSAI Manufacture Registration", icon: ClipboardCheck },
-        { name: "FSSAI Manufacture License", icon: ShieldCheck },
-        { name: "Import Export Code", icon: Globe },
-        { name: "ISO Certificate", icon: BadgeCheck },
-       { name: "Private Limited Company Registration", icon: Building2 },
-      { name: "Partnership Registration Only", icon: FileText },
-      { name: "Partnership Without Registration (PAN + Deed)", icon: FileText },
-      { name: "Partnership With Registration (REG + PAN + Deed)", icon: FileCheck },
-      { name: "Limited Liability Partnership Registration (LLP)", icon: Building2 },
+        { name: "CIBIL Report", 
+          image: `${import.meta.env.BASE_URL}images/icons/Cibil.png`,icon: FileCheck },
+        { name: "MSME", 
+          image: `${import.meta.env.BASE_URL}images/icons/MSME.png`,
+          icon: Building2 },
+        { name: "Mudra Project Report (up to ₹5 lakh)", 
+          image: `${import.meta.env.BASE_URL}images/icons/PR-upto5.png`,
+          icon: ClipboardCheck },
+        { name: "Mudra Project Report (above ₹5 lakh)", 
+          image: `${import.meta.env.BASE_URL}images/icons/PR-above5.png`,
+          icon: ClipboardCheck },
+        { name: "GST Registration", 
+          image: `${import.meta.env.BASE_URL}images/icons/GST.png`,
+          icon: Receipt },
+        { name: "ITR – Income Tax Filing", 
+          image: `${import.meta.env.BASE_URL}images/icons/ITR.png`,
+          icon: FileText },
+        { name: "FSSAI Registration Fee", 
+          image: `${import.meta.env.BASE_URL}images/icons/bl-secured.jpeg`,
+          icon: BadgeCheck },
+        { name: "FSSAI License Fee", 
+          image: `${import.meta.env.BASE_URL}images/icons/bl-secured.jpeg`,
+          icon: BadgeCheck },
+        { name: "FSSAI Registration Modification", 
+          image: `${import.meta.env.BASE_URL}images/icons/bl-secured.jpeg`,
+          icon: FileCheck },
+        { name: "FSSAI License Modification", 
+          image: `${import.meta.env.BASE_URL}images/icons/bl-secured.jpeg`,
+          icon: FileCheck },
+        { name: "FSSAI Manufacture Registration", 
+          image: `${import.meta.env.BASE_URL}images/icons/bl-secured.jpeg`,
+          icon: ClipboardCheck },
+        { name: "FSSAI Manufacture License", 
+          image: `${import.meta.env.BASE_URL}images/icons/bl-secured.jpeg`,
+          icon: ShieldCheck },
+        { name: "Import Export Code", 
+          image: `${import.meta.env.BASE_URL}images/icons/bl-secured.jpeg`,
+          icon: Globe },
+        { name: "ISO Certificate", 
+          image: `${import.meta.env.BASE_URL}images/icons/bl-secured.jpeg`,
+          icon: BadgeCheck },
+       { name: "Private Limited Company Registration", 
+        image: `${import.meta.env.BASE_URL}images/icons/bl-secured.jpeg`,
+        icon: Building2 },
+      { name: "Partnership Registration Only", 
+        image: `${import.meta.env.BASE_URL}images/icons/bl-secured.jpeg`,
+        icon: FileText },
+      { name: "Partnership Without Registration (PAN + Deed)", 
+        image: `${import.meta.env.BASE_URL}images/icons/bl-secured.jpeg`,
+        icon: FileText },
+      { name: "Partnership With Registration (REG + PAN + Deed)", 
+        image: `${import.meta.env.BASE_URL}images/icons/bl-secured.jpeg`,
+        icon: FileCheck },
+      { name: "Limited Liability Partnership Registration (LLP)", 
+        image: `${import.meta.env.BASE_URL}images/icons/bl-secured.jpeg`,
+        icon: Building2 },
 
-      { name: "Trademark - Individual, MSME (Without Track Records)", icon: BadgeCheck },
-      { name: "Trademark - Individual, MSME (With Track Records)", icon: BadgeCheck },
-      { name: "Trademark - LLP/Co/PS (Other Than MSME Without Track Records)", icon: ShieldCheck },
-      { name: "Trademark - LLP/Co/PS (Other Than MSME With Track Records)", icon: ShieldCheck },
-      { name: "Trademark - Ownership Change", icon: FileCheck },
+      { name: "Trademark - Individual, MSME (Without Track Records)", 
+        image: `${import.meta.env.BASE_URL}images/icons/bl-secured.jpeg`,
+        icon: BadgeCheck },
+      { name: "Trademark - Individual, MSME (With Track Records)", 
+        image: `${import.meta.env.BASE_URL}images/icons/bl-secured.jpeg`,
+        icon: BadgeCheck },
+      { name: "Trademark - LLP/Co/PS (Other Than MSME Without Track Records)", 
+        image: `${import.meta.env.BASE_URL}images/icons/bl-secured.jpeg`,
+        icon: ShieldCheck },
+      { name: "Trademark - LLP/Co/PS (Other Than MSME With Track Records)", 
+        image: `${import.meta.env.BASE_URL}images/icons/bl-secured.jpeg`,
+        icon: ShieldCheck },
+      { name: "Trademark - Ownership Change", 
+        image: `${import.meta.env.BASE_URL}images/icons/bl-secured.jpeg`,
+        icon: FileCheck },
 
-      { name: "PCC - Police Clearance Certificate", icon: FileCheck },
+      { name: "PCC - Police Clearance Certificate", 
+        image: `${import.meta.env.BASE_URL}images/icons/bl-secured.jpeg`,
+        icon: FileCheck },
       { name: "Vyapar Mithra", icon: BriefcaseBusiness },
       { name: "Vyapar Mithra Plus", icon: BriefcaseBusiness },
       { name: "Vyapar Mithra All In One", icon: BriefcaseBusiness },
@@ -367,10 +410,10 @@ const handleBottomTab = (label) => {
 
             return (
               <section
-                className="indipay-detail-category"
-                key={category.id}
-                id={category.id}
-              >
+  className={`indipay-detail-category detail-${category.id}`}
+  key={category.id}
+  id={category.id}
+>
                 <div className="indipay-detail-category-heading">
 
                   <div className="indipay-detail-category-icon">

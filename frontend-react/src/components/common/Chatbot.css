@@ -2,7 +2,7 @@
 .indipay-chat-launcher {
   position: fixed;
   right: 26px;
-  bottom: 100px;
+  bottom: 68px;
   z-index: 9998;
   display: flex;
   align-items: center;
@@ -308,7 +308,7 @@
 @media (max-width: 480px) {
   .indipay-chat-launcher {
      right: 16px;
-     bottom: 88px;
+     bottom: 68px;
     height: 56px;
     min-width: 56px;
     padding: 0 15px;

@@ -2964,36 +2964,6 @@
 
 /* =================================
 
-   FOOTER
-
-================================= */
-
-
-
-.indipay-footer {
-
-  padding: 22px 15px;
-
-  text-align: center;
-
-  color: #52709f;
-
-  font-size: 12px;
-
-}
-
-
-
-.indipay-footer p {
-
-  margin: 0;
-
-}
-
-
-
-/* =================================
-
    LUCIDE ICON ALIGNMENT
 
 ================================= */
@@ -5148,7 +5118,7 @@
 
     right: 16px;
 
-    bottom: 18px;
+    bottom: 16px;
 
   }
 
@@ -6190,12 +6160,12 @@
 
 /* Keep WhatsApp above the bottom navigation */
 .whatsapp-float {
-  bottom: 90px;
+  bottom: 130px;
 }
 
 @media (max-width: 600px) {
   .whatsapp-float {
-    bottom: 90px;
+    bottom: 130px;
   }
 }
 /* =========================================
@@ -6402,3 +6372,313 @@
     height: 65px;
   }
 }
+
+
+/* =====================================
+   HOMEPAGE PROMOTIONAL BANNER
+===================================== */
+
+.indipay-home-banner {
+  width: 100%;
+  max-width: 1920px;
+  aspect-ratio: 16 / 9;
+  margin: 55px auto 40px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 16px;
+  background: #101d36;
+}
+
+.indipay-home-banner-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Tablet */
+
+@media (max-width: 768px) {
+  .indipay-home-banner {
+    margin: 35px auto 25px;
+    border-radius: 10px;
+  }
+}
+
+/* Mobile */
+
+@media (max-width: 480px) {
+  .indipay-home-banner {
+    aspect-ratio: 4 / 3;
+    margin: 25px auto 20px;
+    border-radius: 8px;
+  }
+}
+
+
+/* Larger icons in selected service category */
+.indipay-app-home .indipay-selected-service > span {
+  width: 68px;
+  height: 68px;
+  flex: 0 0 68px;
+}
+
+.indipay-app-home .indipay-selected-service > span svg {
+  width: 38px;
+  height: 38px;
+}
+
+.indipay-app-home .indipay-selected-service > span img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Mobile */
+@media (max-width: 760px) {
+  .indipay-app-home .indipay-selected-service > span {
+    width: 60px;
+    height: 60px;
+    flex-basis: 60px;
+  }
+
+  .indipay-app-home .indipay-selected-service > span svg {
+    width: 34px;
+    height: 34px;
+  }
+}
+
+
+/* =====================================
+   FINANCIAL SERVICES ICONS
+===================================== */
+
+.category-1 .indipay-selected-service > span {
+  width: 68px;
+  height: 68px;
+  flex-basis: 68px;
+}
+
+.category-1 .indipay-selected-service > span img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transform: scale(1);
+}
+
+.category-1 .indipay-selected-service > span svg {
+  width: 38px;
+  height: 38px;
+}
+
+
+/* =====================================
+   LEGAL SERVICES ICONS
+===================================== */
+
+.category-2 .indipay-selected-service > span {
+  width: 68px;
+  height: 68px;
+  flex-basis: 68px;
+}
+
+.category-2 .indipay-selected-service > span img {
+  width: 110%;
+  height: 110%;
+  object-fit: cover;
+  transform: scale(1);
+}
+
+.category-2 .indipay-selected-service > span svg {
+  width: 38px;
+  height: 38px;
+}
+
+
+/* =====================================
+   BUSINESS DEVELOPMENT ICONS
+===================================== */
+
+.category-3 .indipay-selected-service > span {
+  width: 68px;
+  height: 68px;
+  flex-basis: 68px;
+}
+
+.category-3 .indipay-selected-service > span img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transform: scale(1);
+}
+
+.category-3 .indipay-selected-service > span svg {
+  width: 38px;
+  height: 38px;
+}
+
+
+/* =====================================
+   JAYTRADE JOBS ICONS
+===================================== */
+
+.category-4 .indipay-selected-service > span {
+  width: 68px;
+  height: 68px;
+  flex-basis: 68px;
+}
+
+.category-4 .indipay-selected-service > span img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transform: scale(1);
+}
+
+.category-4 .indipay-selected-service > span svg {
+  width: 38px;
+  height: 38px;
+}
+
+
+/* =====================================
+   JAYTRADE TIMES & TECHNOLOGIES ICONS
+===================================== */
+
+.category-5 .indipay-selected-service > span {
+  width: 68px;
+  height: 68px;
+  flex-basis: 68px;
+}
+
+.category-5 .indipay-selected-service > span img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transform: scale(1);
+}
+
+.category-5 .indipay-selected-service > span svg {
+  width: 38px;
+  height: 38px;
+}
+
+
+/* =====================================
+   MOBILE ICON SIZES
+===================================== */
+
+@media (max-width: 760px) {
+
+  /* =====================================
+     1. FINANCIAL SERVICES
+  ===================================== */
+
+  .category-1 .indipay-selected-service > span {
+    width: 75px;
+    height: 75px;
+    flex-basis: 75px;
+  }
+
+  .category-1 .indipay-selected-service > span img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .category-1 .indipay-selected-service > span svg {
+    width: 40px;
+    height: 40px;
+  }
+
+
+  /* =====================================
+     2. LEGAL SERVICES
+  ===================================== */
+
+  .category-2 .indipay-selected-service > span {
+    width: 75px;
+    height: 75px;
+    flex-basis: 75px;
+  }
+
+  .category-2 .indipay-selected-service > span img {
+    width: 110%;
+    height: 110%;
+    object-fit: cover;
+  }
+
+  .category-2 .indipay-selected-service > span svg {
+    width: 40px;
+    height: 40px;
+  }
+
+
+  /* =====================================
+     3. BUSINESS DEVELOPMENT
+  ===================================== */
+
+  .category-3 .indipay-selected-service > span {
+    width: 75px;
+    height: 75px;
+    flex-basis: 75px;
+  }
+
+  .category-3 .indipay-selected-service > span img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .category-3 .indipay-selected-service > span svg {
+    width: 40px;
+    height: 40px;
+  }
+
+
+  /* =====================================
+     4. JAYTRADE JOBS
+  ===================================== */
+
+  .category-4 .indipay-selected-service > span {
+    width: 75px;
+    height: 75px;
+    flex-basis: 75px;
+  }
+
+  .category-4 .indipay-selected-service > span img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .category-4 .indipay-selected-service > span svg {
+    width: 40px;
+    height: 40px;
+  }
+
+
+  /* =====================================
+     5. JAYTRADE TIMES & TECHNOLOGIES
+  ===================================== */
+
+  .category-5 .indipay-selected-service > span {
+    width: 75px;
+    height: 75px;
+    flex-basis: 75px;
+  }
+
+  .category-5 .indipay-selected-service > span img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .category-5 .indipay-selected-service > span svg {
+    width: 40px;
+    height: 40px;
+  }
+
+}
+
