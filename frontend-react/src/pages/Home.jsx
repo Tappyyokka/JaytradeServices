@@ -2,7 +2,7 @@ import { useState } from "react";
 import indipayLogo from "../assets/images/logo-transparent2.png";
 import Jaytradelogo from "../assets/images/Jaytrade-logo.jpg";
 import {
-  Menu, X, Bell, LogOut, UserRound, ChevronRight, ChevronLeft,
+  Menu, X, Bell, LogOut, UserRound, ChevronRight, ChevronLeft, Moon, Sun,
   Eye, EyeOff, FileText, ClipboardList, BellRing, Landmark,
   BriefcaseBusiness, GraduationCap, Newspaper, Gift, Star,
   BookOpen, Headset, Users, Wallet, ArrowRight, Sparkles,
@@ -152,6 +152,8 @@ function Home({
   onSelectService,
   onOpenJobs,
   onOpenTimes,
+  darkMode,
+  setDarkMode,
   onOpenWallet,
   onOpenBusinessDevelopment,
   onOpenAboutUs,
@@ -236,7 +238,11 @@ function Home({
 };
 
   return (
-    <div className="indipay-home indipay-app-home" id="home">
+    <div
+      className={`indipay-home indipay-app-home${darkMode ? " dark-mode" : ""}`}
+      id="home"
+      data-theme={darkMode ? "dark" : "light"}
+    >
       <header className="indipay-app-header">
         <button
           className="indipay-app-menu"
@@ -273,6 +279,16 @@ function Home({
           onClick={onOpenAnnouncements}
         >
           <Bell size={21} />
+        </button>
+        <button
+          className="indipay-header-icon indipay-theme-toggle"
+          type="button"
+          aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
+          aria-pressed={darkMode}
+          title={darkMode ? "Switch to light mode" : "Switch to dark mode"}
+          onClick={() => setDarkMode((current) => !current)}
+        >
+          {darkMode ? <Sun size={21} /> : <Moon size={21} />}
         </button>
         <button
   className="indipay-header-icon"
@@ -352,7 +368,7 @@ function Home({
           <div className="indipay-account-carousel">
             <div
               className="indipay-account-track"
-              style={{ transform: `translateX(calc(${activeAccount} * -100%))` }}
+              style={{ transform: `translateX(-${activeAccount * 100}%)` }}
               onTouchStart={(event) => { event.currentTarget.dataset.touchStart = event.touches[0].clientX; }}
               onTouchEnd={(event) => {
                 const delta = Number(event.currentTarget.dataset.touchStart || 0) - event.changedTouches[0].clientX;

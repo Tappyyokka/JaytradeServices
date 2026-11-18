@@ -92,6 +92,7 @@ function Chatbot({
   externalOpenSignal = 0,
 }) {
   const [isOpen, setIsOpen] = useState(false);
+  const previousExternalOpenSignal = useRef(externalOpenSignal);
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState([initialMessage]);
   const [isTyping, setIsTyping] = useState(false);
@@ -103,8 +104,12 @@ function Chatbot({
   }, [messages, isTyping, isOpen]);
 
   useEffect(() => {
-  if (externalOpenSignal > 0) {
-    setIsOpen(true);
+  if (externalOpenSignal !== previousExternalOpenSignal.current) {
+    previousExternalOpenSignal.current = externalOpenSignal;
+
+    if (externalOpenSignal > 0) {
+      setIsOpen(true);
+    }
   }
 }, [externalOpenSignal]);
 

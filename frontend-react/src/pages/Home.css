@@ -7222,3 +7222,533 @@ body:has(.indipay-chat-window) .indipay-support-float {
         background: #ffffff !important;
     }
 }
+
+/* =====================================================
+   INDIPAY HOMEPAGE DARK MODE
+   Scoped only to .indipay-app-home.dark-mode.
+   Light mode remains the default when the class is absent.
+===================================================== */
+
+.indipay-app-home {
+  --home-bg: #FFF8F0;
+  --home-surface: #FFFFFF;
+  --home-surface-soft: #F7F8FA;
+  --home-text: #17243A;
+  --home-muted: #69758A;
+  --home-border: #E8DCCF;
+  --home-navy: #101D36;
+  --home-orange: #F28C28;
+}
+
+.indipay-app-home.dark-mode {
+  --home-bg: #0B1424;
+  --home-surface: #14223A;
+  --home-surface-soft: #1A2B45;
+  --home-text: #F3F6FB;
+  --home-muted: #AAB7C9;
+  --home-border: #2B3B55;
+  background: var(--home-bg) !important;
+  color: var(--home-text) !important;
+  color-scheme: dark;
+}
+
+/* Page canvas and header */
+.indipay-app-home.dark-mode,
+.indipay-app-home.dark-mode .indipay-app-main {
+  background: var(--home-bg) !important;
+  color: var(--home-text) !important;
+}
+
+.indipay-app-home.dark-mode .indipay-app-header {
+  background: linear-gradient(110deg, #081326, #142541) !important;
+  color: #FFFFFF !important;
+  border-bottom: 1px solid var(--home-border) !important;
+}
+
+.indipay-app-home .indipay-theme-toggle {
+  display: grid;
+  place-items: center;
+  flex: 0 0 42px;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border: 1px solid rgba(242, 140, 40, .45);
+  border-radius: 12px;
+  background: rgba(242, 140, 40, .10);
+  color: #F28C28;
+  transition: background .2s ease, transform .2s ease;
+}
+.indipay-app-home .indipay-theme-toggle:hover {
+  background: rgba(242, 140, 40, .20);
+  transform: translateY(-1px);
+}
+.indipay-app-home.dark-mode .indipay-theme-toggle {
+  background: rgba(242, 140, 40, .16) !important;
+  color: #FFB15C !important;
+}
+
+/* Main content surfaces */
+.indipay-app-home.dark-mode .indipay-mini-banner,
+.indipay-app-home.dark-mode .indipay-service-hub,
+.indipay-app-home.dark-mode .indipay-selected-category,
+.indipay-app-home.dark-mode .indipay-tab-placeholder,
+.indipay-app-home.dark-mode .indipay-profile-sheet,
+.indipay-app-home.dark-mode .indipay-app-drawer {
+  background: var(--home-surface) !important;
+  color: var(--home-text) !important;
+  border-color: var(--home-border) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .20) !important;
+}
+
+.indipay-app-home.dark-mode .indipay-mini-banner strong,
+.indipay-app-home.dark-mode .indipay-mini-banner p,
+.indipay-app-home.dark-mode .indipay-tab-placeholder strong,
+.indipay-app-home.dark-mode .indipay-profile-sheet-heading strong,
+.indipay-app-home.dark-mode .indipay-profile-details,
+.indipay-app-home.dark-mode .indipay-profile-details p,
+.indipay-app-home.dark-mode .indipay-app-drawer button,
+.indipay-app-home.dark-mode .indipay-section-heading,
+.indipay-app-home.dark-mode .indipay-selected-category-heading,
+.indipay-app-home.dark-mode .indipay-service-hub h2,
+.indipay-app-home.dark-mode .indipay-service-hub h3 {
+  color: var(--home-text) !important;
+}
+
+.indipay-app-home.dark-mode .indipay-mini-banner small,
+.indipay-app-home.dark-mode .indipay-mini-banner > svg,
+.indipay-app-home.dark-mode .indipay-profile-sheet-heading small,
+.indipay-app-home.dark-mode .indipay-tab-placeholder span {
+  color: #FFAA50 !important;
+}
+
+.indipay-app-home.dark-mode .indipay-mini-banner-icon,
+.indipay-app-home.dark-mode .indipay-profile-sheet-heading > span {
+  background: rgba(242, 140, 40, .15) !important;
+  color: #FFAA50 !important;
+}
+
+/* Service category tabs and service tiles */
+.indipay-app-home.dark-mode .indipay-category-tile {
+  background: var(--home-surface-soft) !important;
+  border-color: var(--home-border) !important;
+  color: var(--home-text) !important;
+}
+.indipay-app-home.dark-mode .indipay-category-tile:hover,
+.indipay-app-home.dark-mode .indipay-category-tile.selected {
+  background: rgba(242, 140, 40, .16) !important;
+  border-color: #F28C28 !important;
+  color: #FFB15C !important;
+}
+.indipay-app-home.dark-mode .indipay-selected-service {
+  background: var(--home-surface-soft) !important;
+  border-color: var(--home-border) !important;
+  color: var(--home-text) !important;
+}
+.indipay-app-home.dark-mode .indipay-selected-service:hover {
+  background: rgba(242, 140, 40, .12) !important;
+  border-color: #F28C28 !important;
+}
+.indipay-app-home.dark-mode .indipay-selected-service > span {
+  background: #20324D !important;
+  color: #FFAA50 !important;
+}
+/* Keep uploaded service artwork on its intended white canvas */
+.indipay-app-home.dark-mode .indipay-selected-service > span:has(img),
+.indipay-app-home.dark-mode .indipay-selected-service > span img {
+  background: #FFFFFF !important;
+}
+
+/* Account cards retain their navy/orange branded appearance */
+.indipay-app-home.dark-mode .indipay-account-card {
+  box-shadow: 0 10px 28px rgba(0, 0, 0, .30) !important;
+}
+
+/* Bottom navigation */
+.indipay-app-home.dark-mode .indipay-bottom-nav {
+  background: rgba(12, 23, 40, .98) !important;
+  border-top: 1px solid var(--home-border) !important;
+  box-shadow: 0 -6px 22px rgba(0, 0, 0, .20) !important;
+}
+.indipay-app-home.dark-mode .indipay-bottom-nav button {
+  color: #B8C4D5 !important;
+  background: transparent !important;
+}
+.indipay-app-home.dark-mode .indipay-bottom-nav button.active {
+  color: #FFAA50 !important;
+  background: rgba(242, 140, 40, .13) !important;
+}
+.indipay-app-home.dark-mode .indipay-bottom-nav button:not(.active):hover {
+  color: #FFAA50 !important;
+  background: rgba(242, 140, 40, .08) !important;
+}
+
+/* Drawer and profile overlay */
+.indipay-app-home.dark-mode .indipay-drawer-backdrop,
+.indipay-app-home.dark-mode .indipay-profile-overlay {
+  background: rgba(0, 0, 0, .62) !important;
+}
+.indipay-app-home.dark-mode .indipay-app-drawer button:hover,
+.indipay-app-home.dark-mode .indipay-profile-sheet > button:hover {
+  background: rgba(242, 140, 40, .13) !important;
+  color: #FFAA50 !important;
+}
+.indipay-app-home.dark-mode .indipay-profile-sheet > button {
+  color: var(--home-text) !important;
+  border-color: var(--home-border) !important;
+}
+.indipay-app-home.dark-mode .indipay-profile-sheet-heading > button {
+  color: var(--home-text) !important;
+}
+
+/* Search field and quick actions */
+.indipay-app-home.dark-mode .indipay-app-search {
+  background: rgba(255, 255, 255, .08) !important;
+  border-color: #40516A !important;
+  color: #FFFFFF !important;
+}
+.indipay-app-home.dark-mode .indipay-app-search input {
+  color: #FFFFFF !important;
+}
+.indipay-app-home.dark-mode .indipay-quick-actions button {
+  background: var(--home-surface-soft) !important;
+  border-color: var(--home-border) !important;
+  color: var(--home-text) !important;
+}
+.indipay-app-home.dark-mode .indipay-quick-actions button svg {
+  color: #FFAA50 !important;
+}
+
+/* Small text and divider details */
+.indipay-app-home.dark-mode .indipay-account-carousel-controls,
+.indipay-app-home.dark-mode .indipay-account-carousel-controls button {
+  color: var(--home-muted) !important;
+}
+.indipay-app-home.dark-mode .indipay-view-all-services {
+  background: var(--home-surface-soft) !important;
+  border-color: #F28C28 !important;
+  color: #FFAA50 !important;
+}
+.indipay-app-home.dark-mode .indipay-view-all-services:hover {
+  background: rgba(242, 140, 40, .16) !important;
+}
+
+/* Promotional artwork is intentionally not recolored */
+.indipay-app-home.dark-mode .indipay-home-banner,
+.indipay-app-home.dark-mode .indipay-home-banner-image {
+  background-color: #101D36;
+}
+
+
+/* =========================================================
+   DARK MODE PATCH — SERVICE AREA, CAROUSEL ARROWS & BOTTOM NAV
+   These selectors are intentionally more specific than the
+   older homepage theme rules above.
+========================================================= */
+
+/* Service category section: darken the whole area, not only tabs */
+.indipay-app-home.dark-mode .indipay-service-hub,
+.indipay-app-home.dark-mode .indipay-selected-category,
+.indipay-app-home.dark-mode .indipay-selected-services {
+  background: #0B1729 !important;
+  color: #F4F7FC !important;
+  border-color: #263B59 !important;
+  box-shadow: none !important;
+}
+
+/* Category strip and individual category tabs */
+.indipay-app-home.dark-mode .indipay-category-grid {
+  background: #0B1729 !important;
+  border-color: #263B59 !important;
+  scrollbar-color: #40516B #0B1729;
+}
+.indipay-app-home.dark-mode .indipay-category-tile {
+  background: #1A2B46 !important;
+  color: #E7EDF7 !important;
+  border: 1px solid #344966 !important;
+  box-shadow: none !important;
+}
+.indipay-app-home.dark-mode .indipay-category-tile.selected,
+.indipay-app-home.dark-mode .indipay-category-tile[aria-pressed="true"] {
+  background: #F28C28 !important;
+  color: #101D36 !important;
+  border-color: #F28C28 !important;
+}
+.indipay-app-home.dark-mode .indipay-category-tile:hover:not(.selected) {
+  background: #263B59 !important;
+  color: #FFFFFF !important;
+}
+
+/* Service cards and labels */
+.indipay-app-home.dark-mode .indipay-selected-service {
+  background: #142541 !important;
+  color: #F4F7FC !important;
+  border: 1px solid #304563 !important;
+  box-shadow: none !important;
+}
+.indipay-app-home.dark-mode .indipay-selected-service:hover {
+  background: #1B3152 !important;
+  border-color: #F28C28 !important;
+}
+.indipay-app-home.dark-mode .indipay-selected-service strong {
+  color: #F4F7FC !important;
+}
+.indipay-app-home.dark-mode .indipay-selected-service > span {
+  background: #FFFFFF !important;
+  color: #101D36 !important;
+}
+
+/* Account carousel arrow controls */
+.indipay-app-home.dark-mode .indipay-account-carousel-controls button {
+  background: #1A2B46 !important;
+  color: #FFAA50 !important;
+  border: 1px solid #40516B !important;
+  cursor: pointer !important;
+}
+.indipay-app-home .indipay-account-carousel-controls button {
+  cursor: pointer;
+  pointer-events: auto;
+  position: relative;
+  z-index: 2;
+}
+
+/* Bottom nav is rendered alongside Home in the app shell,
+   so use :has() to theme it when the homepage is in dark mode. */
+body:has(.indipay-app-home.dark-mode) .indipay-bottom-nav {
+  background: #101D36 !important;
+  background-color: #101D36 !important;
+  border-top: 1px solid #304563 !important;
+  box-shadow: 0 -6px 22px rgba(0, 0, 0, .28) !important;
+  backdrop-filter: none !important;
+}
+body:has(.indipay-app-home.dark-mode) .indipay-bottom-nav button {
+  color: #B8C4D6 !important;
+  background: transparent !important;
+}
+body:has(.indipay-app-home.dark-mode) .indipay-bottom-nav button.active {
+  color: #FFAA50 !important;
+  background: rgba(242, 140, 40, .14) !important;
+}
+body:has(.indipay-app-home.dark-mode) .indipay-bottom-nav button:not(.active):hover {
+  color: #FFAA50 !important;
+  background: rgba(242, 140, 40, .08) !important;
+}
+body:has(.indipay-app-home.dark-mode) .indipay-bottom-nav button svg {
+  color: inherit !important;
+}
+
+/* Smooth colour transition when toggling */
+.indipay-app-home .indipay-service-hub,
+.indipay-app-home .indipay-category-tile,
+.indipay-app-home .indipay-selected-service {
+  transition: background-color .2s ease, color .2s ease, border-color .2s ease;
+}
+
+
+/* =========================================================
+   DARK MODE — ACCOUNT CARD SHORTCUT FOOTERS
+   Styles the Statements / Applications / Notifications row
+   inside each account carousel card, including the orange
+   My Services card.
+========================================================= */
+
+.indipay-app-home.dark-mode .indipay-account-card .indipay-account-card-links {
+  background: #101D36 !important;
+  background-color: #101D36 !important;
+  border-top: 1px solid #40516B !important;
+  color: #E7EDF7 !important;
+}
+
+.indipay-app-home.dark-mode .indipay-account-card .indipay-account-card-links button {
+  background: transparent !important;
+  color: #D6DFED !important;
+  border-right: 1px solid #40516B !important;
+  transition: background-color .2s ease, color .2s ease;
+}
+
+.indipay-app-home.dark-mode .indipay-account-card .indipay-account-card-links button:last-child {
+  border-right: 0 !important;
+}
+
+.indipay-app-home.dark-mode .indipay-account-card .indipay-account-card-links button svg {
+  color: #FFAA50 !important;
+}
+
+.indipay-app-home.dark-mode .indipay-account-card .indipay-account-card-links button span {
+  color: inherit !important;
+}
+
+.indipay-app-home.dark-mode .indipay-account-card .indipay-account-card-links button:hover,
+.indipay-app-home.dark-mode .indipay-account-card .indipay-account-card-links button:focus-visible {
+  background: rgba(242, 140, 40, .14) !important;
+  color: #FFAA50 !important;
+  outline-color: #F28C28;
+}
+
+.indipay-app-home.dark-mode .indipay-account-card .indipay-account-card-links button:hover svg,
+.indipay-app-home.dark-mode .indipay-account-card .indipay-account-card-links button:focus-visible svg {
+  color: #FFAA50 !important;
+}
+
+/* FIX: DARK MODE — ACCOUNT CARD SHORTCUT FOOTERS */
+
+.indipay-app-home.dark-mode .indipay-account-card-links,
+.indipay-app-home[data-theme="dark"] .indipay-account-card-links {
+  background: #101D36 !important;
+  background-image: none !important;
+  border-top: 1px solid rgba(242, 140, 40, 0.45) !important;
+}
+
+.indipay-app-home.dark-mode .indipay-account-card-links button,
+.indipay-app-home[data-theme="dark"] .indipay-account-card-links button {
+  background: #101D36 !important;
+  color: #FFFFFF !important;
+  border: 0 !important;
+}
+
+.indipay-app-home.dark-mode .indipay-account-card-links button + button,
+.indipay-app-home[data-theme="dark"] .indipay-account-card-links button + button {
+  border-left: 1px solid #344966 !important;
+}
+
+.indipay-app-home.dark-mode .indipay-account-card-links button svg,
+.indipay-app-home[data-theme="dark"] .indipay-account-card-links button svg {
+  color: #F28C28 !important;
+  stroke: #F28C28 !important;
+}
+
+.indipay-app-home.dark-mode .indipay-account-card-links button span,
+.indipay-app-home[data-theme="dark"] .indipay-account-card-links button span {
+  color: #FFFFFF !important;
+}
+
+.indipay-app-home.dark-mode .indipay-account-card-links button:hover,
+.indipay-app-home[data-theme="dark"] .indipay-account-card-links button:hover {
+  background: #1A304F !important;
+  color: #F28C28 !important;
+}
+
+.indipay-app-home.dark-mode .indipay-account-card-links button:hover span,
+.indipay-app-home[data-theme="dark"] .indipay-account-card-links button:hover span {
+  color: #F28C28 !important;
+}
+
+
+/* =========================================
+   ACCOUNT CARD SHORTCUTS — FINAL THEME FIX
+========================================= */
+
+/* LIGHT MODE */
+.indipay-app-home:not(.dark-mode) .indipay-account-card-links {
+  background: rgba(255, 255, 255, 0.12) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.35) !important;
+}
+
+.indipay-app-home:not(.dark-mode) .indipay-account-card-links button {
+  background: transparent !important;
+  color: #FFFFFF !important;
+  border: 0 !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.3) !important;
+}
+
+.indipay-app-home:not(.dark-mode) .indipay-account-card-links button:last-child {
+  border-right: 0 !important;
+}
+
+.indipay-app-home:not(.dark-mode) .indipay-account-card-links button svg {
+  color: #FFFFFF !important;
+  stroke: currentColor !important;
+}
+
+.indipay-app-home:not(.dark-mode) .indipay-account-card-links button span {
+  color: inherit !important;
+}
+
+/* DARK MODE */
+.indipay-app-home.dark-mode .indipay-account-card-links {
+  background: #101D36 !important;
+  background-image: none !important;
+  border-top: 1px solid #40516B !important;
+}
+
+.indipay-app-home.dark-mode .indipay-account-card-links button {
+  background: transparent !important;
+  color: #E7EDF7 !important;
+  border: 0 !important;
+  border-right: 1px solid #40516B !important;
+}
+
+.indipay-app-home.dark-mode .indipay-account-card-links button:last-child {
+  border-right: 0 !important;
+}
+
+.indipay-app-home.dark-mode .indipay-account-card-links button svg {
+  color: #FFAA50 !important;
+  stroke: currentColor !important;
+}
+
+.indipay-app-home.dark-mode .indipay-account-card-links button span {
+  color: inherit !important;
+}
+
+/* HOVER */
+.indipay-app-home .indipay-account-card-links button:hover {
+  background: rgba(242, 140, 40, 0.16) !important;
+  color: #FFAA50 !important;
+}
+
+.indipay-app-home .indipay-account-card-links button:hover svg,
+.indipay-app-home .indipay-account-card-links button:hover span {
+  color: #FFAA50 !important;
+}
+/* Pin footer only on account cards 2 and 3 */
+.indipay-app-home .indipay-account-card.account-card-2,
+.indipay-app-home .indipay-account-card.account-card-3 {
+  display: flex;
+  flex-direction: column;
+}
+
+.indipay-app-home .indipay-account-card.account-card-2
+.indipay-account-card-links,
+.indipay-app-home .indipay-account-card.account-card-3
+.indipay-account-card-links {
+  margin-top: auto !important;
+  flex-shrink: 0;
+}
+
+/* =========================================
+   GLOBAL DARK MODE - BOTTOM NAVIGATION
+========================================= */
+
+.indipay-app-shell.dark-mode .indipay-bottom-nav {
+  background: rgba(13, 21, 36, 0.98);
+  border-top: 1px solid #2C3D55;
+  box-shadow: 0 -5px 18px rgba(0, 0, 0, 0.25);
+}
+
+/* Inactive navigation items */
+.indipay-app-shell.dark-mode .indipay-bottom-nav button {
+  color: #A5B2C5;
+  background: transparent;
+}
+
+/* Active navigation item */
+.indipay-app-shell.dark-mode .indipay-bottom-nav button.active {
+  color: #F28C28;
+  background: rgba(242, 140, 40, 0.12);
+}
+
+/* Keep animation icons in sync with button color */
+.indipay-app-shell.dark-mode .indipay-bottom-nav button svg {
+  color: currentColor;
+  stroke: currentColor;
+}
+
+/* Preserve the orange Rewards icon */
+.indipay-app-shell.dark-mode .indipay-bottom-nav button:nth-child(3) {
+  color: #F28C28;
+}
+
+/* Active item should retain its own background */
+.indipay-app-shell.dark-mode .indipay-bottom-nav button:nth-child(3).active {
+  background: rgba(242, 140, 40, 0.12);
+}

@@ -1,34 +1,39 @@
 
-import {
-  UserRound,
-  Gift,
-  BookOpen,
-  Headset,
-  Users,
-} from "lucide-react";
+import UseAnimations from "react-useanimations";
+
+import user from "react-useanimations/lib/user";
+import users from "react-useanimations/lib/users";
+import gift from "react-useanimations/lib/gift";
+import bookOpen from "react-useanimations/lib/bookOpen";
+import headphones from "react-useanimations/lib/headphones";
 
 const bottomItems = [
-  { label: "Me", icon: UserRound, page: "me" },
-  { label: "Refer", icon: Users, page: "refer" },
-  { label: "Rewards", icon: Gift, page: "rewards" },
-  { label: "Learn & Earn", icon: BookOpen, page: "learn-earn" },
-  { label: "About Us", icon: Headset, page: "about-us" },
+  { label: "Me", icon: user, page: "me" },
+  { label: "Refer", icon: users, page: "refer" },
+  { label: "Rewards", icon: gift, page: "rewards" },
+  { label: "Learn & Earn", icon: bookOpen, page: "learn-earn" },
+  { label: "About Us", icon: headphones, page: "about-us" },
 ];
 
 function BottomNav({ activeTab, onNavigate }) {
   return (
     <nav className="indipay-bottom-nav" aria-label="Main navigation">
       {bottomItems.map((item) => {
-        const Icon = item.icon;
+        const isActive = activeTab === item.label;
 
         return (
           <button
             key={item.label}
             type="button"
-            className={activeTab === item.label ? "active" : ""}
+            className={isActive ? "active" : ""}
             onClick={() => onNavigate?.(item.page)}
           >
-            <Icon size={20} strokeWidth={1.9} />
+            <UseAnimations
+              animation={item.icon}
+              size={25}
+              strokeColor="currentColor"
+              speed={1}
+            />
             <span>{item.label}</span>
           </button>
         );

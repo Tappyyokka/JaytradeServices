@@ -34,6 +34,13 @@ import ServiceDetail from "./pages/ServiceDetail";
 
 function App() {
   const [currentPage, setCurrentPage] = useState("existing");
+  const [darkMode, setDarkMode] = useState(() => {
+  return localStorage.getItem("indipay-theme") === "dark";
+});
+
+useEffect(() => {
+  localStorage.setItem("indipay-theme", darkMode ? "dark" : "light");
+}, [darkMode]);
   const [customer, setCustomer] = useState(null);
   const [selectedService, setSelectedService] = useState(null);
   const [applicationReturnPage, setApplicationReturnPage] = useState("service-detail");
@@ -292,7 +299,9 @@ onOpenAboutUs={handleOpenAboutUs}
   } else if (currentPage === "home") {
   pageContent = (
     <Home
-    customer={customer}
+  customer={customer}
+  darkMode={darkMode}
+  setDarkMode={setDarkMode}
     onLogout={async () => {
   try {
     await fetch("http://localhost:5000/api/auth/logout", {
@@ -560,8 +569,11 @@ else {
   currentPage === "login" || currentPage === "register";
 
 return (
-  <>
-  {pageContent}
+  <div
+    className={`indipay-app-shell${darkMode ? " dark-mode" : ""}`}
+    data-theme={darkMode ? "dark" : "light"}
+  >
+    {pageContent}
 
   {!["existing", "login", "register"].includes(currentPage) && (
     <BottomNav
@@ -674,7 +686,7 @@ return (
 )}
       </>
     )}
-  </>
+    </div>
 );
 }
 

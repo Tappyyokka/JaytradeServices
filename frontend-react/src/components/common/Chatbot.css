@@ -842,3 +842,318 @@
 .indipay-chat-support-strip button:hover {
   color: #ffad59;
 }
+
+
+/* =========================================
+   INDIPAY CHATBOT — FINAL MOBILE LAYOUT FIX
+========================================= */
+
+@media (max-width: 768px) {
+
+  /* Main chatbot */
+  .indipay-chat-window {
+    width: 100vw !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+    max-width: 100vw !important;
+    max-height: 100dvh !important;
+    inset: 0 !important;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* Header */
+  .indipay-chat-header {
+    flex-shrink: 0;
+    min-height: 104px;
+    padding: 14px 18px;
+    gap: 12px;
+  }
+
+  .indipay-chat-heading {
+    min-width: 0;
+  }
+
+  /* Scrollable conversation area */
+  .indipay-chat-messages {
+    flex: 1 1 auto;
+    min-width: 0;
+    min-height: 0;
+    width: 100%;
+    padding: 18px 16px;
+    gap: 16px;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  /* Message alignment */
+  .indipay-chat-message {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    gap: 8px;
+  }
+
+  .indipay-chat-message.bot {
+    align-self: flex-start;
+  }
+
+  .indipay-chat-message.user {
+    width: auto;
+    max-width: 90%;
+    align-self: flex-end;
+  }
+
+  .indipay-chat-bubble {
+    min-width: 0;
+    max-width: 100%;
+    padding: 12px 14px;
+    font-size: 14px;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+  }
+
+  /* Quick help wrapper */
+  .indipay-chat-quick-help {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-width: 0;
+    padding: 0 0 0 35px;
+    margin: 0;
+    box-sizing: border-box;
+  }
+
+  /* Quick help grid */
+  .indipay-chat-quick-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+    min-width: 0;
+    gap: 12px;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+  }
+
+  /* Both quick help and service category cards */
+  .indipay-chat-category-option {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    width: 100%;
+    min-width: 0;
+    min-height: 116px;
+    padding: 14px;
+    gap: 8px;
+    border: 1px solid #293c61;
+    border-radius: 18px;
+    background: #15223c;
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 14px;
+    line-height: 1.4;
+    text-align: left;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    box-sizing: border-box;
+  }
+
+  .indipay-chat-category-option strong {
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  .indipay-chat-category-option small {
+    font-size: 12px;
+    line-height: 1.4;
+    color: #a3b5d4;
+  }
+
+  .indipay-chat-category-option .chat-action-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    margin-bottom: 2px;
+    border-radius: 12px;
+    background: #091326;
+    color: #ffffff;
+  }
+
+  /* Service category grid */
+  .indipay-chat-category-options {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+    min-width: 0;
+    gap: 12px;
+    margin-top: 12px;
+    box-sizing: border-box;
+  }
+
+  .indipay-chat-category-options .indipay-chat-category-option {
+    min-height: 100px;
+  }
+
+  /* Back button should not look like a large category card */
+  .indipay-chat-category-options .indipay-chat-back-option {
+    grid-column: 1 / -1;
+    min-height: 64px;
+    padding: 14px 16px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    background: #15223c;
+    color: #f28c28;
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  /* Support strip */
+  .indipay-chat-support-strip {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    width: 100%;
+    min-width: 0;
+    flex-shrink: 0;
+    padding: 14px 18px;
+    box-sizing: border-box;
+  }
+
+  .indipay-chat-support-strip > span {
+    flex: 1 1 auto;
+    min-width: 0;
+    font-size: 13px;
+  }
+
+  .indipay-chat-support-strip button {
+    flex: 0 0 auto;
+    white-space: nowrap;
+    font-size: 13px;
+  }
+
+  /* Input section */
+  .indipay-chat-input-area {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    min-width: 0;
+    flex-shrink: 0;
+    padding: 12px 16px;
+    box-sizing: border-box;
+  }
+
+  .indipay-chat-input-area input {
+    flex: 1 1 0;
+    width: 0;
+    min-width: 0;
+    height: 52px;
+    padding: 0 16px;
+    font-size: 14px;
+  }
+
+  .indipay-chat-input-area button {
+    flex: 0 0 52px;
+    width: 52px;
+    height: 52px;
+  }
+
+  /* Footer */
+  .indipay-chat-footer {
+    flex-shrink: 0;
+    width: 100%;
+    padding: 9px 8px;
+    text-align: center;
+    box-sizing: border-box;
+  }
+}
+
+/* Smaller phones */
+@media (max-width: 380px) {
+
+  .indipay-chat-messages {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .indipay-chat-quick-help {
+    padding-left: 30px;
+  }
+
+  .indipay-chat-quick-actions,
+  .indipay-chat-category-options {
+    gap: 8px;
+  }
+
+  .indipay-chat-category-option {
+    padding: 10px;
+    font-size: 12px;
+  }
+
+  .indipay-chat-support-strip {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .indipay-chat-input-area {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
+
+
+
+/* Compact vertical service categories */
+
+@media (max-width: 768px) {
+
+  .indipay-chat-category-options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .indipay-chat-category-options >
+  .indipay-chat-category-option:not(.indipay-chat-back-option) {
+    width: 100%;
+    height: 54px;
+    min-height: 54px;
+    padding: 0 16px;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    border-radius: 12px;
+    font-size: 13px;
+  }
+
+  .indipay-chat-category-options >
+  .indipay-chat-back-option {
+    width: 100%;
+    height: 44px;
+    min-height: 44px;
+    margin-top: 3px;
+    padding: 0 14px;
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+
+    border-radius: 12px;
+    font-size: 13px;
+  }
+}
+
+

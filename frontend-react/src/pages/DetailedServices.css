@@ -1442,3 +1442,172 @@
     transparent 70%
   );
 }
+
+
+/* =========================================
+   DETAILED SERVICES - GLOBAL DARK MODE
+   Controlled by the Home page theme toggle
+========================================= */
+
+.indipay-app-shell {
+  min-height: 100vh;
+}
+
+.indipay-app-shell.dark-mode .indipay-detailed-services {
+  background: #0D1524;
+  color: #E8EDF5;
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+/* HEADER */
+
+.indipay-app-shell.dark-mode .indipay-services-plain-header {
+  background: #111D30;
+  border-bottom-color: #263650;
+}
+
+.indipay-app-shell.dark-mode .indipay-services-plain-header .indipay-app-menu {
+  color: #FFFFFF;
+}
+
+.indipay-app-shell.dark-mode .indipay-services-plain-header .indipay-app-menu svg {
+  color: #FFFFFF;
+  stroke: #FFFFFF;
+}
+
+.indipay-app-shell.dark-mode .indipay-services-header-actions .indipay-header-icon {
+  background: #1C2B42;
+  color: #F28C28;
+}
+
+/* PAGE BACKGROUND */
+
+.indipay-app-shell.dark-mode .indipay-services-page-container {
+  background: #0D1524;
+}
+
+/* HERO */
+
+.indipay-app-shell.dark-mode .indipay-services-hero {
+  background:
+    radial-gradient(circle at 85% 25%, rgba(242, 140, 40, 0.12), transparent 30%),
+    linear-gradient(115deg, #101D36, #172943 65%, #203653);
+  border-color: #30425C;
+}
+
+.indipay-app-shell.dark-mode .indipay-services-hero-content h1 {
+  color: #FFFFFF;
+}
+
+.indipay-app-shell.dark-mode .indipay-services-hero-content h1 span {
+  color: #F28C28;
+}
+
+.indipay-app-shell.dark-mode .indipay-services-hero-content p {
+  color: #B6C2D3;
+}
+
+.indipay-app-shell.dark-mode .indipay-services-hero-stats {
+  background: rgba(8, 18, 33, 0.55);
+  border-top-color: rgba(255, 255, 255, 0.12);
+}
+
+.indipay-app-shell.dark-mode .indipay-services-hero-stats span {
+  color: #B6C2D3;
+}
+
+.indipay-app-shell.dark-mode .indipay-services-stat-divider {
+  background: #40516A;
+}
+
+/* CATEGORY HEADINGS */
+
+.indipay-app-shell.dark-mode .indipay-detail-category-heading h2 {
+  color: #F3F6FA;
+}
+
+.indipay-app-shell.dark-mode .indipay-detail-category-heading p {
+  color: #A5B2C5;
+}
+
+.indipay-app-shell.dark-mode .indipay-detail-category-number {
+  color: #F28C28;
+}
+
+.indipay-app-shell.dark-mode .indipay-detail-category-count {
+  background: rgba(242, 140, 40, 0.12);
+  color: #F6A653;
+}
+
+/* SERVICE CARDS */
+
+.indipay-app-shell.dark-mode .indipay-detail-service-item {
+  background: #172438;
+  border-color: #2C3D55;
+}
+
+.indipay-app-shell.dark-mode .indipay-detail-service-item:hover {
+  background: #1D2E46;
+  border-color: #F28C28;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.25);
+}
+
+.indipay-app-shell.dark-mode .indipay-detail-service-name {
+  color: #E8EDF5;
+}
+
+.indipay-app-shell.dark-mode .indipay-detail-service-icon {
+  background: #FFFFFF;
+  color: #F28C28;
+}
+
+.indipay-app-shell.dark-mode .indipay-detail-service-arrow {
+  color: #F28C28;
+}
+
+/* COMING SOON */
+
+.indipay-app-shell.dark-mode .indipay-services-coming-soon {
+  background: #172438;
+  border-color: #344760;
+  color: #F28C28;
+}
+
+.indipay-app-shell.dark-mode .indipay-services-coming-soon strong {
+  color: #F3F6FA;
+}
+
+.indipay-app-shell.dark-mode .indipay-services-coming-soon span {
+  color: #A5B2C5;
+}
+
+/* BOTTOM CTA */
+
+.indipay-app-shell.dark-mode .indipay-services-bottom {
+  background: linear-gradient(115deg, #101D36, #1D3557);
+}
+
+.indipay-app-shell.dark-mode .indipay-services-bottom p {
+  color: #FFFFFF;
+}
+
+.indipay-app-shell.dark-mode .indipay-services-bottom > span {
+  color: #B6C2D3;
+}
+
+/* DRAWER */
+
+.indipay-app-shell.dark-mode .indipay-app-drawer {
+  background: #142238;
+  color: #E8EDF5;
+}
+
+.indipay-app-shell.dark-mode .indipay-app-drawer button {
+  color: #E8EDF5;
+  border-color: #2C3D55;
+}
+
+.indipay-app-shell.dark-mode .indipay-app-drawer button:hover {
+  background: rgba(242, 140, 40, 0.12);
+  color: #F28C28;
+}

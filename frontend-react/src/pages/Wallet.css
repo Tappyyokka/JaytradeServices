@@ -941,3 +941,232 @@
     transform: translateY(-9px);
   }
 }
+
+
+/* =========================================
+   INDIPAY WALLET - GLOBAL DARK MODE
+========================================= */
+
+.indipay-app-shell.dark-mode .indipay-wallet-page {
+  background: #0D1524;
+  color: #E8EDF5;
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+.indipay-app-shell.dark-mode .indipay-wallet-main {
+  background: #0D1524;
+}
+
+/* Page heading */
+.indipay-app-shell.dark-mode .wallet-page-heading > div:first-child > span {
+  color: #F28C28;
+}
+
+.indipay-app-shell.dark-mode .wallet-page-heading h1 {
+  color: #FFFFFF;
+}
+
+.indipay-app-shell.dark-mode .wallet-page-heading p {
+  color: #A5B2C5;
+}
+
+.indipay-app-shell.dark-mode .wallet-heading-icon {
+  background: #243750;
+  color: #F28C28;
+}
+
+/* Physical wallet card intentionally retains its original design */
+
+/* Rewards information strip */
+.indipay-app-shell.dark-mode .wallet-benefit-strip {
+  background: #202D40;
+  border-color: #35465E;
+  color: #F28C28;
+}
+
+.indipay-app-shell.dark-mode .wallet-benefit-strip strong {
+  color: #F3F6FA;
+}
+
+.indipay-app-shell.dark-mode .wallet-benefit-strip p {
+  color: #A5B2C5;
+}
+
+/* Section headings */
+.indipay-app-shell.dark-mode .wallet-section-heading h2 {
+  color: #F3F6FA;
+}
+
+.indipay-app-shell.dark-mode .wallet-section-heading > span,
+.indipay-app-shell.dark-mode .wallet-section-heading p {
+  color: #A5B2C5;
+}
+
+/* Wallet action cards */
+.indipay-app-shell.dark-mode .wallet-action-card {
+  background: #172438;
+  border-color: #2C3D55;
+}
+
+.indipay-app-shell.dark-mode .wallet-action-card:hover {
+  background: #1D2E46;
+  border-color: #F28C28;
+  box-shadow: 0 9px 22px rgba(0, 0, 0, 0.25);
+}
+
+.indipay-app-shell.dark-mode .wallet-action-card > strong {
+  color: #F3F6FA;
+}
+
+.indipay-app-shell.dark-mode .wallet-action-card > small {
+  color: #A5B2C5;
+}
+
+.indipay-app-shell.dark-mode .wallet-action-card > svg:last-child {
+  color: #F28C28;
+}
+
+.indipay-app-shell.dark-mode .wallet-action-icon.orange {
+  background: rgba(242, 140, 40, 0.14);
+  color: #F28C28;
+}
+
+.indipay-app-shell.dark-mode .wallet-action-icon.navy {
+  background: #293B55;
+  color: #DCE6F4;
+}
+
+/* Recent transactions */
+.indipay-app-shell.dark-mode .wallet-transaction-list {
+  background: #172438;
+  border-color: #2C3D55;
+}
+
+.indipay-app-shell.dark-mode .wallet-transaction {
+  border-bottom-color: #2C3D55;
+}
+
+.indipay-app-shell.dark-mode .wallet-transaction-details strong {
+  color: #F3F6FA;
+}
+
+.indipay-app-shell.dark-mode .wallet-transaction-details small {
+  color: #A5B2C5;
+}
+
+.indipay-app-shell.dark-mode .wallet-transaction-icon.credit {
+  background: rgba(21, 155, 88, 0.15);
+}
+
+.indipay-app-shell.dark-mode .wallet-transaction-icon.debit {
+  background: rgba(230, 107, 54, 0.15);
+}
+
+/* Empty transactions */
+.indipay-app-shell.dark-mode .wallet-empty-state {
+  background: #172438;
+  border-color: #2C3D55;
+}
+
+.indipay-app-shell.dark-mode .wallet-empty-state strong {
+  color: #F3F6FA;
+}
+
+.indipay-app-shell.dark-mode .wallet-empty-state p {
+  color: #A5B2C5;
+}
+
+.indipay-app-shell.dark-mode .wallet-empty-state > span {
+  background: #293B55;
+  color: #F28C28;
+}
+
+/* Wallet terms */
+.indipay-app-shell.dark-mode .wallet-terms {
+  background: #172438;
+  color: #A5B2C5;
+}
+
+/* View all button */
+.indipay-app-shell.dark-mode .wallet-see-all {
+  color: #F28C28;
+}
+
+/* Information modals */
+.indipay-app-shell.dark-mode .wallet-info-modal {
+  background: #172438;
+  border: 1px solid #344760;
+}
+
+.indipay-app-shell.dark-mode .wallet-info-modal h2 {
+  color: #FFFFFF;
+}
+
+.indipay-app-shell.dark-mode .wallet-info-modal p {
+  color: #B6C2D3;
+}
+
+.indipay-app-shell.dark-mode .wallet-modal-close {
+  color: #DCE6F4;
+}
+
+.indipay-app-shell.dark-mode .wallet-modal-icon {
+  background: rgba(242, 140, 40, 0.14);
+  color: #F28C28;
+}
+
+.indipay-app-shell.dark-mode .wallet-modal-primary {
+  background: #F28C28;
+  color: #101D36;
+}
+
+/* Profile panel */
+.indipay-app-shell.dark-mode .wallet-profile-panel {
+  background: #142238;
+  color: #E8EDF5;
+}
+
+.indipay-app-shell.dark-mode .wallet-profile-close {
+  color: #E8EDF5;
+}
+
+.indipay-app-shell.dark-mode .wallet-profile-panel h2 {
+  color: #FFFFFF;
+}
+
+.indipay-app-shell.dark-mode .wallet-profile-panel > p,
+.indipay-app-shell.dark-mode .wallet-profile-details span {
+  color: #A5B2C5;
+}
+
+.indipay-app-shell.dark-mode .wallet-profile-details {
+  border-top-color: #2C3D55;
+}
+
+.indipay-app-shell.dark-mode .wallet-profile-details div {
+  border-bottom-color: #2C3D55;
+}
+
+.indipay-app-shell.dark-mode .wallet-profile-details strong {
+  color: #E8EDF5;
+}
+
+.indipay-app-shell.dark-mode .wallet-profile-icon {
+  background: rgba(242, 140, 40, 0.14);
+  color: #F28C28;
+}
+
+.indipay-app-shell.dark-mode .wallet-profile-logout {
+  background: rgba(230, 107, 54, 0.14);
+  color: #FF9478;
+}
+
+/* Smooth theme transition */
+.indipay-wallet-page,
+.indipay-wallet-page .wallet-action-card,
+.indipay-wallet-page .wallet-benefit-strip,
+.indipay-wallet-page .wallet-transaction-list,
+.indipay-wallet-page .wallet-info-modal,
+.indipay-wallet-page .wallet-profile-panel {
+  transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+}
