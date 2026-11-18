@@ -7,7 +7,6 @@ import {
   MessageCircle,
 } from "lucide-react";
 
-import "./Footer.css";
 import transparentLogo from "../../assets/images/logo-transparent.png";
 
 function Footer() {
