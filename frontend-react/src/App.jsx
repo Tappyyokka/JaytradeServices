@@ -2,8 +2,7 @@ import { useState, useEffect } from "react";
 
 import Navbar from "./components/common/navbar";
 import Footer from "./components/common/Footer";
-import { MessageCircle } from "lucide-react";
-import { Phone } from "lucide-react";
+import { MessageCircle, Phone, X, Bot } from "lucide-react";
 
 import IndexHero from "./components/index/IndexHero";
 import AboutSection from "./components/index/AboutSection";
@@ -39,6 +38,8 @@ function App() {
   const [selectedService, setSelectedService] = useState(null);
   const [applicationReturnPage, setApplicationReturnPage] = useState("service-detail");
   const [timesReturnPage, setTimesReturnPage] = useState("home");
+  const [supportMenuOpen, setSupportMenuOpen] = useState(false);
+const [chatOpenSignal, setChatOpenSignal] = useState(0);
 
   const handleBottomNavigation = (page) => {
   if (page === "me") {
@@ -306,6 +307,10 @@ onOpenAboutUs={handleOpenAboutUs}
   setCurrentPage("existing");
   window.scrollTo(0, 0);
 }}
+onOpenRefer={() => {
+  setCurrentPage("refer");
+  window.scrollTo(0, 0);
+}}
       onBack={() => {
         setCurrentPage("existing");
         window.scrollTo(0, 0);
@@ -568,6 +573,8 @@ return (
     {["home", "services", "service-detail"].includes(currentPage) && (
       <Chatbot
         customer={customer}
+        hideLauncher
+        externalOpenSignal={chatOpenSignal}
         currentService={
           currentPage === "service-detail" ? selectedService : null
         }
@@ -612,22 +619,59 @@ return (
   <Footer onSelectService={handleSelectService} />
 )}
 
+        {["home", "services", "service-detail"].includes(currentPage) ? (
+  <div className="indipay-support-float">
+    {supportMenuOpen && (
+      <div className="indipay-support-options">
+        <button
+          type="button"
+          onClick={() => {
+            setSupportMenuOpen(false);
+            setChatOpenSignal((value) => value + 1);
+          }}
+        >
+          <Bot size={19} />
+          Ask the AI Assistant
+        </button>
+
         <a
           href="https://wa.me/916238398343?text=Hello%20Jay%20Trade,%20I'm%20interested%20in%20your%20services.%20Could%20you%20please%20assist%20me?"
-          className="whatsapp-float"
           target="_blank"
           rel="noopener noreferrer"
-          aria-label="Chat with Jay Trade on WhatsApp"
         >
-          <span className="whatsapp-icon">
-            <MessageCircle size={32} strokeWidth={2.2} />
-            <Phone
-              size={15}
-              strokeWidth={3}
-              className="whatsapp-phone"
-            />
+          <span className="support-whatsapp-icon">
+            <MessageCircle size={17} />
+            <Phone size={9} />
           </span>
+          Chat on WhatsApp
         </a>
+      </div>
+    )}
+
+    <button
+      type="button"
+      className="indipay-support-main"
+      onClick={() => setSupportMenuOpen((open) => !open)}
+      aria-expanded={supportMenuOpen}
+      aria-label={supportMenuOpen ? "Close support options" : "Open support options"}
+    >
+      {supportMenuOpen ? <X size={25} /> : <MessageCircle size={25} />}
+    </button>
+  </div>
+) : (
+  <a
+    href="https://wa.me/916238398343?text=Hello%20Jay%20Trade,%20I'm%20interested%20in%20your%20services.%20Could%20you%20please%20assist%20me?"
+    className="whatsapp-float"
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="Chat with Jay Trade on WhatsApp"
+  >
+    <span className="whatsapp-icon">
+      <MessageCircle size={32} />
+      <Phone size={15} className="whatsapp-phone" />
+    </span>
+  </a>
+)}
       </>
     )}
   </>

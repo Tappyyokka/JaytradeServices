@@ -7,8 +7,11 @@ import {
   MessageCircle,
   ChevronRight,
   RotateCcw,
-  Maximize2, Minimize2,
   Headset,
+  LayoutGrid,
+  FileText,
+  Search,
+  Phone,
 } from "lucide-react";
 import "./Chatbot.css";
 
@@ -76,21 +79,34 @@ const serviceGroups = [
 
 const initialMessage = {
   role: "bot",
-  text: "Hello! 👋 Welcome to Indipay. I'm your virtual assistant. I can help you explore our services, understand the application process and find support. What would you like to know?",
+  text: "Hi, I'm your Indipay assistant. What do you need help with?",
 };
 
-function Chatbot({ customer, currentService, onOpenApplications, onLogin, onOpenCategory, }) {
+function Chatbot({
+  customer,
+  currentService,
+  onOpenApplications,
+  onLogin,
+  onOpenCategory,
+  hideLauncher = false,
+  externalOpenSignal = 0,
+}) {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState([initialMessage]);
   const [isTyping, setIsTyping] = useState(false);
-  const [isFullscreen, setIsFullscreen] = useState(false);
   const [showCategories, setShowCategories] = useState(false);
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isTyping, isOpen]);
+
+  useEffect(() => {
+  if (externalOpenSignal > 0) {
+    setIsOpen(true);
+  }
+}, [externalOpenSignal]);
 
   const addBotMessage = (text) => {
     setIsTyping(true);
@@ -312,7 +328,7 @@ function Chatbot({ customer, currentService, onOpenApplications, onLogin, onOpen
   return (
     <>
       {isOpen && (
-        <section className={`indipay-chat-window ${isFullscreen ? "fullscreen" : ""}`}>
+        <section className="indipay-chat-window">
           <header className="indipay-chat-header">
             <div className="indipay-chat-avatar">
               <Bot size={25} />
@@ -333,16 +349,6 @@ function Chatbot({ customer, currentService, onOpenApplications, onLogin, onOpen
             >
               <RotateCcw size={17} />
             </button>
-
-            <button
-  type="button"
-  className="indipay-chat-header-btn"
-  onClick={() => setIsFullscreen((previous) => !previous)}
-  aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
-  title={isFullscreen ? "Exit fullscreen" : "Fullscreen"}
->
-  {isFullscreen ? <Minimize2 size={23} /> : <Maximize2 size={23} />}
-</button>
 
             <button
               type="button"
@@ -389,29 +395,55 @@ function Chatbot({ customer, currentService, onOpenApplications, onLogin, onOpen
             {!isTyping && (
   <>
     {!showCategories ? (
-      <div className="indipay-chat-quick-help">
-        <span className="indipay-chat-quick-label">
-          QUICK HELP
-        </span>
+  <div className="indipay-chat-quick-help">
+    <div className="indipay-chat-quick-actions">
+      {[
+        {
+          id: "services",
+          label: "Explore services",
+          description: "Loans and more",
+          icon: LayoutGrid,
+        },
+        {
+          id: "application",
+          label: "How to apply",
+          description: "Steps and documents",
+          icon: FileText,
+        },
+        {
+          id: "tracking",
+          label: "Track application",
+          description: "See your status",
+          icon: Search,
+        },
+        {
+          id: "contact",
+          label: "Contact support",
+          description: "Call, chat or email",
+          icon: Phone,
+        },
+      ].map((action) => {
+        const Icon = action.icon;
 
-        {[
-          { id: "services", label: "Explore Services" },
-          { id: "application", label: "How to Apply" },
-          { id: "tracking", label: "Track Application" },
-          { id: "contact", label: "Contact Support" },
-        ].map((action) => (
+        return (
           <button
             type="button"
             key={action.id}
             className="indipay-chat-category-option"
             onClick={() => handleQuickAction(action.id)}
           >
-            <span>{action.label}</span>
-            <ChevronRight size={19} />
+            <span className="chat-action-icon">
+              <Icon size={19} />
+            </span>
+
+            <strong>{action.label}</strong>
+            <small>{action.description}</small>
           </button>
-        ))}
-      </div>
-    ) : (
+        );
+      })}
+    </div>
+  </div>
+) : (
   <div className="indipay-chat-quick-help">
 
     <span className="indipay-chat-quick-label">
@@ -450,6 +482,18 @@ function Chatbot({ customer, currentService, onOpenApplications, onLogin, onOpen
             <div ref={messagesEndRef} />
           </div>
 
+          <div className="indipay-chat-support-strip">
+  <span>Need a person instead?</span>
+
+  <button
+    type="button"
+    onClick={showContact}
+  >
+    <Headset size={16} />
+    Talk to support
+  </button>
+</div>
+
           <form
             className="indipay-chat-input-area"
             onSubmit={(event) => {
@@ -479,7 +523,7 @@ function Chatbot({ customer, currentService, onOpenApplications, onLogin, onOpen
         </section>
       )}
 
-      {!isOpen && (
+      {!isOpen && !hideLauncher && (
   <button
     type="button"
     className="indipay-chat-launcher"

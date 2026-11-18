@@ -1,4 +1,37 @@
 
+/* Prevent width and padding from causing overflow */
+.indipay-chat-window,
+.indipay-chat-window *,
+.indipay-chat-window *::before,
+.indipay-chat-window *::after {
+  box-sizing: border-box;
+}
+
+.indipay-chat-window {
+  min-width: 0;
+}
+
+.indipay-chat-messages {
+  min-width: 0;
+  min-height: 0;
+  width: 100%;
+}
+
+.indipay-chat-input-area {
+  width: 100%;
+  min-width: 0;
+  flex-shrink: 0;
+}
+
+.indipay-chat-input-area input {
+  width: 100%;
+  min-width: 0;
+}
+ .indipay-chat-window button,
+.indipay-chat-launcher {
+  flex-shrink: 0;
+}
+
 .indipay-chat-launcher {
   position: fixed;
   right: 26px;
@@ -37,25 +70,24 @@
 
 .indipay-chat-window {
   position: fixed;
-  inset: 0;
-  width: 100vw;
-  height: 100vh;
-  height: 100dvh;
-  max-width: none;
-  max-height: none;
-  border-radius: 0;
+  right: 26px;
+  bottom: 145px;
   z-index: 99999;
+
   display: flex;
   flex-direction: column;
+
   width: 370px;
   max-width: calc(100vw - 32px);
   height: 540px;
-  max-height: calc(100dvh - 135px);
+  max-height: calc(100dvh - 165px);
+
   overflow: hidden;
   background: #ffffff;
   border: 1px solid #e8ebf0;
   border-radius: 20px;
   box-shadow: 0 16px 55px rgba(16, 29, 54, 0.2);
+
   font-family: "Poppins", sans-serif;
 }
 
@@ -282,19 +314,28 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 42px;
-  height: 42px;
+
+  width: 44px;
+  height: 44px;
   flex-shrink: 0;
+
   border: none;
   border-radius: 50%;
   background: #f28c28;
-  color: #ffffff;
+  color: #101d36;
+
   cursor: pointer;
+ transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.indipay-chat-input-area button:not(:disabled):hover {
+  background: #e77b16;
 }
 
 .indipay-chat-input-area button:disabled {
+  background: #f5d3b4;
+  color: #7c6755;
   cursor: not-allowed;
-  opacity: 0.45;
 }
 
 .indipay-chat-footer {
@@ -307,8 +348,8 @@
 
 @media (max-width: 480px) {
   .indipay-chat-launcher {
-     right: 16px;
-     bottom: 68px;
+    right: 16px;
+    bottom: 68px;
     height: 56px;
     min-width: 56px;
     padding: 0 15px;
@@ -316,15 +357,28 @@
 
   .indipay-chat-window {
     right: 10px;
-    bottom: 155px;
+    bottom: 135px;
     width: calc(100vw - 20px);
-    height: min(540px, calc(100dvh - 110px));
+    height: min(540px, calc(100dvh - 155px));
     max-width: none;
-    border-radius: 17px;
+    max-height: none;
+  }
+
+  .indipay-chat-messages {
+    padding: 14px 10px;
+  }
+
+  .indipay-chat-message {
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .indipay-chat-quick-help {
+    padding-left: 0;
   }
 }
 
-/* Fullscreen chatbot mode */
+/* Fullscreen chatbot */
 .indipay-chat-window.fullscreen {
   position: fixed !important;
   inset: 0 !important;
@@ -336,14 +390,10 @@
   max-width: none !important;
   max-height: none !important;
 
-  border-radius: 0 !important;
   margin: 0 !important;
-
+  border-radius: 0 !important;
   z-index: 999999 !important;
-}
 
-/* Ensure the chatbot layout fills the screen */
-.indipay-chat-window.fullscreen {
   display: flex;
   flex-direction: column;
 }
@@ -362,54 +412,34 @@
   flex-shrink: 0;
 }
 .indipay-chat-category-options {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
+  width: 100%;
   margin-top: 14px;
 }
 
 .indipay-chat-category-option {
   width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 15px 16px;
-  border: 1px solid #e0e5ed;
-  border-radius: 14px;
-  background: #fff;
-  color: #101d36;
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-  text-align: left;
-  transition: 0.2s ease;
-}
-
-.indipay-chat-category-option:hover {
-  border-color: #f28c28;
-  background: #fff7ef;
-  transform: translateY(-1px);
-}
-/* Compact chatbot quick-help and category buttons */
-.indipay-chat-category-option {
-  width: 100%;
-  min-height: 44px;
-  padding: 11px 14px;
+  min-width: 0;
+  min-height: 65px;
+  padding: 11px 12px;
 
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
+  gap: 8px;
 
-  font-family: inherit;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 1.5;
-
-  color: #101d36;
-  background: #fff;
   border: 1px solid #e0e5ed;
   border-radius: 12px;
+  background: #fff;
+  color: #101d36;
+
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.4;
+  text-align: left;
 
   cursor: pointer;
   transition: background 0.2s ease, border-color 0.2s ease;
@@ -418,6 +448,13 @@
 .indipay-chat-category-option:hover {
   background: #fff7ef;
   border-color: #f28c28;
+}
+
+.indipay-chat-back-option {
+  grid-column: 1 / -1;
+  justify-content: center;
+  color: #f28c28;
+  background: #fff7ef;
 }
 
 /* Back to Quick Help button */
@@ -454,4 +491,354 @@
 .indipay-chat-back-option:hover {
   background: #ffeddc;
   border-color: #f28c28;
+}
+
+.indipay-chat-quick-help {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-left: 34px;
+}
+
+.indipay-chat-quick-label {
+  margin-bottom: 4px;
+  color: #8993a3;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+
+/* =================================
+   MOBILE CHATBOT - REFERENCE DESIGN
+================================= */
+
+@media (max-width: 768px) {
+  .indipay-chat-window {
+    position: fixed !important;
+    inset: 0 !important;
+
+    width: 100vw !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+
+    max-width: none !important;
+    max-height: none !important;
+
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+
+    display: flex;
+    flex-direction: column;
+    background: #0b1428;
+  }
+
+  /* Header */
+  .indipay-chat-header {
+    flex-shrink: 0;
+    padding: 14px 16px;
+    background: #091326;
+    border-bottom: 1px solid #1c2b49;
+  }
+
+  /* Chat background */
+  .indipay-chat-messages {
+    flex: 1;
+    min-height: 0;
+    padding: 18px 16px;
+    gap: 12px;
+    overflow-y: auto;
+    background: #0b1428;
+  }
+
+  /* Bot message */
+  .indipay-chat-message.bot .indipay-chat-bubble {
+    background: #1b2947;
+    color: #ffffff;
+    border: 1px solid #2b3e64;
+    border-radius: 17px 17px 17px 4px;
+  }
+
+  /* User message */
+  .indipay-chat-message.user .indipay-chat-bubble {
+    background: #f28c28;
+    color: #ffffff;
+  }
+
+  .indipay-chat-message-avatar {
+    background: #101d36;
+    color: #ffffff;
+  }
+
+  /* Quick help cards */
+  .indipay-chat-quick-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    padding-left: 34px;
+  }
+
+  .indipay-chat-quick-actions > span {
+    grid-column: 1 / -1;
+    color: #899bb9;
+  }
+
+  .indipay-chat-quick-actions button {
+    min-width: 0;
+    min-height: 105px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 7px;
+    background: #15223c;
+    color: #ffffff;
+    border: 1px solid #293c61;
+    border-radius: 16px;
+  }
+
+  .indipay-chat-quick-actions button:hover {
+    background: #1b2c4c;
+    border-color: #f28c28;
+  }
+
+  /* Category options */
+  .indipay-chat-category-options {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .indipay-chat-category-option {
+    background: #15223c;
+    color: #ffffff;
+    border-color: #293c61;
+  }
+
+  /* Input section */
+  .indipay-chat-input-area {
+    flex-shrink: 0;
+    padding: 12px;
+    background: #101d36;
+    border-top: 1px solid #293c61;
+  }
+
+  .indipay-chat-input-area input {
+    background: #091326;
+    color: #ffffff;
+    border-color: #293c61;
+  }
+
+  .indipay-chat-input-area input::placeholder {
+    color: #a3b1ca;
+  }
+
+  .indipay-chat-input-area input:focus {
+    background: #15223c;
+  }
+
+  .indipay-chat-input-area button {
+    background: #f28c28;
+    color: #101d36;
+  }
+
+  /* Footer */
+  .indipay-chat-footer {
+    flex-shrink: 0;
+    background: #101d36;
+    color: #a3b1ca;
+    padding: 8px;
+  }
+}
+
+
+/* =====================================
+   INDIPAY MOBILE CHATBOT - REFERENCE UI
+===================================== */
+
+@media (max-width: 768px) {
+
+  .indipay-chat-window {
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+    max-width: none !important;
+    max-height: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    background: #0b1428;
+    box-shadow: none !important;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .indipay-chat-header {
+    flex-shrink: 0;
+    padding: 14px 16px;
+    background: #091326;
+  }
+
+  .indipay-chat-heading strong {
+    color: #fff;
+  }
+
+  .indipay-chat-messages {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 18px 16px;
+    background: #0b1428;
+    gap: 12px;
+  }
+
+  .indipay-chat-message.bot .indipay-chat-bubble {
+    background: #1b2947;
+    color: #fff;
+    border: 1px solid #2b3e64;
+    border-radius: 17px;
+  }
+
+  .indipay-chat-message.user .indipay-chat-bubble {
+    background: #f28c28;
+    color: #fff;
+  }
+
+  /* Quick help cards */
+
+  .indipay-chat-quick-help {
+    padding-left: 34px;
+  }
+
+  .indipay-chat-quick-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    width: 100%;
+  }
+
+  .indipay-chat-category-option {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 6px;
+
+    width: 100%;
+    min-width: 0;
+    min-height: 108px;
+    padding: 12px;
+
+    background: #15223c;
+    border: 1px solid #293c61;
+    border-radius: 16px;
+    color: #fff;
+    text-align: left;
+  }
+
+  .indipay-chat-category-option .chat-action-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    margin-bottom: 2px;
+    border-radius: 12px;
+    background: #091326;
+    color: #fff;
+  }
+
+  .indipay-chat-category-option strong {
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  .indipay-chat-category-option small {
+    font-size: 11px;
+    color: #a3b5d4;
+  }
+
+  .indipay-chat-category-option:hover {
+    background: #1b2c4c;
+    border-color: #f28c28;
+  }
+
+  /* Input */
+
+  .indipay-chat-input-area {
+    flex-shrink: 0;
+    padding: 12px;
+    background: #101d36;
+    border-top: 1px solid #293c61;
+  }
+
+  .indipay-chat-input-area input {
+    background: #091326;
+    color: #fff;
+    border-color: #293c61;
+  }
+
+  .indipay-chat-input-area input::placeholder {
+    color: #a3b1ca;
+  }
+
+  .indipay-chat-input-area button {
+    background: #f28c28;
+    color: #101d36;
+  }
+
+  /* Footer */
+
+  .indipay-chat-footer {
+    flex-shrink: 0;
+    padding: 8px;
+    background: #101d36;
+    color: #a3b1ca;
+  }
+}
+
+
+/* Talk to support strip */
+
+.indipay-chat-support-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+
+  flex-shrink: 0;
+  padding: 12px 16px 8px;
+
+  background: #101d36;
+  border-top: 1px solid #293c61;
+}
+
+.indipay-chat-support-strip > span {
+  color: #a3b5d4;
+  font-size: 12px;
+}
+
+.indipay-chat-support-strip button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+
+  padding: 5px 0;
+
+  border: none;
+  background: transparent;
+  color: #f28c28;
+
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.indipay-chat-support-strip button:hover {
+  color: #ffad59;
 }

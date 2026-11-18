@@ -3340,7 +3340,7 @@
 
   margin: 0;
 
-  color: #263c5b;
+  color: #ffffff;
 
   font-size: 12px;
 
@@ -6688,3 +6688,537 @@
 
 }
 
+
+/* SLIM CATEGORY NAVIGATION */
+
+.indipay-service-hub .indipay-category-grid {
+  min-height: 0;
+  height: 48px;
+  padding: 3px;
+  gap: 3px;
+  border-radius: 18px;
+  background: #F1F3F7;
+  align-items: stretch;
+}
+
+.indipay-service-hub .indipay-category-tile {
+  min-height: 0;
+  height: 42px;
+  padding: 0 16px;
+  border-radius: 15px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* Navy blue selected and hover category tabs */
+.indipay-service-hub .indipay-category-tile:hover,
+.indipay-service-hub .indipay-category-tile.selected {
+  background: #101D36 !important;
+  color: #ffffff !important;
+  border-color: #101D36 !important;
+  box-shadow: 0 2px 5px rgba(16, 29, 54, 0.10);
+}
+
+@media (max-width: 600px) {
+  .indipay-service-hub .indipay-category-grid {
+    height: 44px;
+    padding: 3px;
+    border-radius: 17px;
+  }
+
+  .indipay-service-hub .indipay-category-tile {
+    height: 38px;
+    padding: 0 13px;
+    border-radius: 14px;
+    font-size: 10px;
+  }
+}
+
+
+/* =====================================
+   CLEAN HOMEPAGE SERVICE SECTION
+===================================== */
+
+/* Remove outer service container box */
+.indipay-service-hub {
+  padding: 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* Remove inner selected-category box */
+.indipay-service-hub .indipay-selected-category {
+  margin-top: 12px !important;
+  padding: 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* Category navigation spacing */
+.indipay-service-hub .indipay-category-grid {
+  margin-bottom: 12px;
+}
+
+/* Service cards remain unchanged */
+.indipay-service-hub .indipay-selected-services {
+  margin-top: 0;
+}
+
+/* View All Services button */
+.indipay-view-all-services {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  width: 100%;
+  min-height: 42px;
+  margin-top: 14px;
+  padding: 10px 16px;
+
+  border: 1px solid #f28c28;
+  border-radius: 12px;
+
+  background: #fff;
+  color: #e87920;
+
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.indipay-view-all-services:hover {
+  background: #fff3e6;
+  border-color: #e87920;
+}
+
+/* Mobile */
+@media (max-width: 760px) {
+  .indipay-service-hub .indipay-category-grid {
+    margin-bottom: 10px;
+  }
+
+  .indipay-view-all-services {
+    min-height: 40px;
+    margin-top: 12px;
+    border-radius: 11px;
+  }
+}
+
+
+/* =====================================
+   INDIPAY SEARCH HEADER
+===================================== */
+
+.indipay-app-search {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  height: 42px;
+  padding: 0 13px;
+  border: 1px solid rgba(255,255,255,.24);
+  border-radius: 12px;
+  background: rgba(255,255,255,.10);
+  color: #fff;
+}
+
+.indipay-app-search input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #fff;
+  font: inherit;
+  font-size: 14px;
+}
+
+.indipay-app-search input::placeholder {
+  color: #d4dbea;
+  opacity: 1;
+}
+
+/* ACCOUNT ID + COPY */
+
+.indipay-account-id-row {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 5px;
+}
+
+.indipay-account-id-row strong {
+  font-size: clamp(17px, 3vw, 23px);
+  letter-spacing: 1px;
+}
+
+.indipay-account-id-row button {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 0;
+  border-radius: 9px;
+  background: rgba(255,255,255,.15);
+  color: #fff;
+}
+
+/* WALLET PREVIEW */
+
+.indipay-wallet-preview {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 12px;
+  padding: 12px 14px;
+  border-radius: 13px;
+  background: rgba(255,255,255,.10);
+}
+
+.indipay-wallet-preview > div {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.indipay-wallet-preview span {
+  color: #d4dbea;
+  font-size: 11px;
+}
+
+.indipay-wallet-preview strong {
+  font-size: 20px;
+  letter-spacing: 1px;
+}
+
+.indipay-wallet-preview button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 0;
+  background: transparent;
+  color: #fff;
+  font-size: 12px;
+}
+
+/* ACCOUNT SHORTCUT ICONS */
+
+.indipay-account-card-links button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 62px;
+}
+
+.indipay-account-card-links button svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* QUICK ACTION CHIPS */
+
+.indipay-quick-actions {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 12px 0 5px;
+  scrollbar-width: none;
+}
+
+.indipay-quick-actions::-webkit-scrollbar {
+  display: none;
+}
+
+.indipay-quick-actions button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  flex: 0 0 auto;
+  min-height: 40px;
+  padding: 0 13px;
+  border: 1px solid #263d64;
+  border-radius: 24px;
+  background: #142541;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.indipay-quick-actions button svg {
+  color: #f28c28;
+}
+
+/* =====================================
+   COMBINED FLOATING SUPPORT MENU
+===================================== */
+
+.indipay-support-float {
+  position: fixed;
+  right: 20px;
+  bottom: 88px;
+  z-index: 100000;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.indipay-support-options {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  animation: supportOptionsIn .2s ease;
+}
+
+.indipay-support-options button,
+.indipay-support-options a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 43px;
+  padding: 0 16px;
+  border: 1px solid #293d60;
+  border-radius: 30px;
+  background: #142541;
+  color: #fff;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 650;
+  white-space: nowrap;
+  box-shadow: 0 5px 16px rgba(0,0,0,.15);
+  cursor: pointer;
+}
+
+.indipay-support-options button svg {
+  color: #f28c28;
+}
+
+.support-whatsapp-icon {
+  position: relative;
+  display: grid;
+  place-items: center;
+  color: #25d366;
+}
+
+.support-whatsapp-icon svg:last-child {
+  position: absolute;
+}
+
+.indipay-support-main {
+  width: 54px;
+  height: 54px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: #f28c28;
+  color: #fff;
+  box-shadow: 0 5px 18px rgba(0,0,0,.2);
+  cursor: pointer;
+}
+
+@keyframes supportOptionsIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 600px) {
+  .indipay-support-float {
+    right: 15px;
+    bottom: 82px;
+  }
+
+  .indipay-support-main {
+    width: 50px;
+    height: 50px;
+  }
+
+  .indipay-quick-actions button {
+    font-size: 11px;
+  }
+}
+
+/* Hide floating support button while chatbot is open */
+body:has(.indipay-chat-window) .indipay-support-float {
+  display: none !important;
+}
+
+
+
+/* =====================================================
+   SERVICE LOGO DISPLAY FIX
+   Preserve full document logos instead of circle-cropping
+   the square artwork. Applies only when a service uses
+   a custom image; regular React icons remain unchanged.
+===================================================== */
+
+/* Give image-based logos a larger, square holder */
+.indipay-home .indipay-service-icon:has(.indipay-custom-service-image) {
+  width: 88px !important;
+  height: 88px !important;
+  flex: 0 0 88px !important;
+  display: grid !important;
+  place-items: center !important;
+  padding: 0 !important;
+  margin-bottom: 12px !important;
+  border-radius: 14px !important;
+  overflow: hidden !important;
+  background: #FFFFFF !important;
+  color: inherit;
+}
+
+/* Do not crop the document corners or magnify the artwork */
+.indipay-home .indipay-service-icon .indipay-custom-service-image {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  border-radius: 0 !important;
+  transform: none !important;
+}
+
+/* Keep the original circular appearance of circular logos
+   inside their square image canvas; the image itself controls
+   its shape and is never clipped by a circular parent. */
+
+/* Mobile sizing */
+@media (max-width: 650px) {
+  .indipay-home .indipay-service-icon:has(.indipay-custom-service-image) {
+    width: 82px !important;
+    height: 82px !important;
+    flex-basis: 82px !important;
+    border-radius: 12px !important;
+  }
+}
+
+/* Compact phones */
+@media (max-width: 380px) {
+  .indipay-home .indipay-service-icon:has(.indipay-custom-service-image) {
+    width: 74px !important;
+    height: 74px !important;
+    flex-basis: 74px !important;
+  }
+}
+
+/* =========================================
+   LEGAL SERVICES ONLY — LOGO IMAGE SIZE
+   Targets the Legal category (category-2).
+   Does not change Financial, Business Development,
+   Jaytrade Jobs, or other category icons.
+========================================= */
+
+.category-2 .indipay-selected-service > span img {
+  width: 78% !important;
+  height: 78% !important;
+  max-width: 78% !important;
+  max-height: 78% !important;
+  object-fit: cover !important;
+  object-position: center !important;
+  transform: none !important;
+  border-radius: 0 !important;
+}
+
+/* Keep the same reduced logo size on mobile */
+@media (max-width: 760px) {
+  .category-2 .indipay-selected-service > span img {
+    width: 90% !important;
+    height: 100% !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    object-fit: cover !important;
+  }
+}
+
+/* LEGAL SERVICES ONLY background white— category-2 */
+
+.indipay-selected-category.category-2
+.indipay-selected-service > span {
+    background: #ffffff !important;
+    border-radius: 50% !important;
+    overflow: hidden;
+}
+
+/* Logo scaling */
+.indipay-selected-category.category-2
+.indipay-selected-service > span img {
+    width: 78% !important;
+    height: 78% !important;
+    object-fit: contain !important;
+    object-position: center;
+    background: #ffffff;
+}
+
+/* Mobile */
+@media (max-width: 650px) {
+    .indipay-selected-category.category-2
+    .indipay-selected-service > span {
+        background: #ffffff !important;
+    }
+}
+
+/* JOBS SERVICES ONLY background white— category-4 */
+
+.indipay-selected-category.category-4
+.indipay-selected-service > span {
+    background: #ffffff !important;
+    border-radius: 50% !important;
+    overflow: hidden;
+}
+
+/* Logo scaling */
+.indipay-selected-category.category-4
+.indipay-selected-service > span img {
+    width: 78% !important;
+    height: 78% !important;
+    object-fit: contain !important;
+    object-position: center;
+    background: #ffffff;
+}
+
+/* Mobile */
+@media (max-width: 650px) {
+    .indipay-selected-category.category-4
+    .indipay-selected-service > span {
+        background: #ffffff !important;
+    }
+}
+
+/* Logo scaling */
+.indipay-selected-category.category-5
+.indipay-selected-service > span img {
+    width: 78% !important;
+    height: 78% !important;
+    object-fit: contain !important;
+    object-position: center;
+    background: #ffffff;
+}
+
+/* Mobile */
+@media (max-width: 650px) {
+    .indipay-selected-category.category-5
+    .indipay-selected-service > span {
+        background: #ffffff !important;
+    }
+}

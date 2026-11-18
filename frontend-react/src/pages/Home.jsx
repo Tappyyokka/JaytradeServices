@@ -7,7 +7,7 @@ import {
   BriefcaseBusiness, GraduationCap, Newspaper, Gift, Star,
   BookOpen, Headset, Users, Wallet, ArrowRight, Sparkles,
   CreditCard, CircleHelp, Home as HomeIcon, Settings, Building2,
-  BadgeCheck, Receipt, FileCheck, Globe
+  BadgeCheck, Receipt, FileCheck, Globe, Search, Copy, Check, Plus, CheckCircle,
 } from "lucide-react";
 import "./Home.css";
 
@@ -78,7 +78,7 @@ const serviceCategories = [
        { name: "ISO Certificate", 
         image: `${import.meta.env.BASE_URL}images/icons/ISO.png`,
         icon: BadgeCheck },
-       { name: "Trademark - Individual, MSME (Without Track Records)", 
+       { name: "Trademark", 
         image: `${import.meta.env.BASE_URL}images/icons/Trademark.png`,
         icon: BadgeCheck },
     ],
@@ -89,10 +89,18 @@ const serviceCategories = [
     icon: BriefcaseBusiness,
     background: "business-development.jpg",
     services: [
-      { name: "Business Associate", icon: Users },
-      { name: "Premium Franchise", icon: Building2 },
-      { name: "Normal Franchise", icon: Building2 },
-      { name: "Virtual Franchise", icon: Globe },
+      { name: "Business Associate",
+        image: `${import.meta.env.BASE_URL}images/icons/BA.png`,
+         icon: Users },
+      { name: "Premium Franchise",
+        image: `${import.meta.env.BASE_URL}images/icons/PF.png`,
+         icon: Building2 },
+      { name: "Normal Franchise",
+        image: `${import.meta.env.BASE_URL}images/icons/NF.png`,
+         icon: Building2 },
+      { name: "Virtual Franchise",
+        image: `${import.meta.env.BASE_URL}images/icons/VF.png`,
+         icon: Globe },
     ],
   },
   {
@@ -101,10 +109,18 @@ const serviceCategories = [
     icon: GraduationCap,
     background: "jobs.jpg",
     services: [
-      { name: "Udyog Registration", icon: FileCheck },
-      { name: "Udyog Plus Registration", icon: BadgeCheck },
-      { name: "Standard Registration", icon: FileCheck },
-      { name: "Corporate Plus", icon: Building2 },
+      { name: "Udyog Registration", 
+        image: `${import.meta.env.BASE_URL}images/icons/Udyog.png`,
+      icon: FileCheck },
+      { name: "Udyog Plus Registration", 
+        image: `${import.meta.env.BASE_URL}images/icons/Udplus.png`,
+      icon: BadgeCheck },
+      { name: "Standard Registration", 
+        image: `${import.meta.env.BASE_URL}images/icons/Standard.png`,
+      icon: FileCheck },
+      { name: "Corporate Plus",
+        image: `${import.meta.env.BASE_URL}images/icons/Corporate.png`,
+       icon: Building2 },
     ],
   },
   {
@@ -113,10 +129,15 @@ const serviceCategories = [
   icon: Newspaper,
   background: "times.jpg",
   services: [
-    { name: "Growup Package", icon: BriefcaseBusiness },
-    { name: "Standard Package", icon: BadgeCheck },
-    { name: "Premium Package", icon: Star },
-    { name: "Corporate Package", icon: Building2 },
+    { name: "Growup Package", image: `${import.meta.env.BASE_URL}images/icons/growup.png`,
+    icon: BriefcaseBusiness },
+    { name: "Standard Package", image: `${import.meta.env.BASE_URL}images/icons/ST.png`,
+    icon: BadgeCheck },
+    { name: "Premium Package", image: `${import.meta.env.BASE_URL}images/icons/premium.png`,
+    icon: Star },
+
+    { name: "Corporate Package", image: `${import.meta.env.BASE_URL}images/icons/Corp.png`,
+    icon: Building2 },
   ],
 },
 ]
@@ -136,6 +157,7 @@ function Home({
   onOpenAboutUs,
   onLogin,
   onRegister,
+  onOpenRefer,
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
@@ -143,6 +165,8 @@ function Home({
   const [activeTab, setActiveTab] = useState("Me");
   const [balanceVisible, setBalanceVisible] = useState(false);
   const [activeAccount, setActiveAccount] = useState(0);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [accountIdCopied, setAccountIdCopied] = useState(false);
   const formatAccountId = (accountId) => {
   const digits = String(accountId || "").replace(/\D/g, "");
   return digits.replace(/(.{4})/g, "$1 ").trim();
@@ -225,9 +249,22 @@ function Home({
         </button>
 
         <div className="indipay-app-search">
-          <span>What would you like to do today?</span>
-          <span className="indipay-search-line" />
-        </div>
+  <Search size={19} />
+
+  <input
+    type="search"
+    value={searchQuery}
+    onChange={(event) => setSearchQuery(event.target.value)}
+    onKeyDown={(event) => {
+      if (event.key === "Enter") {
+        onOpenServices?.();
+        window.scrollTo(0, 0);
+      }
+    }}
+    placeholder="Search loans, services, help"
+    aria-label="Search loans, services and help"
+  />
+</div>
 
         <button
           className="indipay-header-icon"
@@ -326,92 +363,92 @@ function Home({
             >
               
 {accountCards.map((card, index) => (
-  <article
-    className={`indipay-account-card account-card-${index + 1}`}
-    key={card.eyebrow}
-    onClick={() => {
-      if (index === 0) onOpenWallet?.();
-    }}
-    role={index === 0 ? "button" : undefined}
-    tabIndex={index === 0 ? 0 : undefined}
-    onKeyDown={(event) => {
-      if (
-        index === 0 &&
-        (event.key === "Enter" || event.key === " ")
-      ) {
-        event.preventDefault();
-        onOpenWallet?.();
-      }
-    }}
-    style={{ cursor: index === 0 ? "pointer" : "default" }}
-  >
-    <div className="indipay-account-card-top">
-      <span>{card.eyebrow}</span>
-      <img src={Jaytradelogo} alt="Jaytrade Logo" />
-    </div>
+  
+<article
+  className={`indipay-account-card account-card-${index + 1}`}
+  key={card.eyebrow}
+>
+  <div className="indipay-account-card-top">
+    <span>{card.eyebrow}</span>
+    <img src={Jaytradelogo} alt="Jaytrade Logo" />
+  </div>
 
-    <h2>{card.title}</h2>
+  <h2>{card.title}</h2>
 
-    <div className="indipay-account-number">
-      {index === 0 && balanceVisible
-        ? "₹ 0.00"
-        : card.number}
-    </div>
+  {index === 0 ? (
+    <>
+      <div className="indipay-account-id-row">
+        <strong>{card.number}</strong>
 
-    {index === 0 && (
+        <button
+          type="button"
+          aria-label="Copy account ID"
+          onClick={async () => {
+            try {
+              await navigator.clipboard.writeText(card.number);
+              setAccountIdCopied(true);
+              setTimeout(() => setAccountIdCopied(false), 1600);
+            } catch (error) {
+              console.error("Could not copy account ID", error);
+            }
+          }}
+        >
+          {accountIdCopied ? <Check size={17} /> : <Copy size={17} />}
+        </button>
+      </div>
+
+      <p>{card.detail}</p>
+
+      <div className="indipay-wallet-preview">
+        <div>
+          <span>Wallet balance</span>
+          <strong>
+            {balanceVisible ? "₹ 0.00" : "₹ ••••••"}
+          </strong>
+        </div>
+
+        <button
+          type="button"
+          onClick={() => setBalanceVisible((visible) => !visible)}
+        >
+          {balanceVisible ? <EyeOff size={17} /> : <Eye size={17} />}
+          {balanceVisible ? "Hide" : "Show"}
+        </button>
+      </div>
+    </>
+  ) : (
+    <>
+      <div className="indipay-account-number">{card.number}</div>
+      <p>{card.detail}</p>
+
       <button
         className="indipay-balance-button"
-        onClick={(event) => {
-          event.stopPropagation();
-          setBalanceVisible((visible) => !visible);
-        }}
+        onClick={index === 1 ? onOpenApplicationStatus : onOpenServices}
       >
-        {balanceVisible ? (
-          <EyeOff size={15} />
-        ) : (
-          <Eye size={15} />
-        )}
-        {balanceVisible ? "Hide Balance" : card.action}
+        {card.action}
+        <ArrowRight size={15} />
       </button>
-    )}
+    </>
+  )}
 
-    {index !== 0 && (
-      <button
-        className="indipay-balance-button"
-        onClick={(event) => {
-          event.stopPropagation();
-          index === 1
-            ? onOpenApplicationStatus?.()
-            : onOpenServices?.();
-        }}
-      >
-        {card.action} <ArrowRight size={15} />
-      </button>
-    )}
+  <div className="indipay-account-card-links">
+    <button onClick={() => handleShortcut("Statements")}>
+      <FileText size={18} />
+      <span>Statements</span>
+    </button>
 
-    <p>{card.detail}</p>
+    <button onClick={onOpenApplicationStatus}>
+      <ClipboardList size={18} />
+      <span>Applications</span>
+    </button>
 
-    <div className="indipay-account-card-links">
-      <button onClick={(event) => {
-        event.stopPropagation();
-        handleShortcut("Statements");
-      }}>
-        Statements
-      </button>
-      <button onClick={(event) => {
-        event.stopPropagation();
-        onOpenApplicationStatus?.();
-      }}>
-        Applications
-      </button>
-      <button onClick={(event) => {
-        event.stopPropagation();
-        onOpenAnnouncements?.();
-      }}>
-        Notifications
-      </button>
-    </div>
-  </article>
+    <button onClick={onOpenAnnouncements}>
+      <Bell size={18} />
+      <span>Notifications</span>
+    </button>
+  </div>
+</article>
+
 ))}
 
             </div>
@@ -423,6 +460,27 @@ function Home({
               <button aria-label="Next account card" onClick={() => setActiveAccount((n) => (n + 1) % accountCards.length)}><ChevronRight size={17} /></button>
             </div>
           </div>
+          <div className="indipay-quick-actions">
+  <button onClick={() => {
+    setActiveCategory("Financial Services");
+    document.getElementById("services")?.scrollIntoView({
+      behavior: "smooth"
+    });
+  }}>
+    <Plus size={17} />
+    Apply for a loan
+  </button>
+
+  <button onClick={onOpenApplicationStatus}>
+    <CheckCircle size={17} />
+    Check status
+  </button>
+
+  <button onClick={onOpenRefer}>
+    <Gift size={17} />
+    Refer & Earn
+  </button>
+</div>
         </section>
 
         <section className="indipay-mini-banners" 
@@ -443,89 +501,85 @@ function Home({
           })}
         </section>
 
-        <section className="indipay-service-hub" id="services">
-          <div className="indipay-section-heading">
-            <div>
-              <span>EXPLORE INDIPAY</span>
-              <h1>Service Categories</h1>
-              <p>Select a category to see all available services.</p>
-            </div>
-            <button onClick={onOpenServices}>View all <ArrowRight size={16} /></button>
-          </div>
+        
+<section className="indipay-service-hub" id="services">
 
-         <div
-  className="indipay-category-grid"
-  onWheel={handleHorizontalWheel}
->
-            {serviceCategories.map((category) => {
-              const active = activeCategory === category.title;
-
-return (
-  <button
-    className={`indipay-category-tile ${active ? "selected" : ""}`}
-    key={category.title}
-    onClick={() => setActiveCategory(active ? null : category.title)}
-    aria-expanded={active}
+  <div
+    className="indipay-category-grid"
+    onWheel={handleHorizontalWheel}
   >
-    <strong>{category.title.replace(" Services", "")}</strong>
-  </button>
-);
-            })}
-          </div>
+    {serviceCategories.map((category) => {
+      const active = activeCategory === category.title;
 
-          {selectedCategory && (
-            <div
-  className={`indipay-selected-category category-${serviceCategories
-    .findIndex((category) => category.title === selectedCategory.title) + 1}`}
->
-              <div className="indipay-selected-category-heading">
-                <div>
-                  <span>SELECTED CATEGORY</span>
-                  <h2>{selectedCategory.title}</h2>
-                  <p>{selectedCategory.description}</p>
-                </div>
-                <button onClick={() => setActiveCategory(null)} aria-label="Close category"><X size={20} /></button>
-              </div>
-              <div className="indipay-selected-services">
-  {selectedCategory.services.map((service) => {
-    const Icon = service.icon;
+      return (
+        <button
+          className={`indipay-category-tile ${active ? "selected" : ""}`}
+          key={category.title}
+          onClick={() => setActiveCategory(category.title)}
+          aria-pressed={active}
+        >
+          <strong>{category.title.replace(" Services", "")}</strong>
+        </button>
+      );
+    })}
+  </div>
 
-    return (
+  {selectedCategory && (
+    <div
+      className={`indipay-selected-category category-${serviceCategories
+        .findIndex((category) => category.title === selectedCategory.title) + 1}`}
+    >
+      <div className="indipay-selected-services">
+        {selectedCategory.services.map((service) => {
+          const Icon = service.icon;
+
+          return (
+            <button
+              className="indipay-selected-service"
+              key={service.name}
+              onClick={() => {
+                if (selectedCategory.title === "Jaytrade Jobs") {
+                  onOpenJobs?.();
+                } else if (
+                  selectedCategory.title === "Jaytrade Times & Technologies"
+                ) {
+                  onOpenTimes?.();
+                } else if (
+                  selectedCategory.title === "Business Development"
+                ) {
+                  onOpenBusinessDevelopment?.();
+                } else {
+                  onSelectService?.(service);
+                }
+              }}
+            >
+              <span>
+                {service.image ? (
+                  <img src={service.image} alt="" />
+                ) : (
+                  <Icon size={27} />
+                )}
+              </span>
+
+              <strong>{service.name}</strong>
+            </button>
+          );
+        })}
+      </div>
+
       <button
-        className="indipay-selected-service"
-        key={service.name}
-        onClick={() => {
-  if (selectedCategory.title === "Jaytrade Jobs") {
-    onOpenJobs?.();
-  } else if (
-    selectedCategory.title === "Jaytrade Times & Technologies"
-) {
-    onOpenTimes?.();
-} else if (
-    selectedCategory.title === "Business Development"
-) {
-    onOpenBusinessDevelopment?.();
-} else {
-    onSelectService?.(service);
-}
-}}
+        type="button"
+        className="indipay-view-all-services"
+        onClick={onOpenServices}
       >
-        <span>
-          {service.image ? (
-            <img src={service.image} alt="" />
-          ) : (
-            <Icon size={27} />
-          )}
-        </span>
-
-        <strong>{service.name}</strong>
+        View All Services
+        <ArrowRight size={16} />
       </button>
-    );
-  })}
-</div>
-            </div>
-          )}
-        </section>
+    </div>
+  )}
+
+</section>
+
 
         {/* Homepage Promotional Banner */}
         <section className="indipay-home-banner">
