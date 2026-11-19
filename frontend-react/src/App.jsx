@@ -644,6 +644,7 @@ return (
  currentPage !== "rewards" &&
  currentPage !== "about-us" &&
  currentPage !== "learn-earn" &&
+  currentPage !== "announcements" &&
  currentPage !== "legal-details" && 
  currentPage !== "jobs" && (
   <Footer onSelectService={handleSelectService} />
