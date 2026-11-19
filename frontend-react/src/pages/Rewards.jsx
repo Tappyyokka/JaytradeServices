@@ -78,21 +78,23 @@ const dummyRewards = [
 ];
 
 
-function ScratchCard({ reward, onCopy }) {
+
+function ScratchCard({ reward, onCopy, revealed, onReveal }) {
   const canvasRef = useRef(null);
   const scratchingRef = useRef(false);
-  const [revealed, setRevealed] = useState(false);
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    if (!canvas || revealed) return;
 
     const card = canvas.parentElement;
     if (!card) return;
 
     const setupCanvas = () => {
       const rect = canvas.getBoundingClientRect();
+      if (!rect.width || !rect.height) return;
+
       const pixelRatio = window.devicePixelRatio || 1;
 
       canvas.width = Math.max(1, Math.round(rect.width * pixelRatio));
@@ -101,35 +103,93 @@ function ScratchCard({ reward, onCopy }) {
       const ctx = canvas.getContext("2d");
       ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
 
-      const gradient = ctx.createLinearGradient(
-        0, 0, rect.width, rect.height
-      );
+      
+const coverColors = {
+  orange: { background: "#F28C28", pattern: "#C65D0A" },
+  navy: { background: "#387FE0", pattern: "#1760B5" },
+  gold: { background: "#E9B94D", pattern: "#B18A27" },
+};
 
-      gradient.addColorStop(0, "#D8DCE3");
-      gradient.addColorStop(0.5, "#F5F6F8");
-      gradient.addColorStop(1, "#BEC5D0");
+const colors = coverColors[reward.color] || coverColors.orange;
 
-      ctx.fillStyle = gradient;
-      ctx.fillRect(0, 0, rect.width, rect.height);
+ctx.clearRect(0, 0, rect.width, rect.height);
 
-      // Scratch instruction
-      ctx.fillStyle = "#667085";
-      ctx.font = "800 13px Arial";
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
+// Same colourful cover as the Rewards page
+ctx.fillStyle = colors.background;
+ctx.fillRect(0, 0, rect.width, rect.height);
 
-      ctx.fillText(
-        "SCRATCH TO REVEAL",
-        rect.width / 2,
-        rect.height / 2 - 12
-      );
+ctx.strokeStyle = colors.pattern;
+ctx.fillStyle = colors.pattern;
+ctx.globalAlpha = 0.65;
+ctx.lineWidth = 5;
 
-      ctx.font = "30px Arial";
-      ctx.fillText(
-        "✦",
-        rect.width / 2,
-        rect.height / 2 + 23
-      );
+// Decorative dots
+[
+  [0.68, 0.18],
+  [0.48, 0.58],
+  [0.14, 0.72],
+  [0.62, 0.88],
+].forEach(([x, y]) => {
+  ctx.beginPath();
+  ctx.arc(rect.width * x, rect.height * y, 9, 0, Math.PI * 2);
+  ctx.fill();
+});
+
+// Gift illustrations
+const drawGift = (x, y, size, rotation = 0) => {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(rotation);
+
+  ctx.lineWidth = 5;
+  ctx.strokeRect(-size / 2, -size / 2, size, size);
+  ctx.beginPath();
+  ctx.moveTo(-size / 2, -size / 5);
+  ctx.lineTo(size / 2, -size / 5);
+  ctx.moveTo(0, -size / 2);
+  ctx.lineTo(0, size / 2);
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.ellipse(-size / 5, -size / 2, size / 6, size / 8, -0.5, 0, Math.PI * 2);
+  ctx.ellipse(size / 5, -size / 2, size / 6, size / 8, 0.5, 0, Math.PI * 2);
+  ctx.stroke();
+
+  ctx.restore();
+};
+
+drawGift(rect.width * 0.25, rect.height * 0.3, 48, -0.2);
+drawGift(rect.width * 0.78, rect.height * 0.67, 38, 0.3);
+
+// Sparkle illustrations
+const drawSparkle = (x, y, size) => {
+  ctx.beginPath();
+  for (let i = 0; i < 8; i++) {
+    const angle = (Math.PI * 2 * i) / 8;
+    const radius = i % 2 === 0 ? size : size * 0.25;
+    const px = x + Math.cos(angle) * radius;
+    const py = y + Math.sin(angle) * radius;
+
+    if (i === 0) ctx.moveTo(px, py);
+    else ctx.lineTo(px, py);
+  }
+  ctx.closePath();
+  ctx.stroke();
+};
+
+drawSparkle(rect.width * 0.72, rect.height * 0.48, 19);
+drawSparkle(rect.width * 0.22, rect.height * 0.78, 11);
+
+// Brand label
+ctx.globalAlpha = 0.9;
+ctx.fillStyle = "#FFFFFF";
+ctx.font = "800 11px Arial";
+ctx.textAlign = "right";
+ctx.textBaseline = "top";
+ctx.fillText("INDIPAY REWARDS", rect.width - 16, 16);
+
+ctx.globalAlpha = 1;
+
     };
 
     setupCanvas();
@@ -138,7 +198,7 @@ function ScratchCard({ reward, onCopy }) {
     resizeObserver.observe(card);
 
     return () => resizeObserver.disconnect();
-  }, []);
+  }, [revealed]);
 
   const scratch = (event) => {
     if (revealed) return;
@@ -149,33 +209,27 @@ function ScratchCard({ reward, onCopy }) {
     if (!canvas || !ctx) return;
 
     const rect = canvas.getBoundingClientRect();
-
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
 
     ctx.globalCompositeOperation = "destination-out";
     ctx.beginPath();
-    ctx.arc(x, y, 24, 0, Math.PI * 2);
+    ctx.arc(x, y, 28, 0, Math.PI * 2);
     ctx.fill();
 
-    // Check scratched percentage occasionally
     if (Math.random() < 0.2) {
-      const image = ctx.getImageData(
-        0, 0, canvas.width, canvas.height
-      );
-
+      const image = ctx.getImageData(0, 0, canvas.width, canvas.height);
       let transparent = 0;
 
       for (let i = 3; i < image.data.length; i += 4) {
         if (image.data[i] < 10) transparent++;
       }
 
-      const percentage =
-        transparent / (image.data.length / 4);
+      const percentage = transparent / (image.data.length / 4);
 
       if (percentage >= 0.55) {
-        setRevealed(true);
         scratchingRef.current = false;
+        onReveal?.(reward.id);
       }
     }
   };
@@ -184,16 +238,12 @@ function ScratchCard({ reward, onCopy }) {
     if (revealed) return;
 
     scratchingRef.current = true;
-
     event.currentTarget.setPointerCapture?.(event.pointerId);
-
     scratch(event);
   };
 
   const handlePointerMove = (event) => {
-    if (scratchingRef.current) {
-      scratch(event);
-    }
+    if (scratchingRef.current) scratch(event);
   };
 
   const handlePointerUp = () => {
@@ -203,92 +253,66 @@ function ScratchCard({ reward, onCopy }) {
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(reward.code);
-
       setCopied(true);
       onCopy?.(reward.code);
-
       setTimeout(() => setCopied(false), 1800);
     } catch {
       setCopied(false);
     }
   };
 
-  return (
-    <article className={`reward-card reward-${reward.color}`}>
-
-      <div className="reward-card-top">
-        <span className="reward-category">
-          {reward.category}
-        </span>
-
-        <span className="reward-new-label">
-          INDIPAY REWARD
-        </span>
-      </div>
-
-      <div className="reward-value-area">
-        <span className="reward-value">{reward.value}</span>
-        <Gift size={34} />
-      </div>
-
+  
+return (
+  <div className={`reward-scratch-popup-card reward-${reward.color}`}>
+    <div className="reward-scratch-hidden-content">
+      <span>YOU WON</span>
+      <strong className="scratch-reward-value">{reward.value}</strong>
       <h3>{reward.title}</h3>
 
-      <p className="reward-description">
-        {reward.description}
-      </p>
+      <span className="scratch-code-label">YOUR REWARD CODE</span>
 
-      <div className="reward-scratch-area">
-        
-<div className={`reward-reveal-content ${revealed ? "revealed" : ""}`}>
-  <span>YOUR REWARD CODE</span>
+      <div className="reward-code-row">
+        <strong>{reward.code}</strong>
+        <button
+          type="button"
+          onClick={handleCopy}
+          aria-label="Copy reward code"
+          title={copied ? "Copied!" : "Copy code"}
+        >
+          {copied ? <Check size={17} /> : <Copy size={17} />}
+        </button>
+      </div>
+    </div>
 
-  <div className="reward-code-row">
-    <strong>{reward.code}</strong>
-
-    <button
-      type="button"
-      onClick={handleCopy}
-      aria-label="Copy reward code"
-      title={copied ? "Copied!" : "Copy code"}
-    >
-      {copied ? <Check size={17} /> : <Copy size={17} />}
-    </button>
+    {!revealed && (
+      <canvas
+        ref={canvasRef}
+        className="reward-scratch-canvas"
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+        onPointerCancel={handlePointerUp}
+      />
+    )}
   </div>
-</div>
+);
 
-      </div>
-
-      <div className="reward-card-footer">
-        <span>
-          <Clock size={13} /> {reward.expiry}
-        </span>
-
-        <span>{revealed ? "Revealed" : "Scratch card"}</span>
-      </div>
-
-      <small className="reward-terms">
-        {reward.terms}
-      </small>
-
-      {!revealed && (
-        <canvas
-          ref={canvasRef}
-          className="reward-scratch-canvas"
-          onPointerDown={handlePointerDown}
-          onPointerMove={handlePointerMove}
-          onPointerUp={handlePointerUp}
-          onPointerCancel={handlePointerUp}
-        />
-      )}
-
-    </article>
-  );
 }
+
 
 
 export default function Rewards({ customer, onBack }) {
   const [activeFilter, setActiveFilter] = useState("All");
   const [copiedCode, setCopiedCode] = useState("");
+  const [selectedReward, setSelectedReward] = useState(null);
+const [revealedRewards, setRevealedRewards] = useState([]);
+const handleReveal = (rewardId) => {
+  setRevealedRewards((previous) =>
+    previous.includes(rewardId)
+      ? previous
+      : [...previous, rewardId]
+  );
+};
 
   const filters = ["All", "Welcome", "Services", "Financial", "Referral", "Special"];
 
@@ -364,15 +388,97 @@ export default function Rewards({ customer, onBack }) {
             ))}
           </div>
 
-          <div className="rewards-grid">
-            {filteredRewards.map((reward) => (
-              <ScratchCard
-                key={reward.id}
-                reward={reward}
-                onCopy={setCopiedCode}
-              />
-            ))}
-          </div>
+          
+
+<div className="rewards-grid">
+  {filteredRewards.map((reward) => {
+    const isRevealed = revealedRewards.includes(reward.id);
+
+    return (
+      <article
+        key={reward.id}
+        className={`reward-preview reward-preview-${reward.color}`}
+        onClick={() => setSelectedReward(reward)}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            setSelectedReward(reward);
+          }
+        }}
+      >
+        
+{isRevealed ? (
+  
+<div className="reward-preview-revealed-content">
+  <div className="reward-card-top">
+    <span className="reward-category">{reward.category}</span>
+    <span className="reward-new-label">INDIPAY REWARD</span>
+  </div>
+
+  <div className="reward-value-area">
+    <span className="reward-value">{reward.value}</span>
+    <Gift size={38} />
+  </div>
+
+  <h3>{reward.title}</h3>
+
+  <p className="reward-description">{reward.description}</p>
+
+  
+<div className="reward-scratch-area">
+  <div className="reward-reveal-content revealed">
+    <Gift size={24} />
+    <span>
+      {isRevealed ? "Reward revealed" : "Tap to scratch"}
+    </span>
+    {!isRevealed && (
+      <small>Scratch card →</small>
+    )}
+  </div>
+</div>
+
+
+  <div className="reward-code-row">
+    <strong>{reward.code}</strong>
+    <button
+      type="button"
+      onClick={(event) => {
+        event.stopPropagation();
+        navigator.clipboard.writeText(reward.code);
+        setCopiedCode(reward.code);
+      }}
+      title="Copy reward code"
+    >
+      <Copy size={17} />
+    </button>
+  </div>
+</div>
+
+) : (
+  <>
+    <div className="reward-preview-pattern">
+      <Gift className="pattern-gift gift-one" size={65} />
+      <Gift className="pattern-gift gift-two" size={48} />
+      <Sparkles className="pattern-sparkle sparkle-one" size={35} />
+      <Sparkles className="pattern-sparkle sparkle-two" size={25} />
+      <span className="pattern-dot dot-one" />
+      <span className="pattern-dot dot-two" />
+      <span className="pattern-dot dot-three" />
+      <span className="pattern-dot dot-four" />
+    </div>
+
+    <span className="reward-preview-brand">INDIPAY REWARDS</span>
+  </>
+)}
+
+      </article>
+    );
+  })}
+</div>
+
+
 
           {filteredRewards.length === 0 && (
             <div className="rewards-empty">
@@ -400,6 +506,39 @@ export default function Rewards({ customer, onBack }) {
           redemption and expiry will be managed by Indipay.
         </p>
       </main>
+
+
+
+{selectedReward && (
+  <div
+    className="reward-modal-overlay"
+    onClick={() => setSelectedReward(null)}
+  >
+    <div
+      className="reward-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Scratch to reveal your reward"
+      onClick={(event) => event.stopPropagation()}
+    >
+      <ScratchCard
+        reward={selectedReward}
+        onCopy={setCopiedCode}
+        revealed={revealedRewards.includes(selectedReward.id)}
+        onReveal={handleReveal}
+      />
+
+      {revealedRewards.includes(selectedReward.id) && (
+        <p className="reward-modal-success">
+          <Check size={17} />
+          Your reward has been revealed!
+        </p>
+      )}
+    </div>
+  </div>
+)}
+
+
 
     </div>
   );

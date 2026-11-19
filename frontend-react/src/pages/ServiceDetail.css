@@ -1957,3 +1957,146 @@
     height: auto;
   }
 }
+
+/* =========================================
+   SERVICE DETAIL PAGE - DARK MODE
+========================================= */
+
+.indipay-app-shell.dark-mode .indipay-service-detail-page {
+  background: #0b1424;
+  color: #edf2fa;
+}
+
+/* Header */
+
+.indipay-app-shell.dark-mode .indipay-detail-header {
+  background: #101d32;
+  border-bottom-color: #263750;
+}
+
+.indipay-app-shell.dark-mode .indipay-detail-back {
+  color: #edf2fa;
+}
+
+.indipay-app-shell.dark-mode .indipay-detail-header-icon {
+  background: #1b2b43;
+  color: #edf2fa;
+}
+
+.indipay-app-shell.dark-mode .indipay-detail-profile-trigger {
+  background: #1b2b43;
+  border-color: #344660;
+  color: #edf2fa;
+}
+
+.indipay-app-shell.dark-mode .indipay-detail-profile-menu {
+  background: #14233a;
+  border-color: #344660;
+}
+
+.indipay-app-shell.dark-mode .indipay-detail-profile-menu button {
+  color: #edf2fa;
+}
+
+.indipay-app-shell.dark-mode .indipay-detail-profile-menu button:hover {
+  background: #263750;
+  color: #ffad59;
+}
+
+/* Service introduction */
+
+.indipay-app-shell.dark-mode .indipay-simple-service-intro h1 {
+  color: #f4f7fc;
+}
+
+.indipay-app-shell.dark-mode .indipay-simple-service-intro p {
+  color: #aab7ca;
+}
+
+.indipay-app-shell.dark-mode .indipay-simple-eyebrow {
+  color: #ffad59;
+}
+
+/* Application card */
+
+.indipay-app-shell.dark-mode .indipay-simple-application {
+  background: #14233a;
+  border-color: #2b3d57;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.18);
+}
+
+.indipay-app-shell.dark-mode .indipay-simple-application > label:first-child {
+  color: #edf2fa;
+}
+
+.indipay-app-shell.dark-mode .indipay-amount-input {
+  background: #0e1a2c;
+  border-color: #344660;
+  color: #ffad59;
+}
+
+.indipay-app-shell.dark-mode .indipay-amount-input input {
+  color: #f4f7fc;
+}
+
+.indipay-app-shell.dark-mode .indipay-amount-input input::placeholder {
+  color: #8190a5;
+}
+
+.indipay-app-shell.dark-mode .indipay-simple-terms {
+  color: #b8c4d5;
+}
+
+.indipay-app-shell.dark-mode .indipay-simple-terms a {
+  color: #ffad59;
+}
+
+/* Apply button */
+
+.indipay-app-shell.dark-mode .indipay-simple-apply {
+  background: #f28c28;
+  color: #101d36;
+}
+
+.indipay-app-shell.dark-mode .indipay-simple-apply:hover:not(:disabled) {
+  background: #ffad59;
+}
+
+/* Storyboard heading */
+
+.indipay-app-shell.dark-mode .indipay-simple-storyboard-heading h2 {
+  color: #f4f7fc;
+}
+
+.indipay-app-shell.dark-mode .indipay-simple-storyboard-heading p {
+  color: #aab7ca;
+}
+
+/* Storyboard placeholder */
+
+.indipay-app-shell.dark-mode .indipay-simple-storyboard-placeholder {
+  background: #14233a;
+  border-color: #344660;
+}
+
+.indipay-app-shell.dark-mode .indipay-simple-storyboard-placeholder span {
+  color: #edf2fa;
+}
+
+/* Profile overlay */
+
+.indipay-app-shell.dark-mode .indipay-profile-sheet {
+  background: #14233a;
+  color: #edf2fa;
+}
+
+.indipay-app-shell.dark-mode .indipay-profile-sheet-heading strong,
+.indipay-app-shell.dark-mode .indipay-profile-sheet-heading small {
+  color: #edf2fa;
+}
+
+.indipay-app-shell.dark-mode .indipay-profile-sheet > button {
+  background: #1b2b43;
+  color: #edf2fa;
+  border-color: #344660;
+}

@@ -131,3 +131,177 @@
 @media(prefers-reduced-motion:reduce){
     .le-card,.le-tab,
     .le-detail-panel{animation:none;transition:none}}
+
+/* Dark mode: inherits the global Indipay theme from .indipay-app-shell */
+.indipay-app-shell.dark-mode .le-page {
+  background: #0b1424;
+  color: #edf2fa;
+}
+
+.indipay-app-shell.dark-mode .le-header {
+  background: #080f1d;
+  color: #f7f9fc;
+  box-shadow: 0 5px 18px rgba(0, 0, 0, .28);
+}
+
+.indipay-app-shell.dark-mode .le-hero {
+  background:
+    radial-gradient(circle at 85% 20%, rgba(242, 140, 40, .2), transparent 27%),
+    linear-gradient(120deg, #111e34, #1c3457);
+}
+
+.indipay-app-shell.dark-mode .le-tab,
+.indipay-app-shell.dark-mode .le-card,
+.indipay-app-shell.dark-mode .le-search,
+.indipay-app-shell.dark-mode .le-empty,
+.indipay-app-shell.dark-mode .le-faq {
+  background: #152238;
+  color: #edf2fa;
+  border-color: #2b3b54;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, .16);
+}
+
+.indipay-app-shell.dark-mode .le-tab:hover,
+.indipay-app-shell.dark-mode .le-card:hover {
+  border-color: #a9672d;
+}
+
+.indipay-app-shell.dark-mode .le-tab.active {
+  background: #28283a;
+  border-color: #f28c28;
+  box-shadow: 0 7px 20px rgba(242, 140, 40, .08);
+}
+
+.indipay-app-shell.dark-mode .le-tab-icon {
+  background: #22344f;
+  color: #f5a04b;
+}
+
+.indipay-app-shell.dark-mode .le-tab.active .le-tab-icon {
+  background: #101d36;
+  color: #f28c28;
+}
+
+.indipay-app-shell.dark-mode .le-tab small,
+.indipay-app-shell.dark-mode .le-section-heading p,
+.indipay-app-shell.dark-mode .le-card-meta,
+.indipay-app-shell.dark-mode .le-card > p,
+.indipay-app-shell.dark-mode .le-card-bottom > span,
+.indipay-app-shell.dark-mode .le-page-note,
+.indipay-app-shell.dark-mode .le-empty p {
+  color: #a8b5c8;
+}
+
+.indipay-app-shell.dark-mode .le-search input {
+  color: #edf2fa;
+}
+
+.indipay-app-shell.dark-mode .le-search input::placeholder {
+  color: #8795aa;
+}
+
+.indipay-app-shell.dark-mode .le-search kbd {
+  background: #0d192b;
+  color: #aebbd0;
+  border-color: #35445b;
+}
+
+.indipay-app-shell.dark-mode .le-category-filters button {
+  background: #152238;
+  color: #bac5d5;
+  border-color: #2b3b54;
+}
+
+.indipay-app-shell.dark-mode .le-category-filters button.active {
+  background: #f28c28;
+  color: #101d36;
+  border-color: #f28c28;
+}
+
+.indipay-app-shell.dark-mode .le-card-bottom {
+  border-top-color: #2b3b54;
+}
+
+.indipay-app-shell.dark-mode .le-help-strip {
+  background: #292437;
+  border-color: #62472f;
+}
+
+.indipay-app-shell.dark-mode .le-help-icon {
+  background: #18253a;
+}
+
+.indipay-app-shell.dark-mode .le-help-strip p {
+  color: #b6c0d0;
+}
+
+.indipay-app-shell.dark-mode .le-detail-panel {
+  background: #101c30;
+  color: #edf2fa;
+}
+
+.indipay-app-shell.dark-mode .le-icon-button {
+  background: #26364e;
+  color: #edf2fa;
+}
+
+.indipay-app-shell.dark-mode .le-detail-panel h2,
+.indipay-app-shell.dark-mode .le-detail-panel h3,
+.indipay-app-shell.dark-mode .le-faq strong {
+  color: #f1f5fb;
+}
+
+.indipay-app-shell.dark-mode .le-detail-intro,
+.indipay-app-shell.dark-mode .le-body-copy,
+.indipay-app-shell.dark-mode .le-check-list li,
+.indipay-app-shell.dark-mode .le-bullet-list li,
+.indipay-app-shell.dark-mode .le-step-list p,
+.indipay-app-shell.dark-mode .le-faq p,
+.indipay-app-shell.dark-mode .le-disclaimer {
+  color: #b3bfd0;
+}
+
+.indipay-app-shell.dark-mode .le-step-list li > span {
+  background: #3b2d24;
+  color: #ffad5a;
+}
+
+.indipay-app-shell.dark-mode .le-faq {
+  background: #17263d;
+}
+
+.indipay-app-shell.dark-mode .le-video-placeholder {
+  background: linear-gradient(135deg, #1a2a42, #111d30);
+  border-color: #3a4b64;
+  color: #dce5f1;
+}
+
+.indipay-app-shell.dark-mode .le-video-placeholder small {
+  color: #a8b5c8;
+}
+
+.indipay-app-shell.dark-mode .le-secondary-button {
+  background: #1b2a40;
+  color: #edf2fa;
+  border-color: #3a4b64;
+}
+
+.indipay-app-shell.dark-mode .le-card-icon.le-legal {
+  background: #24334d;
+  color: #a9c3f4;
+}
+
+.indipay-app-shell.dark-mode .le-card-icon.le-business {
+  background: #1c3b35;
+  color: #7dd5b0;
+}
+
+.indipay-app-shell.dark-mode .le-card-icon.le-jobs {
+  background: #342b49;
+  color: #c7a9f5;
+}
+
+.indipay-app-shell.dark-mode .le-card-icon.le-times {
+  background: #453026;
+  color: #ffb17c;
+}

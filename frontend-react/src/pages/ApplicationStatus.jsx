@@ -9,8 +9,9 @@ import {
   Download,
 } from "lucide-react";
 import "./ApplicationStatus.css";
+import API_BASE_URL from "../config/api";
 
-const API_URL = "http://localhost:5000/api/applications";
+const API_URL = `${API_BASE_URL}/api/my-applications`;
 
 const statusOptions = [
   "Pending",

@@ -10,6 +10,7 @@ import {
 
 import { serviceOptions } from "../data/serviceOptions";
 import "./ApplicationForm.css";
+import API_BASE_URL from "../config/api";
 
 function ApplicationForm({ initialService, onApplicationSubmitted, onBack, customer }) {
   const [formData, setFormData] = useState({
@@ -44,7 +45,7 @@ const handleSubmit = async (event) => {
 
     try {
         const response = await fetch(
-    "http://localhost:5000/api/applications",
+    `${API_BASE_URL}/api/applications`,
     {
         method: "POST",
         headers: {

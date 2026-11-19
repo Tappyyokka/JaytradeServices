@@ -9,6 +9,7 @@ import {
   RefreshCw,
 } from "lucide-react";
 import "./Refer.css";
+import API_BASE_URL from "../config/api";
 
 function Refer({ customer }) {
   const [data, setData] = useState(null);
@@ -25,7 +26,7 @@ function Refer({ customer }) {
       setError("");
 
       const response = await fetch(
-        "http://localhost:5000/api/auth/referrals",
+        `${API_BASE_URL}/api/auth/referrals`,
         {
           credentials: "include",
         }

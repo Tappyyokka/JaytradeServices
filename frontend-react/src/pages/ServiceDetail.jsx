@@ -690,28 +690,6 @@ const handleBottomTab = (label) => {
   </div>
 )}
 
-      <nav className="indipay-bottom-nav" aria-label="Main navigation">
-  {[
-    { label: "Me", icon: UserRound },
-    { label: "My Customers", icon: Users },
-    { label: "Rewards", icon: Gift },
-    { label: "Learn & Earn", icon: BookOpen },
-    { label: "About Us", icon: Info },
-  ].map((item) => {
-    const Icon = item.icon;
-
-    return (
-      <button
-        key={item.label}
-        className={activeTab === item.label ? "active" : ""}
-        onClick={() => handleBottomTab(item.label)}
-      >
-        <Icon size={20} strokeWidth={1.9} />
-        <span>{item.label}</span>
-      </button>
-    );
-  })}
-</nav>
     </div>
   );
 

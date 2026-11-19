@@ -7752,3 +7752,50 @@ body:has(.indipay-app-home.dark-mode) .indipay-bottom-nav button svg {
 .indipay-app-shell.dark-mode .indipay-bottom-nav button:nth-child(3).active {
   background: rgba(242, 140, 40, 0.12);
 }
+
+.indipay-login-required {
+  min-height: 75vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: #f5f7fb;
+}
+
+.indipay-login-required-card {
+  width: 100%;
+  max-width: 420px;
+  padding: 35px 25px;
+  text-align: center;
+  background: #ffffff;
+  border-radius: 18px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+}
+
+.indipay-login-required-card h2 {
+  color: #142b50;
+  margin-bottom: 12px;
+}
+
+.indipay-login-required-card p {
+  color: #64748b;
+  line-height: 1.6;
+  margin-bottom: 25px;
+}
+
+.indipay-login-required-card button {
+  width: 100%;
+  padding: 13px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 9px;
+  background: #f28c28;
+  color: #ffffff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.indipay-login-required-card button:last-child {
+  background: #e9edf4;
+  color: #142b50;
+}

@@ -12,6 +12,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import "./Register.css";
+import API_BASE_URL from "../config/api";
 
 function Register({ onBack, onLogin, onSuccess }) {
   const [showPassword, setShowPassword] = useState(false);
@@ -60,7 +61,8 @@ function Register({ onBack, onLogin, onSuccess }) {
 
     try {
         const response = await fetch(
-            "http://localhost:5000/api/auth/register",
+            `${API_BASE_URL}/api/auth/register`
+,
             {
                 method: "POST",
                 headers: {

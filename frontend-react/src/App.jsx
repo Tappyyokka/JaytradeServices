@@ -1,16 +1,9 @@
 import { useState, useEffect } from "react";
 
-import Navbar from "./components/common/navbar";
-import Footer from "./components/common/Footer";
-import { MessageCircle, Phone, X, Bot } from "lucide-react";
 
-import IndexHero from "./components/index/IndexHero";
-import AboutSection from "./components/index/AboutSection";
-import FeaturedStories from "./components/index/FeaturedStories";
-import ServicesOverview from "./components/index/ServicesOverview";
-import WhyChooseUs from "./components/index/WhyChooseUs";
-import HowItWorks from "./components/index/HowItWorks";
-import AuthBanner from "./components/index/AuthBanner";
+import Footer from "./components/common/Footer";
+import API_BASE_URL from "./config/api";
+import { MessageCircle, Phone, X, Bot } from "lucide-react";
 import Chatbot from "./components/common/Chatbot";
 import Announcements from "./pages/Announcements";
 import ApplicationForm from "./pages/ApplicationForm";
@@ -26,6 +19,7 @@ import Times from "./pages/Times";
 import BusinessDevelopment from "./pages/BusinessDevelopment";
 import AboutUs from "./pages/AboutUs";
 import Login from "./pages/Login";
+import LegalDetails from "./pages/LegalDetails";
 import Register from "./pages/Register";
 
 import Home from "./pages/Home";
@@ -33,7 +27,7 @@ import DetailedServices from "./pages/DetailedServices";
 import ServiceDetail from "./pages/ServiceDetail";
 
 function App() {
-  const [currentPage, setCurrentPage] = useState("existing");
+  const [currentPage, setCurrentPage] = useState("home");
   const [darkMode, setDarkMode] = useState(() => {
   return localStorage.getItem("indipay-theme") === "dark";
 });
@@ -87,7 +81,7 @@ const activeTab = pageToTab[currentPage] || "";
     const checkCustomerSession = async () => {
         try {
             const response = await fetch(
-                "http://localhost:5000/api/auth/me",
+                `${API_BASE_URL}/api/auth/me`,
                 {
                     method: "GET",
                     credentials: "include",
@@ -113,6 +107,11 @@ const activeTab = pageToTab[currentPage] || "";
     setCurrentPage("service-detail");
     window.scrollTo(0, 0);
   };
+  const handleOpenLegalDetails = (service) => {
+  setSelectedService(service);
+  setCurrentPage("legal-details");
+  window.scrollTo(0, 0);
+};
   const handleOpenJobs = () => {
   setCurrentPage("jobs");
   window.scrollTo(0, 0);
@@ -133,13 +132,63 @@ const handleOpenTimes = () => {
   window.scrollTo(0, 0);
 };
 
+const protectedPages = [
+  "customer-applications",
+  "application-status",
+  "application-form",
+  "wallet",
+  "rewards",
+  "refer",
+];
+
+const requiresLogin =
+  !customer && protectedPages.includes(currentPage);
+
    let pageContent;
 
-   if (currentPage === "login") {
+  if (requiresLogin) {
+  pageContent = (
+    <div className="indipay-login-required">
+      <div className="indipay-login-required-card">
+        <h2>Login Required</h2>
+        <p>
+          Please log in to access this section of your Indipay account.
+        </p>
+
+        <button
+          onClick={() => {
+            setCurrentPage("login");
+            window.scrollTo(0, 0);
+          }}
+        >
+          Login to Continue
+        </button>
+
+        <button
+          onClick={() => {
+            setCurrentPage("register");
+            window.scrollTo(0, 0);
+          }}
+        >
+          Create Account
+        </button>
+
+        <button
+          onClick={() => {
+            setCurrentPage("home");
+            window.scrollTo(0, 0);
+          }}
+        >
+          Back to Home
+        </button>
+      </div>
+    </div>
+  );
+} else if (currentPage === "login") {
   pageContent = (
     <Login
       onBack={() => {
-        setCurrentPage("existing");
+        setCurrentPage("home");
         window.scrollTo(0, 0);
       }}
       onRegister={() => {
@@ -157,7 +206,7 @@ const handleOpenTimes = () => {
   pageContent = (
     <Register
       onBack={() => {
-        setCurrentPage("existing");
+        setCurrentPage("home");
         window.scrollTo(0, 0);
       }}
       onLogin={() => {
@@ -217,7 +266,25 @@ onApplicationSubmitted={() => {
       
     );
 
-    } else if (currentPage === "jobs") {
+   } else if (currentPage === "legal-details") {
+  pageContent = (
+    <LegalDetails
+      service={selectedService}
+      onBack={() => {
+        setCurrentPage("services");
+        window.scrollTo(0, 0);
+      }}
+      onApplyNow={handleApplyNow}
+      onLogin={() => {
+        setCurrentPage("login");
+        window.scrollTo(0, 0);
+      }}
+      onOpenAboutUs={handleOpenAboutUs}
+    />
+  );
+} 
+    
+    else if (currentPage === "jobs") {
   pageContent = (
     <Jobs
       onBack={() => {
@@ -268,6 +335,7 @@ onApplicationSubmitted={() => {
     window.scrollTo(0, 0);
   }}
   onSelectService={handleSelectService}
+  onSelectLegalService={handleOpenLegalDetails}
   onOpenApplicationStatus={() => {
   if (customer?.role === "ADMIN") {
     setCurrentPage("application-status");
@@ -304,7 +372,7 @@ onOpenAboutUs={handleOpenAboutUs}
   setDarkMode={setDarkMode}
     onLogout={async () => {
   try {
-    await fetch("http://localhost:5000/api/auth/logout", {
+    await fetch(`${API_BASE_URL}/api/auth/logout`, {
       method: "POST",
       credentials: "include",
     });
@@ -313,7 +381,7 @@ onOpenAboutUs={handleOpenAboutUs}
   }
 
   setCustomer(null);
-  setCurrentPage("existing");
+  setCurrentPage("home");
   window.scrollTo(0, 0);
 }}
 onOpenRefer={() => {
@@ -321,7 +389,7 @@ onOpenRefer={() => {
   window.scrollTo(0, 0);
 }}
       onBack={() => {
-        setCurrentPage("existing");
+        setCurrentPage("home");
         window.scrollTo(0, 0);
       }}
       onOpenServices={() => {
@@ -404,7 +472,7 @@ else if (currentPage === "wallet") {
 }}
       onLogout={async () => {
         try {
-          await fetch("http://localhost:5000/api/auth/logout", {
+          await fetch(`${API_BASE_URL}/api/auth/logout`, {
             method: "POST",
             credentials: "include",
           });
@@ -413,7 +481,7 @@ else if (currentPage === "wallet") {
         }
 
         setCustomer(null);
-        setCurrentPage("existing");
+        setCurrentPage("home");
         window.scrollTo(0, 0);
       }}
       onOpenProfile={() => {
@@ -510,60 +578,8 @@ else if (currentPage === "about-us") {
 }
 
 else {
-    pageContent = (
-      <>
-        <button
-          onClick={() => {
-            setCurrentPage("home");
-            window.scrollTo(0, 0);
-          }}
-          style={{
-            position: "fixed",
-            bottom: "20px",
-            right: "20px",
-            zIndex: 9999,
-            padding: "12px 20px",
-            background: "#0866f5",
-            color: "#fff",
-            border: "none",
-            borderRadius: "8px",
-            cursor: "pointer",
-            fontWeight: "600",
-            boxShadow: "0 3px 12px rgba(0,0,0,0.2)",
-          }}
-        >
-          Open New Home Page →
-        </button>
-
-        <Navbar
-  onLogin={() => {
-    setCurrentPage("login");
-    window.scrollTo(0, 0);
-  }}
-  onRegister={() => {
-    setCurrentPage("register");
-    window.scrollTo(0, 0);
-  }}
-/>
-        <IndexHero />
-        <AboutSection />
-        <FeaturedStories />
-        <ServicesOverview />
-        <WhyChooseUs />
-        <HowItWorks />
-        <AuthBanner
-  onRegister={() => {
-    setCurrentPage("register");
-    window.scrollTo(0, 0);
-  }}
-  onLogin={() => {
-    setCurrentPage("login");
-    window.scrollTo(0, 0);
-  }}
-/>
-      </>
-    );
-  }
+  pageContent = null;
+}
 
   const isAuthPage =
   currentPage === "login" || currentPage === "register";
@@ -575,14 +591,14 @@ return (
   >
     {pageContent}
 
-  {!["existing", "login", "register"].includes(currentPage) && (
+  {!["login", "register"].includes(currentPage) && (
     <BottomNav
       activeTab={activeTab}
       onNavigate={handleBottomNavigation}
     />
   )}
 
-    {["home", "services", "service-detail"].includes(currentPage) && (
+   {!isAuthPage && (
       <Chatbot
         customer={customer}
         hideLauncher
@@ -626,64 +642,55 @@ return (
  currentPage !== "wallet" &&
  currentPage !== "refer" &&
  currentPage !== "rewards" &&
+ currentPage !== "about-us" &&
  currentPage !== "learn-earn" &&
+ currentPage !== "legal-details" && 
  currentPage !== "jobs" && (
   <Footer onSelectService={handleSelectService} />
 )}
 
-        {["home", "services", "service-detail"].includes(currentPage) ? (
-  <div className="indipay-support-float">
-    {supportMenuOpen && (
-      <div className="indipay-support-options">
-        <button
-          type="button"
-          onClick={() => {
-            setSupportMenuOpen(false);
-            setChatOpenSignal((value) => value + 1);
-          }}
-        >
-          <Bot size={19} />
-          Ask the AI Assistant
-        </button>
+    
+<div className="indipay-support-float">
+  {supportMenuOpen && (
+    <div className="indipay-support-options">
+      <button
+        type="button"
+        onClick={() => {
+          setSupportMenuOpen(false);
+          setChatOpenSignal((value) => value + 1);
+        }}
+      >
+        <Bot size={19} />
+        Ask the AI Assistant
+      </button>
 
-        <a
-          href="https://wa.me/916238398343?text=Hello%20Jay%20Trade,%20I'm%20interested%20in%20your%20services.%20Could%20you%20please%20assist%20me?"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <span className="support-whatsapp-icon">
-            <MessageCircle size={17} />
-            <Phone size={9} />
-          </span>
-          Chat on WhatsApp
-        </a>
-      </div>
-    )}
+      <a
+        href="https://wa.me/916238398343?text=Hello%20Jay%20Trade,%20I'm%20interested%20in%20your%20services.%20Could%20you%20please%20assist%20me?"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <span className="support-whatsapp-icon">
+          <MessageCircle size={17} />
+          <Phone size={9} />
+        </span>
+        Chat on WhatsApp
+      </a>
+    </div>
+  )}
 
-    <button
-      type="button"
-      className="indipay-support-main"
-      onClick={() => setSupportMenuOpen((open) => !open)}
-      aria-expanded={supportMenuOpen}
-      aria-label={supportMenuOpen ? "Close support options" : "Open support options"}
-    >
-      {supportMenuOpen ? <X size={25} /> : <MessageCircle size={25} />}
-    </button>
-  </div>
-) : (
-  <a
-    href="https://wa.me/916238398343?text=Hello%20Jay%20Trade,%20I'm%20interested%20in%20your%20services.%20Could%20you%20please%20assist%20me?"
-    className="whatsapp-float"
-    target="_blank"
-    rel="noopener noreferrer"
-    aria-label="Chat with Jay Trade on WhatsApp"
+  <button
+    type="button"
+    className="indipay-support-main"
+    onClick={() => setSupportMenuOpen((open) => !open)}
+    aria-expanded={supportMenuOpen}
+    aria-label={
+      supportMenuOpen ? "Close support options" : "Open support options"
+    }
   >
-    <span className="whatsapp-icon">
-      <MessageCircle size={32} />
-      <Phone size={15} className="whatsapp-phone" />
-    </span>
-  </a>
-)}
+    {supportMenuOpen ? <X size={25} /> : <MessageCircle size={25} />}
+  </button>
+</div>
+   
       </>
     )}
     </div>

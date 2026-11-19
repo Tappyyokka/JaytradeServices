@@ -11,6 +11,7 @@ import {
   UserRound,
 } from "lucide-react";
 import "./Login.css";
+import API_BASE_URL from "../config/api";
 
 function Login({ onBack, onRegister, onSuccess  }) {
   const [showPassword, setShowPassword] = useState(false);
@@ -36,7 +37,7 @@ function Login({ onBack, onRegister, onSuccess  }) {
 
     try {
         const response = await fetch(
-            "http://localhost:5000/api/auth/login",
+            `${API_BASE_URL}/api/auth/login`,
             {
                 method: "POST",
                 headers: {

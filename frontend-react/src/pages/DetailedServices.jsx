@@ -90,6 +90,7 @@ function AnimatedIcon({
 function DetailedServices({
   onBack,
   onSelectService,
+  onSelectLegalService,
   onOpenApplicationStatus,
   onOpenAnnouncements,
   onOpenJobs,
@@ -388,9 +389,10 @@ const categories = [
 ];
 
   const handleServiceClick = (category, service) => {
-  if (
+  if (category.id === "legal-services") {
+    onSelectLegalService?.(service);
+  } else if (
     category.id === "financial-services" ||
-    category.id === "legal-services" ||
     category.id === "business-development"
   ) {
     onSelectService?.(service);
