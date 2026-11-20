@@ -40,6 +40,21 @@ function generateAccountId() {
     return String(randomInt(100000000000, 1000000000000));
 }
 
+// PostgreSQL can discard an idle pooled connection. Retrying a read once lets
+// the pool obtain a fresh connection without retrying any database writes.
+async function readWithConnectionRetry(query) {
+    try {
+        return await query();
+    } catch (error) {
+        if (error?.code !== "P1017") {
+            throw error;
+        }
+
+        console.warn("PostgreSQL connection closed; retrying read query once.");
+        return query();
+    }
+}
+
 // REGISTER CUSTOMER
 router.post("/register", async (req, res) => {
     try {
@@ -77,26 +92,26 @@ router.post("/register", async (req, res) => {
             });
         }
 
-        const existingUser = await prisma.user.findFirst({
+        const existingUser = await readWithConnectionRetry(() => prisma.user.findFirst({
             where: {
                 OR: [
                     { email: cleanEmail },
                     { phone: cleanMobile },
                 ],
             },
-        });
+        }));
 
         let referrer = null;
 
 if (referralCode && referralCode.trim()) {
-    referrer = await prisma.user.findUnique({
+    referrer = await readWithConnectionRetry(() => prisma.user.findUnique({
         where: {
             referralCode: referralCode.trim().toUpperCase(),
         },
         select: {
             id: true,
         },
-    });
+    }));
 
     if (!referrer) {
         return res.status(400).json({
@@ -203,9 +218,9 @@ router.post("/login", async (req, res) => {
 
         const cleanEmail = email.trim().toLowerCase();
 
-        const user = await prisma.user.findUnique({
+        const user = await readWithConnectionRetry(() => prisma.user.findUnique({
             where: { email: cleanEmail },
-        });
+        }));
 
         if (!user || !(await bcrypt.compare(password, user.password))) {
             return res.status(401).json({
@@ -278,7 +293,7 @@ function authenticateCustomer(req, res, next) {
 // GET LOGGED-IN CUSTOMER
 router.get("/me", authenticateCustomer, async (req, res) => {
     try {
-        const user = await prisma.user.findUnique({
+        const user = await readWithConnectionRetry(() => prisma.user.findUnique({
             where: { id: req.user.id },
             select: {
                 accountId: true,
@@ -289,7 +304,7 @@ router.get("/me", authenticateCustomer, async (req, res) => {
                 role: true,
                 isActive: true,
             },
-        });
+        }));
 
         if (!user || !user.isActive) {
             return res.status(401).json({
@@ -318,14 +333,14 @@ router.get("/me", authenticateCustomer, async (req, res) => {
 // GET CUSTOMER REFERRALS
 router.get("/referrals", authenticateCustomer, async (req, res) => {
     try {
-        let user = await prisma.user.findUnique({
+        let user = await readWithConnectionRetry(() => prisma.user.findUnique({
             where: { id: req.user.id },
             select: {
                 id: true,
                 accountId: true,
                 referralCode: true,
             },
-        });
+        }));
 
         if (!user) {
             return res.status(404).json({
@@ -351,7 +366,7 @@ router.get("/referrals", authenticateCustomer, async (req, res) => {
             });
         }
 
-        const referrals = await prisma.user.findMany({
+        const referrals = await readWithConnectionRetry(() => prisma.user.findMany({
             where: {
                 referredById: req.user.id,
             },
@@ -363,7 +378,7 @@ router.get("/referrals", authenticateCustomer, async (req, res) => {
             orderBy: {
                 createdAt: "desc",
             },
-        });
+        }));
 
         return res.json({
             success: true,
