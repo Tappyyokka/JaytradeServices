@@ -18,7 +18,7 @@ import BottomNav from "../components/common/BottomNav";
 import API_BASE_URL from "../config/api";
 
 const API_URL = `${API_BASE_URL}/api/my-applications`;
-const STATUS_API_URL = `${API_BASE_URL}/api/my-applications`;
+const STATUS_API_URL = `${API_BASE_URL}/api/applications`;
 
 function CustomerApplications({ onBack }) {
   const [applications, setApplications] = useState([]);
