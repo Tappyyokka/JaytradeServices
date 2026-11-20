@@ -14,7 +14,6 @@ import {
 } from "lucide-react";
 
 import "./CustomerApplications.css";
-import BottomNav from "../components/common/BottomNav";
 import API_BASE_URL from "../config/api";
 
 const API_URL = `${API_BASE_URL}/api/my-applications`;
@@ -378,14 +377,6 @@ const customerStatus = jaytradeData?.customer_status;
         </section>
       </div>
 
-      <BottomNav
-        activeTab="Applications"
-        onNavigate={(label) => {
-          if (label === "Me" || label === "About Us") {
-            onBack?.();
-          }
-        }}
-      />
     </main>
   );
 }

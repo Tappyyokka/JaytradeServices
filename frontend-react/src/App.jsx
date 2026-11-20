@@ -68,6 +68,9 @@ useEffect(() => {
 const pageToTab = {
   home: "Me",
   login: "Me",
+  "customer-applications": "Me",
+  "application-status": "Me",
+  "application-form": "Me",
   refer: "Refer",
   rewards: "Rewards",
   times: "Learn & Earn",
