@@ -10,13 +10,15 @@ const router = express.Router();
 const COOKIE_NAME = "indipay_token";
 
 function getCookieOptions() {
-    return {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
-        maxAge: 7 * 24 * 60 * 60 * 1000,
-        path: "/",
-    };
+  const isProduction = process.env.NODE_ENV === "production";
+
+  return {
+    httpOnly: true,
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "lax",
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+    path: "/",
+  };
 }
 
 function createToken(user) {
@@ -384,10 +386,10 @@ router.get("/referrals", authenticateCustomer, async (req, res) => {
 // LOGOUT CUSTOMER
 router.post("/logout", (req, res) => {
     res.clearCookie(COOKIE_NAME, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
-        path: "/",
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    path: "/",
     });
 
     return res.json({
