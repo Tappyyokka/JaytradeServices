@@ -7551,87 +7551,12 @@ body:has(.indipay-app-home.dark-mode) .indipay-bottom-nav button svg {
    My Services card.
 ========================================================= */
 
-.indipay-app-home.dark-mode .indipay-account-card .indipay-account-card-links {
-  background: #101D36 !important;
-  background-color: #101D36 !important;
-  border-top: 1px solid #40516B !important;
-  color: #E7EDF7 !important;
-}
-
-.indipay-app-home.dark-mode .indipay-account-card .indipay-account-card-links button {
-  background: transparent !important;
-  color: #D6DFED !important;
-  border-right: 1px solid #40516B !important;
-  transition: background-color .2s ease, color .2s ease;
-}
-
-.indipay-app-home.dark-mode .indipay-account-card .indipay-account-card-links button:last-child {
-  border-right: 0 !important;
-}
-
-.indipay-app-home.dark-mode .indipay-account-card .indipay-account-card-links button svg {
-  color: #FFAA50 !important;
-}
-
-.indipay-app-home.dark-mode .indipay-account-card .indipay-account-card-links button span {
-  color: inherit !important;
-}
-
 .indipay-app-home.dark-mode .indipay-account-card .indipay-account-card-links button:hover,
 .indipay-app-home.dark-mode .indipay-account-card .indipay-account-card-links button:focus-visible {
   background: rgba(242, 140, 40, .14) !important;
   color: #FFAA50 !important;
   outline-color: #F28C28;
 }
-
-.indipay-app-home.dark-mode .indipay-account-card .indipay-account-card-links button:hover svg,
-.indipay-app-home.dark-mode .indipay-account-card .indipay-account-card-links button:focus-visible svg {
-  color: #FFAA50 !important;
-}
-
-/* FIX: DARK MODE — ACCOUNT CARD SHORTCUT FOOTERS */
-
-.indipay-app-home.dark-mode .indipay-account-card-links,
-.indipay-app-home[data-theme="dark"] .indipay-account-card-links {
-  background: #101D36 !important;
-  background-image: none !important;
-  border-top: 1px solid rgba(242, 140, 40, 0.45) !important;
-}
-
-.indipay-app-home.dark-mode .indipay-account-card-links button,
-.indipay-app-home[data-theme="dark"] .indipay-account-card-links button {
-  background: #101D36 !important;
-  color: #FFFFFF !important;
-  border: 0 !important;
-}
-
-.indipay-app-home.dark-mode .indipay-account-card-links button + button,
-.indipay-app-home[data-theme="dark"] .indipay-account-card-links button + button {
-  border-left: 1px solid #344966 !important;
-}
-
-.indipay-app-home.dark-mode .indipay-account-card-links button svg,
-.indipay-app-home[data-theme="dark"] .indipay-account-card-links button svg {
-  color: #F28C28 !important;
-  stroke: #F28C28 !important;
-}
-
-.indipay-app-home.dark-mode .indipay-account-card-links button span,
-.indipay-app-home[data-theme="dark"] .indipay-account-card-links button span {
-  color: #FFFFFF !important;
-}
-
-.indipay-app-home.dark-mode .indipay-account-card-links button:hover,
-.indipay-app-home[data-theme="dark"] .indipay-account-card-links button:hover {
-  background: #1A304F !important;
-  color: #F28C28 !important;
-}
-
-.indipay-app-home.dark-mode .indipay-account-card-links button:hover span,
-.indipay-app-home[data-theme="dark"] .indipay-account-card-links button:hover span {
-  color: #F28C28 !important;
-}
-
 
 /* =========================================
    ACCOUNT CARD SHORTCUTS — FINAL THEME FIX

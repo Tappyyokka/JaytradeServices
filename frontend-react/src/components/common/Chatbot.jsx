@@ -104,14 +104,22 @@ function Chatbot({
   }, [messages, isTyping, isOpen]);
 
   useEffect(() => {
-  if (externalOpenSignal !== previousExternalOpenSignal.current) {
+    if (externalOpenSignal === previousExternalOpenSignal.current) {
+      return undefined;
+    }
+
     previousExternalOpenSignal.current = externalOpenSignal;
 
-    if (externalOpenSignal > 0) {
-      setIsOpen(true);
+    if (externalOpenSignal <= 0) {
+      return undefined;
     }
-  }
-}, [externalOpenSignal]);
+
+    const timeoutId = window.setTimeout(() => {
+      setIsOpen(true);
+    }, 0);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [externalOpenSignal]);
 
   const addBotMessage = (text) => {
     setIsTyping(true);

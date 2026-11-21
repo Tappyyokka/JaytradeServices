@@ -3,10 +3,10 @@ import indipayLogo from "../assets/images/logo-transparent2.png";
 import Jaytradelogo from "../assets/images/Jaytrade-logo.jpg";
 import {
   Menu, X, Bell, LogOut, UserRound, ChevronRight, ChevronLeft, Moon, Sun,
-  Eye, EyeOff, FileText, ClipboardList, BellRing, Landmark,
+  Eye, EyeOff, FileText, ClipboardList, Landmark,
   BriefcaseBusiness, GraduationCap, Newspaper, Gift, Star,
-  BookOpen, Headset, Users, Wallet, ArrowRight, Sparkles,
-  CreditCard, CircleHelp, Home as HomeIcon, Settings, Building2,
+  Users, Wallet, ArrowRight, Sparkles,
+  CreditCard, Home as HomeIcon, Building2,
   BadgeCheck, Receipt, FileCheck, Globe, Search, Copy, Check, Plus, CheckCircle,
 } from "lucide-react";
 import "./Home.css";
@@ -156,7 +156,6 @@ function Home({
   setDarkMode,
   onOpenWallet,
   onOpenBusinessDevelopment,
-  onOpenAboutUs,
   onLogin,
   onRegister,
   onOpenRefer,
@@ -164,7 +163,6 @@ function Home({
   const [menuOpen, setMenuOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState("Financial Services");
-  const [activeTab, setActiveTab] = useState("Me");
   const [balanceVisible, setBalanceVisible] = useState(false);
   const [activeAccount, setActiveAccount] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
@@ -210,30 +208,10 @@ function Home({
     (category) => category.title === activeCategory
   );
 
-  const handleShortcut = (label) => {
-    if (label === "Applications") {
-      onOpenApplicationStatus?.();
-    } else if (label === "Notifications") {
-      onOpenAnnouncements?.();
-    } else if (label === "Statements") {
-      setActiveTab("Statements");
-    }
-  };
-
   const handleHorizontalWheel = (e) => {
   if (e.deltaY !== 0) {
     e.preventDefault();
     e.currentTarget.scrollLeft += e.deltaY;
-  }
-};
-
-  const handleBottomTab = (label) => {
-  setActiveTab(label);
-
-  if (label === "Me") {
-    setProfileOpen(true);
-  } else if (label === "About Us") {
-    onOpenAboutUs?.();
   }
 };
 
@@ -448,7 +426,7 @@ function Home({
   )}
 
   <div className="indipay-account-card-links">
-    <button onClick={() => handleShortcut("Statements")}>
+    <button type="button" onClick={onOpenWallet}>
       <FileText size={18} />
       <span>Statements</span>
     </button>
@@ -607,15 +585,6 @@ function Home({
         </section>
 
 
-        {activeTab !== "Me" && (
-          <div className="indipay-tab-placeholder">
-            <CircleHelp size={20} />
-            <div>
-              <strong>{activeTab}</strong>
-              <span>This section will be connected in a later update.</span>
-            </div>
-          </div>
-        )}
       </main>
 
       {profileOpen && (

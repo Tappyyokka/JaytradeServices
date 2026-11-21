@@ -1,12 +1,11 @@
 
-import { useEffect, useState } from "react";
+import { useEffect, useCallback, useState } from "react";
 import {
   ArrowLeft,
   Search,
   FileText,
   Eye,
   X,
-  Download,
 } from "lucide-react";
 import "./ApplicationStatus.css";
 import API_BASE_URL from "../config/api";
@@ -30,36 +29,45 @@ function ApplicationStatus({ onBack }) {
   const [updatingId, setUpdatingId] = useState(null);
 
   // Fetch applications from PostgreSQL through Node.js
-  const fetchApplications = async () => {
-    try {
-      setLoading(true);
-      setError("");
+  const fetchApplications = useCallback(async () => {
+  try {
+    const response = await fetch(API_URL, {
+      credentials: "include",
+    });
 
-      const response = await fetch(API_URL, {
-    credentials: "include",
-});
-      const result = await response.json();
+    const result = await response.json();
 
-      if (!response.ok || !result.success) {
-        throw new Error(
-          result.message || "Unable to load applications."
-        );
-      }
-
-      setApplications(result.applications || []);
-    } catch (err) {
-      console.error("Application loading error:", err);
-      setError(
-        err.message || "Could not connect to the Indipay backend."
+    if (!response.ok || !result.success) {
+      throw new Error(
+        result.message || "Unable to load applications."
       );
-    } finally {
-      setLoading(false);
     }
-  };
 
-  useEffect(() => {
+    setApplications(result.applications || []);
+    setError("");
+  } catch (err) {
+    console.error("Application loading error:", err);
+    setError(
+      err.message || "Could not connect to the Indipay backend."
+    );
+  } finally {
+    setLoading(false);
+  }
+}, []);
+
+useEffect(() => {
+  const timeoutId = window.setTimeout(() => {
     fetchApplications();
-  }, []);
+  }, 0);
+
+  return () => window.clearTimeout(timeoutId);
+}, [fetchApplications]);
+
+const handleRefresh = () => {
+  setLoading(true);
+  setError("");
+  fetchApplications();
+};
 
   // Update application status in PostgreSQL
   const updateStatus = async (applicationId, status) => {
@@ -216,7 +224,7 @@ function ApplicationStatus({ onBack }) {
 
               <button
                 type="button"
-                onClick={fetchApplications}
+                onClick={handleRefresh}
               >
                 Try Again
               </button>

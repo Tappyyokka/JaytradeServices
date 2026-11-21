@@ -102,10 +102,6 @@ function DetailedServices({
   const [activeTab, setActiveTab] = useState("Me");
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const handleBottomTab = (label) => {
-    setActiveTab(label);
-    if (label === "Me") setProfileOpen(true);
-  };
 
   
 const categories = [

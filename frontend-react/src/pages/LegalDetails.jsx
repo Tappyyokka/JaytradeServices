@@ -5,9 +5,6 @@ import{
   Landmark,
   UserRound,
   Users,
-  Gift,
-  BookOpen,
-  Info,
   Bell,
 ChevronDown,
 CircleHelp,
@@ -449,14 +446,14 @@ const [termsAccepted, setTermsAccepted] = useState(false);
 const [activeTab, setActiveTab] = useState("Me");
 const [profileMenuOpen, setProfileMenuOpen] = useState(false);
 const [profileOpen, setProfileOpen] = useState(false);
+const [previousServiceName, setPreviousServiceName] = useState(service?.name);
 
-const handleBottomTab = (label) => {
-  setActiveTab(label);
-
-  if (label === "Me") {
-    setProfileOpen(true);
-  }
-};
+if (service?.name !== previousServiceName) {
+  setPreviousServiceName(service?.name);
+  setActiveStoryboard(0);
+  setAmount("");
+  setTermsAccepted(false);
+}
 
  const details =
   financialServices[service?.name] ||
@@ -469,11 +466,6 @@ const handleBottomTab = (label) => {
       : []
   );
 
-  useEffect(() => {
-    setActiveStoryboard(0);
-    setAmount("");
-    setTermsAccepted(false);
-  }, [service?.name]);
   useEffect(() => {
   if (storyboardSlides.length <= 1) return;
 

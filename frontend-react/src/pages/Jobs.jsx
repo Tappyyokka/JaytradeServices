@@ -6,15 +6,9 @@ import {
   BriefcaseBusiness,
   Building2,
   GraduationCap,
-  UserRound,
-  Users,
-  Gift,
-  BookOpen,
-  Headset,
 } from "lucide-react";
 
 import "./Jobs.css";
-import { useState } from "react";
 
 const industries = [
   "Optics",
@@ -148,18 +142,7 @@ function PackageCard({ item, type, onApplyNow }) {
   );
 }
 
-function Jobs({ onBack, onApplyNow, onLogin, onOpenAboutUs }) {
-  const [activeTab, setActiveTab] = useState("Me");
-
-  const handleBottomNavigation = (label) => {
-  setActiveTab(label);
-
-  if (label === "Me") {
-    onLogin?.();
-  } else if (label === "About Us") {
-    onOpenAboutUs?.();
-  }
-};
+function Jobs({ onBack, onApplyNow,}) {
 
   return (
     <div className="jobs-page">

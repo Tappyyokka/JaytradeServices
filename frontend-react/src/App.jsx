@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 
 import Footer from "./components/common/Footer";
@@ -26,8 +26,40 @@ import Home from "./pages/Home";
 import DetailedServices from "./pages/DetailedServices";
 import ServiceDetail from "./pages/ServiceDetail";
 
+const PAGE_PATHS = {
+  home: "/",
+  login: "/login",
+  register: "/register",
+  services: "/services",
+  "service-detail": "/services/detail",
+  "legal-details": "/legal-services/detail",
+  "application-form": "/apply",
+  "customer-applications": "/applications",
+  "application-status": "/admin/applications",
+  announcements: "/announcements",
+  wallet: "/wallet",
+  rewards: "/rewards",
+  refer: "/refer",
+  jobs: "/jobs",
+  times: "/times",
+  "business-development": "/business-development",
+  "learn-earn": "/learn-and-earn",
+  "about-us": "/about-us",
+};
+
+function pageFromPath(pathname) {
+  return (
+    Object.entries(PAGE_PATHS).find(([, path]) => path === pathname)?.[0] ||
+    "home"
+  );
+}
+
 function App() {
-  const [currentPage, setCurrentPage] = useState("home");
+  const [currentPage, setCurrentPage] = useState(() =>
+    pageFromPath(window.location.pathname)
+  );
+  const [sessionLoading, setSessionLoading] = useState(true);
+  const isHistoryNavigation = useRef(false);
   const [darkMode, setDarkMode] = useState(() => {
   return localStorage.getItem("indipay-theme") === "dark";
 });
@@ -41,6 +73,30 @@ useEffect(() => {
   const [timesReturnPage, setTimesReturnPage] = useState("home");
   const [supportMenuOpen, setSupportMenuOpen] = useState(false);
 const [chatOpenSignal, setChatOpenSignal] = useState(0);
+
+  useEffect(() => {
+    const handlePopState = () => {
+      isHistoryNavigation.current = true;
+      setCurrentPage(pageFromPath(window.location.pathname));
+      window.scrollTo(0, 0);
+    };
+
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, []);
+
+  useEffect(() => {
+    const path = PAGE_PATHS[currentPage] || PAGE_PATHS.home;
+
+    if (isHistoryNavigation.current) {
+      isHistoryNavigation.current = false;
+      return;
+    }
+
+    if (window.location.pathname !== path) {
+      window.history.pushState({ page: currentPage }, "", path);
+    }
+  }, [currentPage]);
 
   const handleBottomNavigation = (page) => {
   if (page === "me") {
@@ -95,11 +151,12 @@ const activeTab = pageToTab[currentPage] || "";
 
             if (response.ok && result.success) {
                 setCustomer(result.user);
-                setCurrentPage("home");
             }
 
         } catch (error) {
             console.error("Session check failed:", error);
+        } finally {
+            setSessionLoading(false);
         }
     };
 
@@ -144,12 +201,21 @@ const protectedPages = [
   "refer",
 ];
 
-const requiresLogin =
-  !customer && protectedPages.includes(currentPage);
+const isProtectedPage = protectedPages.includes(currentPage);
+const requiresLogin = !sessionLoading && !customer && isProtectedPage;
 
    let pageContent;
 
-  if (requiresLogin) {
+  if (sessionLoading && isProtectedPage) {
+  pageContent = (
+    <div className="indipay-login-required" aria-live="polite">
+      <div className="indipay-login-required-card">
+        <h2>Checking your session…</h2>
+        <p>Please wait while we securely load your account.</p>
+      </div>
+    </div>
+  );
+} else if (requiresLogin) {
   pageContent = (
     <div className="indipay-login-required">
       <div className="indipay-login-required-card">
@@ -649,6 +715,7 @@ return (
  currentPage !== "learn-earn" &&
   currentPage !== "announcements" &&
  currentPage !== "legal-details" && 
+ currentPage !== "application-form" && 
  currentPage !== "jobs" && (
   <Footer onSelectService={handleSelectService} />
 )}

@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from "react";
+import { useEffect, useCallback, useState } from "react";
 import {
   ArrowLeft,
   FileText,
@@ -26,9 +26,10 @@ function CustomerApplications({ onBack }) {
   const [error, setError] = useState("");
   const [refreshingStatuses, setRefreshingStatuses] = useState(false);
 
-  const fetchJaytradeStatuses = async (applicationList) => {
-    setRefreshingStatuses(true);
+  const fetchJaytradeStatuses = useCallback(async (applicationList) => {
+  setRefreshingStatuses(true);
 
+  try {
     const syncedApplications = applicationList.filter(
       (application) => application.leadSyncStatus === "SYNCED"
     );
@@ -81,39 +82,49 @@ function CustomerApplications({ onBack }) {
     });
 
     setJaytradeStatuses(updatedStatuses);
+  } finally {
     setRefreshingStatuses(false);
-  };
+  }
+}, []);
 
-  const fetchApplications = async () => {
-    try {
-      setLoading(true);
-      setError("");
+const fetchApplications = useCallback(async () => {
+  try {
+    const response = await fetch(API_URL, {
+      credentials: "include",
+    });
 
-      const response = await fetch(API_URL, {
-        credentials: "include",
-      });
+    const result = await response.json();
 
-      const result = await response.json();
-
-      if (!response.ok || !result.success) {
-        throw new Error(result.message || "Unable to load applications.");
-      }
-
-      const applicationList = result.applications || [];
-
-      setApplications(applicationList);
-
-      await fetchJaytradeStatuses(applicationList);
-    } catch (err) {
-      setError(err.message || "Could not load your applications.");
-    } finally {
-      setLoading(false);
+    if (!response.ok || !result.success) {
+      throw new Error(result.message || "Unable to load applications.");
     }
-  };
 
-  useEffect(() => {
+    const applicationList = result.applications || [];
+
+    setApplications(applicationList);
+    setError("");
+
+    await fetchJaytradeStatuses(applicationList);
+  } catch (err) {
+    setError(err.message || "Could not load your applications.");
+  } finally {
+    setLoading(false);
+  }
+}, [fetchJaytradeStatuses]);
+
+useEffect(() => {
+  const timeoutId = window.setTimeout(() => {
     fetchApplications();
-  }, []);
+  }, 0);
+
+  return () => window.clearTimeout(timeoutId);
+}, [fetchApplications]);
+
+const handleRefresh = () => {
+  setLoading(true);
+  setError("");
+  fetchApplications();
+};
 
   const formatDate = (date) => {
     if (!date) return "—";
@@ -169,7 +180,7 @@ function CustomerApplications({ onBack }) {
             <h2>Your Submitted Applications</h2>
 
             <button
-              onClick={fetchApplications}
+              onClick={handleRefresh}
               disabled={loading}
             >
               <RefreshCw size={16} />
@@ -184,7 +195,7 @@ function CustomerApplications({ onBack }) {
           ) : error ? (
             <div className="customer-applications-empty">
               <p>{error}</p>
-              <button onClick={fetchApplications}>Try Again</button>
+              <button onClick={handleRefresh}>Try Again</button>
             </div>
           ) : applications.length === 0 ? (
             <div className="customer-applications-empty">

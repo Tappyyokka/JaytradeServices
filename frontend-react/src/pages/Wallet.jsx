@@ -31,7 +31,6 @@ function Wallet({
   onLogin,
   onLogout,
   onOpenRewards,
-  onOpenProfile,
   onOpenWalletHistory,
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -56,20 +55,6 @@ useEffect(() => {
   const [profileOpen, setProfileOpen] = useState(false);
   const [showAddMoneyInfo, setShowAddMoneyInfo] = useState(false);
   const [showRewardsInfo, setShowRewardsInfo] = useState(false);
-  const [activeTab, setActiveTab] = useState("Wallet");
-
-  const handleBottomTab = (label) => {
-    setActiveTab(label);
-
-    if (label === "Me") {
-  setProfileOpen(true);
-} else if (label === "About Us") {
-      onBack?.();
-    } else if (label === "Home") {
-      onBack?.();
-    }
-  };
-
   const formatAmount = (amount) =>
     Number(amount || 0).toLocaleString("en-IN", {
       minimumFractionDigits: 2,

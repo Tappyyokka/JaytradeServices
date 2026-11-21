@@ -11,8 +11,6 @@ import {
   Users,
 } from "lucide-react";
 
-import { useState } from "react";
-import BottomNav from "../components/common/BottomNav";
 import "./BusinessDevelopment.css";
 
 const packages = [
@@ -153,21 +151,7 @@ function BusinessPackageCard({ item, index, onApplyNow }) {
 function BusinessDevelopment({
   onBack,
   onSelectPackage,
-  onLogin,
-  onOpenAboutUs,
 }) {
-  const [activeTab, setActiveTab] = useState("Me");
-
-  const handleBottomNavigation = (label) => {
-    setActiveTab(label);
-
-    if (label === "Me") {
-      onLogin?.();
-    } else if (label === "About Us") {
-      onOpenAboutUs?.();
-    }
-  };
-
   return (
     <div className="bd-page">
       <main className="bd-container">
@@ -269,11 +253,6 @@ function BusinessDevelopment({
         </section>
 
       </main>
-
-      <BottomNav
-        activeTab={activeTab}
-        onNavigate={handleBottomNavigation}
-      />
     </div>
   );
 }

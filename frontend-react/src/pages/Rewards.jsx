@@ -4,7 +4,6 @@ import {
   ArrowLeft,
   Gift,
   Sparkles,
-  Clock,
   Copy,
   Check,
   TicketPercent,
@@ -79,7 +78,7 @@ const dummyRewards = [
 
 
 
-function ScratchCard({ reward, onCopy, revealed, onReveal }) {
+function ScratchCard({ reward, revealed, onReveal }) {
   const canvasRef = useRef(null);
   const scratchingRef = useRef(false);
   const [copied, setCopied] = useState(false);
@@ -198,7 +197,7 @@ ctx.globalAlpha = 1;
     resizeObserver.observe(card);
 
     return () => resizeObserver.disconnect();
-  }, [revealed]);
+  }, [revealed, reward.color]);
 
   const scratch = (event) => {
     if (revealed) return;
@@ -254,7 +253,6 @@ ctx.globalAlpha = 1;
     try {
       await navigator.clipboard.writeText(reward.code);
       setCopied(true);
-      onCopy?.(reward.code);
       setTimeout(() => setCopied(false), 1800);
     } catch {
       setCopied(false);
@@ -303,7 +301,6 @@ return (
 
 export default function Rewards({ customer, onBack }) {
   const [activeFilter, setActiveFilter] = useState("All");
-  const [copiedCode, setCopiedCode] = useState("");
   const [selectedReward, setSelectedReward] = useState(null);
 const [revealedRewards, setRevealedRewards] = useState([]);
 const handleReveal = (rewardId) => {
@@ -447,7 +444,6 @@ const handleReveal = (rewardId) => {
       onClick={(event) => {
         event.stopPropagation();
         navigator.clipboard.writeText(reward.code);
-        setCopiedCode(reward.code);
       }}
       title="Copy reward code"
     >
@@ -523,7 +519,6 @@ const handleReveal = (rewardId) => {
     >
       <ScratchCard
         reward={selectedReward}
-        onCopy={setCopiedCode}
         revealed={revealedRewards.includes(selectedReward.id)}
         onReveal={handleReveal}
       />

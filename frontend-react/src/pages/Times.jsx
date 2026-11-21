@@ -5,17 +5,11 @@ import {
   CheckCircle2,
   Newspaper,
   Megaphone,
-  UserRound,
-  Users,
-  Gift,
-  BookOpen,
-  Headset,
   Video,
   BriefcaseBusiness,
 } from "lucide-react";
 
 import "./Times.css";
-import { useState } from "react";
 
 const packages = [
   {
@@ -75,20 +69,7 @@ const packages = [
   },
 ];
 
-function Times({ onBack, onSelectPackage, onLogin, onOpenAboutUs,onOpenRewards }) {
-  const [activeTab, setActiveTab] = useState("Me");
-
-  const handleBottomNavigation = (label) => {
-  setActiveTab(label);
-
-  if (label === "Me") {
-    onLogin?.();
-  } else if (label === "About Us") {
-    onOpenAboutUs?.();
-  }else if (label === "Rewards") {
-    onOpenRewards?.();
-  }
-};
+function Times({ onBack, onSelectPackage, }) {
 
   return (
     <div className="times-page">

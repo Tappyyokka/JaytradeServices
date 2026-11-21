@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useCallback, useState } from "react";
 import {
   Users,
   Copy,
@@ -11,7 +11,7 @@ import {
 import "./Refer.css";
 import API_BASE_URL from "../config/api";
 
-function Refer({ customer }) {
+function Refer() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -20,35 +20,37 @@ function Refer({ customer }) {
     ? `${window.location.origin}${import.meta.env.BASE_URL}?ref=${data.referralCode}`
     : "";
 
-  const fetchReferrals = async () => {
-    try {
-      setLoading(true);
-      setError("");
-
-      const response = await fetch(
-        `${API_BASE_URL}/api/auth/referrals`,
-        {
-          credentials: "include",
-        }
-      );
-
-      const result = await response.json();
-
-      if (!response.ok || !result.success) {
-        throw new Error(result.message || "Unable to load referrals.");
+  const fetchReferrals = useCallback(async () => {
+  try {
+    const response = await fetch(
+      `${API_BASE_URL}/api/auth/referrals`,
+      {
+        credentials: "include",
       }
+    );
 
-      setData(result);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
+      throw new Error(result.message || "Unable to load referrals.");
     }
-  };
 
-  useEffect(() => {
+    setData(result);
+    setError("");
+  } catch (err) {
+    setError(err.message);
+  } finally {
+    setLoading(false);
+  }
+}, []);
+
+useEffect(() => {
+  const timeoutId = window.setTimeout(() => {
     fetchReferrals();
-  }, []);
+  }, 0);
+
+  return () => window.clearTimeout(timeoutId);
+}, [fetchReferrals]);
 
   const copyLink = async () => {
     try {
@@ -99,7 +101,14 @@ function Refer({ customer }) {
       ) : error ? (
         <div className="refer-error">
           <p>{error}</p>
-          <button onClick={fetchReferrals}>Try Again</button>
+          <button
+  onClick={() => {
+    setLoading(true);
+    fetchReferrals();
+  }}
+>
+  Try Again
+</button>
         </div>
       ) : (
         <>
@@ -165,7 +174,10 @@ function Refer({ customer }) {
 
               <button
                 className="refer-refresh-button"
-                onClick={fetchReferrals}
+                onClick={() => {
+  setLoading(true);
+  fetchReferrals();
+}}
                 aria-label="Refresh referrals"
               >
                 <RefreshCw size={18} />
