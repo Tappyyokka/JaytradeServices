@@ -465,13 +465,13 @@ if (service?.name !== previousServiceName) {
 
       <header className="indipay-detail-header">
   <button
-    type="button"
-    className="indipay-detail-back"
-    onClick={onBack}
-  >
-    <ArrowLeft size={18} />
-    <span>Back to Services</span>
-  </button>
+  type="button"
+  className="indipay-detail-back"
+  onClick={onBack}
+>
+  <ArrowLeft size={18} />
+  <span>Back to Services</span>
+</button>
 
   <div className="indipay-detail-header-actions">
     <button

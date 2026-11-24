@@ -1,15 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap');
-
-:root {
-  --navy: #101D36;
-  --navy-light: #1D3557;
-  --orange: #F28C28;
-  --orange-light: #FFAA50;
-  --cream: #FFF8F0;
-  --white: #FFFFFF;
-  --text: #17243A;
-  --muted: #69758A;
-}
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap");
 
 * {
   margin: 0;
@@ -17,13 +6,33 @@
   box-sizing: border-box;
 }
 
-body {
-  font-family: 'DM Sans', sans-serif;
-  background: var(--cream);
-  color: var(--text);
+html {
+  font-family: var(--font-body);
+  color: var(--brand-text);
+  background: var(--brand-cream);
 }
 
-button, a {
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  font-family: var(--font-body);
+  background: var(--brand-cream);
+  color: var(--brand-text);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+}
+
+button,
+input,
+textarea,
+select {
   font: inherit;
 }
 
@@ -31,7 +40,25 @@ button {
   cursor: pointer;
 }
 
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 3px solid rgba(242, 140, 40, 0.72);
+  outline-offset: 3px;
+}
+
 a {
-  text-decoration: none;
   color: inherit;
+  text-decoration: none;
+}
+
+img,
+svg {
+  max-width: 100%;
+}
+
+img {
+  display: block;
 }

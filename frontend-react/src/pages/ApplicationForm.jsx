@@ -27,6 +27,7 @@ function ApplicationForm({ initialService, onApplicationSubmitted, onBack, custo
 
   const [files, setFiles] = useState([]);
   const [message, setMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -42,6 +43,8 @@ function ApplicationForm({ initialService, onApplicationSubmitted, onBack, custo
 const handleSubmit = async (event) => {
     event.preventDefault();
     setMessage("Submitting your application...");
+    setIsSubmitting(true);
+    let submitted = false;
 
     try {
         const response = await fetch(
@@ -68,6 +71,7 @@ const handleSubmit = async (event) => {
   `Application submitted successfully! Reference: ${result.applicationId}`
 );
 
+submitted = true;
 setTimeout(() => {
   onApplicationSubmitted?.();
 }, 1200);
@@ -77,6 +81,10 @@ setTimeout(() => {
         setMessage(
             error.message || "Unable to submit your application. Please try again."
         );
+    } finally {
+        if (!submitted) {
+          setIsSubmitting(false);
+        }
     }
 };
 
@@ -116,6 +124,7 @@ setTimeout(() => {
         <form
           className="indipay-application-form"
           onSubmit={handleSubmit}
+          aria-busy={isSubmitting}
         >
 
           <div className="indipay-application-form-title">
@@ -314,8 +323,8 @@ setTimeout(() => {
           )}
 
           <div className="indipay-application-submit">
-            <button type="submit">
-              Submit Application
+            <button type="submit" disabled={isSubmitting}>
+              {isSubmitting ? "Submitting…" : "Submit Application"}
               <ArrowRight size={18} />
             </button>
 

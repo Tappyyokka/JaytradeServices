@@ -11,20 +11,72 @@ import {
   Phone,
   Building2,
   BriefcaseBusiness,
+  ChevronDown,
+  ChevronUp,
+  Search,
 } from "lucide-react";
 
 import "./CustomerApplications.css";
 import API_BASE_URL from "../config/api";
+import { EmptyState, LoadingSkeleton } from "../components/common/Feedback";
 
 const API_URL = `${API_BASE_URL}/api/my-applications`;
 const STATUS_API_URL = `${API_BASE_URL}/api/applications`;
 
-function CustomerApplications({ onBack }) {
+const APPLICATION_STEPS = [
+  "Submitted",
+  "Transferred",
+  "In Review",
+  "Decision",
+  "Completed",
+];
+
+function getResolvedStatus(application, jaytradeData) {
+  return jaytradeData?.status || application.status || "Pending";
+}
+
+function getApplicationProgress(application, jaytradeData) {
+  if (application.leadSyncStatus !== "SYNCED") {
+    return { currentStep: 0, rejected: false };
+  }
+
+  const status = getResolvedStatus(application, jaytradeData).toLowerCase();
+
+  if (status.includes("reject")) {
+    return { currentStep: 3, rejected: true };
+  }
+
+  if (status.includes("complete")) {
+    return { currentStep: 4, rejected: false };
+  }
+
+  if (status.includes("approv")) {
+    return { currentStep: 3, rejected: false };
+  }
+
+  if (
+    status.includes("review") ||
+    status.includes("process") ||
+    status.includes("assign")
+  ) {
+    return { currentStep: 2, rejected: false };
+  }
+
+  // Synced to Jaytrade, but no later status is available yet.
+  return { currentStep: 1, rejected: false };
+}
+
+function CustomerApplications({ onBack, onBrowseServices }) {
   const [applications, setApplications] = useState([]);
   const [jaytradeStatuses, setJaytradeStatuses] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [refreshingStatuses, setRefreshingStatuses] = useState(false);
+  const [expandedTrackingIds, setExpandedTrackingIds] = useState(() => new Set());
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [sortOrder, setSortOrder] = useState("newest");
+  const [lastUpdated, setLastUpdated] = useState(null);
 
   const fetchJaytradeStatuses = useCallback(async (applicationList) => {
   setRefreshingStatuses(true);
@@ -105,6 +157,7 @@ const fetchApplications = useCallback(async () => {
     setError("");
 
     await fetchJaytradeStatuses(applicationList);
+    setLastUpdated(new Date());
   } catch (err) {
     setError(err.message || "Could not load your applications.");
   } finally {
@@ -126,6 +179,20 @@ const handleRefresh = () => {
   fetchApplications();
 };
 
+  const toggleTrackingDetails = (applicationId) => {
+    setExpandedTrackingIds((current) => {
+      const next = new Set(current);
+
+      if (next.has(applicationId)) {
+        next.delete(applicationId);
+      } else {
+        next.add(applicationId);
+      }
+
+      return next;
+    });
+  };
+
   const formatDate = (date) => {
     if (!date) return "—";
 
@@ -137,11 +204,13 @@ const handleRefresh = () => {
   };
 
   const getStatusIcon = (status) => {
-    if (status === "Approved" || status === "Completed") {
+    const normalizedStatus = String(status || "").toLowerCase();
+
+    if (normalizedStatus.includes("approv") || normalizedStatus.includes("complete")) {
       return <CheckCircle2 size={19} />;
     }
 
-    if (status === "Rejected") {
+    if (normalizedStatus.includes("reject")) {
       return <XCircle size={19} />;
     }
 
@@ -156,6 +225,58 @@ const handleRefresh = () => {
     return jaytradeStatuses[application.applicationId];
   };
 
+  const getStatusCategory = (status) => {
+    const normalizedStatus = String(status || "").toLowerCase();
+
+    if (normalizedStatus.includes("reject")) return "rejected";
+    if (normalizedStatus.includes("approv") || normalizedStatus.includes("complete")) {
+      return "completed";
+    }
+
+    return "in-progress";
+  };
+
+  const filteredApplications = [...applications]
+    .filter((application) => {
+      const jaytradeData = getJaytradeStatus(application)?.jaytrade;
+      const resolvedStatus = getResolvedStatus(application, jaytradeData);
+      const searchText = [
+        application.service,
+        application.applicationId,
+        application.fullName,
+      ]
+        .join(" ")
+        .toLowerCase();
+
+      const matchesSearch = searchText.includes(searchQuery.trim().toLowerCase());
+      const matchesStatus =
+        statusFilter === "all" ||
+        getStatusCategory(resolvedStatus) === statusFilter;
+
+      return matchesSearch && matchesStatus;
+    })
+    .sort((first, second) => {
+      const firstDate = new Date(first.submittedAt || 0).getTime();
+      const secondDate = new Date(second.submittedAt || 0).getTime();
+
+      return sortOrder === "oldest" ? firstDate - secondDate : secondDate - firstDate;
+    });
+
+  const clearFilters = () => {
+    setSearchQuery("");
+    setStatusFilter("all");
+    setSortOrder("newest");
+  };
+
+  const getLastUpdatedText = () => {
+    if (!lastUpdated) return "";
+
+    return `Updated at ${lastUpdated.toLocaleTimeString("en-IN", {
+      hour: "numeric",
+      minute: "2-digit",
+    })}`;
+  };
+
   return (
     <main className="customer-applications-page">
       <div className="customer-applications-container">
@@ -168,29 +289,77 @@ const handleRefresh = () => {
           Back to Home
         </button>
 
-        <div className="customer-applications-heading">
-          <span>YOUR INDIPAY ACCOUNT</span>
-          <h1>My Applications</h1>
-          <p>Track the progress of services you've applied for.</p>
-        </div>
-
         <section className="customer-applications-list">
 
           <div className="customer-applications-toolbar">
-            <h2>Your Submitted Applications</h2>
+            <div>
+              <h2>Your Submitted Applications</h2>
+              {!loading && !error && (
+                <p className="customer-applications-count">
+                  Showing {filteredApplications.length} of {applications.length}
+                </p>
+              )}
+            </div>
 
             <button
               onClick={handleRefresh}
               disabled={loading}
+              aria-label={loading ? "Refreshing applications" : "Refresh applications"}
             >
-              <RefreshCw size={16} />
-              Refresh
+              <RefreshCw size={16} className={loading ? "is-refreshing" : ""} />
+              {loading ? "Refreshing…" : "Refresh"}
             </button>
           </div>
 
+          <p className="customer-applications-updated" aria-live="polite">
+            {loading ? "Refreshing applications and tracking updates…" : getLastUpdatedText()}
+          </p>
+
+          {!loading && !error && applications.length > 0 && (
+            <div className="customer-applications-controls">
+              <label className="customer-applications-search">
+                <Search size={17} />
+                <span className="sr-only">Search applications</span>
+                <input
+                  type="search"
+                  value={searchQuery}
+                  onChange={(event) => setSearchQuery(event.target.value)}
+                  placeholder="Search service or application ID"
+                />
+              </label>
+
+              <div className="customer-applications-filter-chips" aria-label="Filter applications by status">
+                {[
+                  ["all", "All"],
+                  ["in-progress", "In progress"],
+                  ["completed", "Completed"],
+                  ["rejected", "Rejected"],
+                ].map(([value, label]) => (
+                  <button
+                    key={value}
+                    type="button"
+                    className={statusFilter === value ? "is-active" : ""}
+                    onClick={() => setStatusFilter(value)}
+                    aria-pressed={statusFilter === value}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+
+              <label className="customer-applications-sort">
+                Sort by
+                <select value={sortOrder} onChange={(event) => setSortOrder(event.target.value)}>
+                  <option value="newest">Newest first</option>
+                  <option value="oldest">Oldest first</option>
+                </select>
+              </label>
+            </div>
+          )}
+
           {loading ? (
-            <div className="customer-applications-empty">
-              Loading your applications...
+            <div className="customer-applications-loading" aria-busy="true">
+              <LoadingSkeleton lines={4} />
             </div>
           ) : error ? (
             <div className="customer-applications-empty">
@@ -198,19 +367,33 @@ const handleRefresh = () => {
               <button onClick={handleRefresh}>Try Again</button>
             </div>
           ) : applications.length === 0 ? (
-            <div className="customer-applications-empty">
-              <FileText size={42} />
-              <h3>No applications yet</h3>
-              <p>Your submitted applications will appear here.</p>
-            </div>
+            <EmptyState
+              icon={<FileText size={29} />}
+              title="No applications yet"
+              description="Start with a service and your submitted applications will appear here."
+              actionLabel="Explore services"
+              onAction={onBrowseServices}
+            />
+          ) : filteredApplications.length === 0 ? (
+            <EmptyState
+              icon={<Search size={29} />}
+              title="No matching applications"
+              description="Try a different search term or clear the active filters."
+              actionLabel="Clear filters"
+              onAction={clearFilters}
+            />
           ) : (
             <div className="customer-applications-cards">
 
-              {applications.map((application) => {
+              {filteredApplications.map((application) => {
                 const jaytrade = getJaytradeStatus(application);
 const jaytradeData = jaytrade?.jaytrade;
 const employee = jaytradeData?.assigned_employee;
+const progress = getApplicationProgress(application, jaytradeData);
 const customerStatus = jaytradeData?.customer_status;
+const resolvedStatus = getResolvedStatus(application, jaytradeData);
+const isTrackingExpanded = expandedTrackingIds.has(application.applicationId);
+const trackingDetailsId = `tracking-${application.applicationId}`;
 
                 return (
                   <article
@@ -223,10 +406,10 @@ const customerStatus = jaytradeData?.customer_status;
                       </div>
 
                       <span
-                        className={`customer-application-status status-${application.status?.toLowerCase().replaceAll(" ", "-")}`}
+                        className={`customer-application-status status-${resolvedStatus.toLowerCase().replaceAll(" ", "-")}`}
                       >
-                        {getStatusIcon(application.status)}
-                        {application.status || "Pending"}
+                        {getStatusIcon(resolvedStatus)}
+                        {resolvedStatus}
                       </span>
                     </div>
 
@@ -240,6 +423,45 @@ const customerStatus = jaytradeData?.customer_status;
                       <span>Submitted</span>
                       <strong>{formatDate(application.submittedAt)}</strong>
                     </div>
+
+                    <div
+  className={`application-progress ${
+    progress.rejected ? "is-rejected" : ""
+  }`}
+  aria-label={`Application progress: ${
+    progress.rejected ? "Rejected" : APPLICATION_STEPS[progress.currentStep]
+  }`}
+>
+  {APPLICATION_STEPS.map((step, index) => {
+    const isComplete = index < progress.currentStep;
+    const isCurrent = index === progress.currentStep;
+
+    return (
+      <div
+        className={[
+          "application-progress-step",
+          isComplete ? "is-complete" : "",
+          isCurrent ? "is-current" : "",
+        ]
+          .filter(Boolean)
+          .join(" ")}
+        key={step}
+      >
+        <div className="application-progress-marker">
+          {isComplete ? <CheckCircle2 size={16} /> : index + 1}
+        </div>
+
+        <span>{step}</span>
+      </div>
+    );
+  })}
+</div>
+
+{progress.rejected && (
+  <p className="application-progress-note">
+    This application was rejected.
+  </p>
+)}
 
                     <div className="customer-application-meta">
                       <span>Applicant</span>
@@ -255,8 +477,22 @@ const customerStatus = jaytradeData?.customer_status;
                       </strong>
                     </div>
 
-                    {/* JAYTRADE LIVE TRACKING */}
-                    <div className="customer-jaytrade-tracking">
+                    <button
+                      type="button"
+                      className="customer-tracking-toggle"
+                      onClick={() => toggleTrackingDetails(application.applicationId)}
+                      aria-expanded={isTrackingExpanded}
+                      aria-controls={trackingDetailsId}
+                    >
+                      <span>
+                        <Building2 size={17} />
+                        {isTrackingExpanded ? "Hide tracking details" : "View tracking details"}
+                      </span>
+                      {isTrackingExpanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                    </button>
+
+                    {isTrackingExpanded && (
+                    <div className="customer-jaytrade-tracking" id={trackingDetailsId}>
 
                       <div className="customer-jaytrade-heading">
                         <Building2 size={19} />
@@ -377,6 +613,7 @@ const customerStatus = jaytradeData?.customer_status;
                         </>
                       )}
                     </div>
+                    )}
 
                   </article>
                 );

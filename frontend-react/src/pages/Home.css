@@ -7724,3 +7724,12 @@ body:has(.indipay-app-home.dark-mode) .indipay-bottom-nav button svg {
   background: #e9edf4;
   color: #142b50;
 }
+
+.indipay-account-card.account-card-1 {
+  cursor: pointer;
+}
+
+.indipay-account-card.account-card-1:focus-visible {
+  outline: 2px solid var(--accent-color, #f59e0b);
+  outline-offset: 3px;
+}

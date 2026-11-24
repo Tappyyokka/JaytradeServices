@@ -306,6 +306,10 @@ const requiresLogin = !sessionLoading && !customer && isProtectedPage;
           setCurrentPage("home");
           window.scrollTo(0, 0);
         }}
+        onBrowseServices={() => {
+          setCurrentPage("services");
+          window.scrollTo(0, 0);
+        }}
       />
     );   
       } else if (currentPage === "application-status") {
@@ -683,10 +687,15 @@ return (
           }
           window.scrollTo(0, 0);
         }}
+        onOpenWallet={() => {
+  setCurrentPage("wallet");
+  window.scrollTo(0, 0);
+}}
         onLogin={() => {
           setCurrentPage("login");
           window.scrollTo(0, 0);
         }}
+        
         onOpenCategory={(categoryId) => {
   setCurrentPage("services");
 
@@ -697,6 +706,7 @@ return (
     });
   }, 200);
 }}
+
       />
     )}
 

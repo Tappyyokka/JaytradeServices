@@ -10,11 +10,13 @@ import {
 } from "lucide-react";
 import "./Refer.css";
 import API_BASE_URL from "../config/api";
+import { EmptyState, LoadingSkeleton, Toast } from "../components/common/Feedback";
 
 function Refer() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [toast, setToast] = useState("");
 
   const referralLink = data?.referralCode
     ? `${window.location.origin}${import.meta.env.BASE_URL}?ref=${data.referralCode}`
@@ -55,9 +57,9 @@ useEffect(() => {
   const copyLink = async () => {
     try {
       await navigator.clipboard.writeText(referralLink);
-      alert("Referral link copied!");
+      setToast("Referral link copied.");
     } catch {
-      alert("Unable to copy the link. Please copy it manually.");
+      setToast("Unable to copy the link. Please copy it manually.");
     }
   };
 
@@ -81,6 +83,7 @@ useEffect(() => {
 
   return (
     <div className="indipay-refer-page">
+      <Toast message={toast} tone={toast.startsWith("Unable") ? "error" : "success"} onDismiss={() => setToast("")} />
       <header className="refer-header">
         <div>
           <span className="refer-eyebrow">INDIPAY COMMUNITY</span>
@@ -94,9 +97,8 @@ useEffect(() => {
       </header>
 
       {loading ? (
-        <div className="refer-loading">
-          <RefreshCw className="refer-spin" />
-          <p>Loading your referral details...</p>
+        <div className="refer-loading" aria-busy="true">
+          <LoadingSkeleton lines={5} />
         </div>
       ) : error ? (
         <div className="refer-error">
@@ -179,20 +181,20 @@ useEffect(() => {
   fetchReferrals();
 }}
                 aria-label="Refresh referrals"
+                disabled={loading}
               >
                 <RefreshCw size={18} />
               </button>
             </div>
 
             {data.referrals.length === 0 ? (
-              <div className="refer-empty">
-                <Users size={38} />
-                <h3>No referrals yet</h3>
-                <p>
-                  Share your referral link and your successful registrations
-                  will appear here.
-                </p>
-              </div>
+              <EmptyState
+                icon={<Users size={28} />}
+                title="No referrals yet"
+                description="Share your personal link to invite friends and family to Indipay."
+                actionLabel="Share referral link"
+                onAction={shareLink}
+              />
             ) : (
               <div className="refer-list">
                 {data.referrals.map((person, index) => (

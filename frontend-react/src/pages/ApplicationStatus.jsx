@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import "./ApplicationStatus.css";
 import API_BASE_URL from "../config/api";
+import { EmptyState, LoadingSkeleton } from "../components/common/Feedback";
 
 const API_URL = `${API_BASE_URL}/api/my-applications`;
 
@@ -232,17 +233,15 @@ const handleRefresh = () => {
           )}
 
           {loading ? (
-            <div className="application-status-empty">
-              <p>Loading applications...</p>
+            <div className="application-status-loading" aria-busy="true">
+              <LoadingSkeleton lines={6} />
             </div>
           ) : !error && filteredApplications.length === 0 ? (
-            <div className="application-status-empty">
-              <FileText size={38} />
-              <h3>No applications found</h3>
-              <p>
-                Submitted applications will appear here.
-              </p>
-            </div>
+            <EmptyState
+              icon={<FileText size={28} />}
+              title="No applications found"
+              description="Submitted applications will appear here when customers send their requests."
+            />
           ) : !error && (
             <div className="application-status-table-wrap">
               <table className="application-status-table">

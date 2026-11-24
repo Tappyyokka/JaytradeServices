@@ -361,6 +361,29 @@ function Home({
 <article
   className={`indipay-account-card account-card-${index + 1}`}
   key={card.eyebrow}
+  onClick={
+    index === 0
+      ? (event) => {
+          // Let the card's own buttons keep their actions.
+          if (event.target.closest("button")) return;
+          onOpenWallet?.();
+        }
+      : undefined
+  }
+  onKeyDown={
+    index === 0
+      ? (event) => {
+          if (event.target !== event.currentTarget) return;
+
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            onOpenWallet?.();
+          }
+        }
+      : undefined
+  }
+  role={index === 0 ? "link" : undefined}
+  tabIndex={index === 0 ? 0 : undefined}
 >
   <div className="indipay-account-card-top">
     <span>{card.eyebrow}</span>

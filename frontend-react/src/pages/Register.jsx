@@ -28,6 +28,7 @@ function Register({ onBack, onLogin, onSuccess }) {
   });
 
   const [message, setMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (event) => {
     const { name, value, checked, type } = event.target;
@@ -59,6 +60,7 @@ function Register({ onBack, onLogin, onSuccess }) {
         return;
     }
 
+    setIsSubmitting(true);
     try {
         const response = await fetch(
             `${API_BASE_URL}/api/auth/register`
@@ -96,6 +98,8 @@ if (onSuccess) {
     } catch (error) {
         console.error("Registration error:", error);
         setMessage("Unable to connect to the server. Please try again.");
+    } finally {
+        setIsSubmitting(false);
     }
 };
 
@@ -175,7 +179,7 @@ if (onSuccess) {
               <p>Fill in your details to get started.</p>
             </div>
 
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} aria-busy={isSubmitting}>
               <label className="auth-field">
                 Full Name
                 <span className="auth-input-wrap">
@@ -295,8 +299,8 @@ if (onSuccess) {
                 </span>
               </label>
 
-              <button type="submit" className="auth-submit-button">
-                Create My Account <ArrowRight size={19} />
+              <button type="submit" className="auth-submit-button" disabled={isSubmitting}>
+                {isSubmitting ? "Creating account…" : "Create My Account"} <ArrowRight size={19} />
               </button>
 
               {message && (

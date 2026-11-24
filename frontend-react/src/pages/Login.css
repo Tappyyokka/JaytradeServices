@@ -374,6 +374,27 @@
   box-shadow: 0 8px 20px rgba(216,117,23,0.2);
 }
 
+.auth-submit-button:disabled {
+  cursor: wait;
+  opacity: 0.72;
+  transform: none;
+  box-shadow: none;
+}
+
+.auth-password-toggle,
+.auth-text-button,
+.auth-back-link {
+  min-width: 44px;
+  min-height: 44px;
+}
+
+@media (max-width: 550px) {
+  .auth-submit-button,
+  .auth-input-wrap input {
+    min-height: 48px;
+  }
+}
+
 .auth-feedback {
   margin: 15px 0 0;
   padding: 12px;

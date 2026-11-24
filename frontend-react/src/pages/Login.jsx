@@ -21,6 +21,7 @@ function Login({ onBack, onRegister, onSuccess  }) {
     remember: false,
   });
   const [message, setMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (event) => {
     const { name, value, checked, type } = event.target;
@@ -34,6 +35,7 @@ function Login({ onBack, onRegister, onSuccess  }) {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setMessage("");
+    setIsSubmitting(true);
 
     try {
         const response = await fetch(
@@ -65,6 +67,8 @@ function Login({ onBack, onRegister, onSuccess  }) {
     } catch (error) {
         console.error("Login error:", error);
         setMessage("Unable to connect to the server. Please try again.");
+    } finally {
+        setIsSubmitting(false);
     }
 };
 
@@ -144,7 +148,7 @@ function Login({ onBack, onRegister, onSuccess  }) {
               <p>Enter your details to access your account.</p>
             </div>
 
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} aria-busy={isSubmitting}>
               <label className="auth-field">
                 Email Address
                 <span className="auth-input-wrap">
@@ -207,8 +211,8 @@ function Login({ onBack, onRegister, onSuccess  }) {
                 </button>
               </div>
 
-              <button type="submit" className="auth-submit-button">
-                Login to Account <ArrowRight size={19} />
+              <button type="submit" className="auth-submit-button" disabled={isSubmitting}>
+                {isSubmitting ? "Signing in…" : "Login to Account"} <ArrowRight size={19} />
               </button>
 
               {message && (

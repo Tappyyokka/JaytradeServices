@@ -13,6 +13,7 @@ import {
   FaGlobe,
   FaUsers,
   FaRegistered,
+  FaMagnifyingGlass,
   FaCertificate,
   FaStore,
   FaGraduationCap,
@@ -54,6 +55,7 @@ const icons = {
   users: FaUsers,
   trademark: FaRegistered,
   certificate: FaCertificate,
+  search: FaMagnifyingGlass,
   store: FaStore,
   school: FaGraduationCap,
   news: FaNewspaper,
@@ -101,6 +103,7 @@ function DetailedServices({
   const [profileOpen, setProfileOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("Me");
   const [menuOpen, setMenuOpen] = useState(false);
+  const [serviceSearch, setServiceSearch] = useState("");
 
 
   
@@ -370,6 +373,28 @@ const categories = [
   },
 ];
 
+const normalizedSearch = serviceSearch.trim().toLowerCase();
+
+const filteredCategories = categories
+  .map((category) => {
+    const categoryMatches = category.title
+      .toLowerCase()
+      .includes(normalizedSearch);
+
+    const matchingServices = category.services.filter((service) =>
+      service.name.toLowerCase().includes(normalizedSearch)
+    );
+
+    return {
+      ...category,
+      services:
+        !normalizedSearch || categoryMatches
+          ? category.services
+          : matchingServices,
+    };
+  })
+  .filter((category) => category.services.length > 0);
+
 
   const totalServices = categories.reduce(
     (total, category) => total + category.services.length,
@@ -419,6 +444,19 @@ const categories = [
           <AnimatedIcon name={menuOpen ? "close" : "menu"} size={25} />
         </button>
 
+        <div className="indipay-services-header-search">
+          <span className="indipay-services-search-icon" aria-hidden="true">
+            <AnimatedIcon name="search" size={19} />
+          </span>
+
+          <input
+            type="search"
+            value={serviceSearch}
+            onChange={(event) => setServiceSearch(event.target.value)}
+            placeholder="Search services, loans, registrations..."
+            aria-label="Search services"
+          />
+        </div>
         <div className="indipay-services-header-actions">
           <button
             className="indipay-header-icon"
@@ -579,8 +617,15 @@ const categories = [
         </section>
 
         <div className="indipay-services-list">
-          {categories.map((category, index) => {
+  {filteredCategories.map((category, index) => {
             const isClickable = clickableCategories.includes(category.id);
+
+            {normalizedSearch && filteredCategories.length === 0 && (
+  <div className="indipay-services-no-results" role="status">
+    <strong>No services found</strong>
+    <p>Try another service name or category.</p>
+  </div>
+)}
 
             return (
               <section
