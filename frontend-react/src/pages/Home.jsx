@@ -1,11 +1,12 @@
 import { useState } from "react";
 import indipayLogo from "../assets/images/logo-transparent2.png";
 import Jaytradelogo from "../assets/images/Jaytrade-logo.jpg";
+import { formatPaise } from "../wallet/walletData";
 import {
   Menu, X, Bell, LogOut, UserRound, ChevronRight, ChevronLeft, Moon, Sun,
   Eye, EyeOff, FileText, ClipboardList, Landmark,
   BriefcaseBusiness, GraduationCap, Newspaper, Gift, Star,
-  Users, Wallet, ArrowRight, Sparkles,
+  Users, Wallet, ArrowRight, Sparkles, ShoppingBag, Info,
   CreditCard, Home as HomeIcon, Building2,
   BadgeCheck, Receipt, FileCheck, Globe, Search, Copy, Check, Plus, CheckCircle,
 } from "lucide-react";
@@ -144,8 +145,13 @@ const serviceCategories = [
 
 function Home({
   onBack,
+  onOpenMarketplace,
+  onOpenAboutUs,
   onOpenServices,
   customer,
+  wallet,
+  walletLoading,
+  onOpenWalletHistory,
   onLogout,
   onOpenAnnouncements,
   onOpenApplicationStatus,
@@ -296,6 +302,13 @@ function Home({
   <Wallet size={18} /> All Services
 </button>
 
+<button type="button" onClick={() => {
+  setMenuOpen(false);
+  onOpenMarketplace();
+}}>
+  <ShoppingBag size={18} aria-hidden="true" /> Marketplace
+</button>
+
 <button onClick={() => {
   setMenuOpen(false);
   onOpenWallet?.();
@@ -304,6 +317,7 @@ function Home({
 </button>
             <button onClick={() => { setMenuOpen(false); onOpenApplicationStatus?.(); }}><ClipboardList size={18} /> My Applications</button>
             <button onClick={() => { setMenuOpen(false); onOpenAnnouncements?.(); }}><Bell size={18} /> Notifications</button>
+            <button type="button" onClick={() => { setMenuOpen(false); onOpenAboutUs(); }}><Info size={18} aria-hidden="true" /> About Us</button>
             {customer ? (
   <>
     <button onClick={() => {
@@ -418,9 +432,9 @@ function Home({
 
       <div className="indipay-wallet-preview">
         <div>
-          <span>Wallet balance</span>
+          <span>{wallet?.totalPaise != null ? "Indipay Money balance" : "Marketplace spending balance"}</span>
           <strong>
-            {balanceVisible ? "₹ 0.00" : "₹ ••••••"}
+            {balanceVisible ? (walletLoading ? "Loading…" : formatPaise(wallet?.totalPaise ?? wallet?.availablePaise)) : "₹ ••••••"}
           </strong>
         </div>
 
@@ -449,7 +463,7 @@ function Home({
   )}
 
   <div className="indipay-account-card-links">
-    <button type="button" onClick={onOpenWallet}>
+    <button type="button" onClick={onOpenWalletHistory ?? onOpenWallet}>
       <FileText size={18} />
       <span>Statements</span>
     </button>
@@ -499,6 +513,16 @@ function Home({
   </button>
 </div>
         </section>
+
+        <button type="button" className="indipay-marketplace-card" onClick={onOpenMarketplace}>
+          <span className="indipay-marketplace-card-icon"><ShoppingBag size={22} aria-hidden="true" /></span>
+          <span className="indipay-marketplace-card-copy">
+            <small>SHOP · EARN · EXPLORE</small>
+            <strong>Indipay Marketplace</strong>
+            <span>Shop using your Indipay balance</span>
+          </span>
+          <ArrowRight className="indipay-marketplace-card-arrow" size={20} aria-hidden="true" />
+        </button>
 
         <section className="indipay-mini-banners" 
         onWheel={handleHorizontalWheel} aria-label="Indipay updates">

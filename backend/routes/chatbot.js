@@ -1,12 +1,12 @@
 
 const express = require("express");
 const OpenAI = require("openai");
+const { authenticateCustomer } = require("./auth");
+const rateLimit = require("../src/rateLimit");
 
 const router = express.Router();
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+let openai;
 
 const SYSTEM_INSTRUCTIONS = `
 You are Indipay Assistant, the customer support chatbot for Indipay,
@@ -30,9 +30,9 @@ Important rules:
 - Do not request passwords, OTPs, or API keys.
 `;
 
-router.post("/", async (req, res) => {
+router.post("/", authenticateCustomer, rateLimit({ limit: 10, windowMs: 60000, key: (req) => req.user.id }), async (req, res) => {
   try {
-    const { messages } = req.body;
+    const { messages } = req.body ?? {};
 
     if (!Array.isArray(messages) || messages.length === 0) {
       return res.status(400).json({
@@ -44,7 +44,7 @@ router.post("/", async (req, res) => {
     const validMessages = messages
       .filter(
         (msg) =>
-          ["user", "assistant"].includes(msg.role) &&
+          ["user", "assistant"].includes(msg?.role) &&
           typeof msg.content === "string" &&
           msg.content.trim()
       )
@@ -64,6 +64,10 @@ router.post("/", async (req, res) => {
       });
     }
 
+    if (!process.env.OPENAI_API_KEY) {
+      return res.status(503).json({ success: false, message: "The assistant is temporarily unavailable." });
+    }
+    openai ??= new OpenAI({ apiKey: process.env.OPENAI_API_KEY, timeout: 10000, maxRetries: 0 });
     const response = await openai.responses.create({
       model: "gpt-4.1-mini",
       instructions: SYSTEM_INSTRUCTIONS,
@@ -76,7 +80,7 @@ router.post("/", async (req, res) => {
       reply: response.output_text,
     });
   } catch (error) {
-    console.error("Indipay chatbot error:", error);
+    console.error("Indipay chatbot error:", error.code || error.name);
 
     return res.status(500).json({
       success: false,

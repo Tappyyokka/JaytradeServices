@@ -1,0 +1,142 @@
+.indipay-marketplace .mp-wallet-page {
+  --wallet-credit: #167647;
+  --wallet-debit: #a34813;
+  --wallet-refund: #3b59a6;
+}
+.indipay-app-shell[data-theme="dark"] .mp-wallet-page {
+  --wallet-credit: #81d9ab;
+  --wallet-debit: #ffb365;
+  --wallet-refund: #a9bfff;
+}
+.indipay-marketplace .mp-wallet-page-heading,
+.indipay-marketplace .mp-wallet-affordable,
+.indipay-marketplace .mp-wallet-results {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.indipay-marketplace .mp-wallet-page-heading h1,
+.indipay-marketplace .mp-wallet-page-heading p,
+.indipay-marketplace .mp-wallet-affordable p { margin: 0 0 5px; }
+.indipay-marketplace :is(.mp-wallet-page-heading p, .mp-wallet-muted, .mp-wallet-empty, .mp-wallet-affordable p) { color: var(--mp-muted); }
+.indipay-marketplace .mp-wallet-page button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 42px;
+  padding: 6px 11px;
+  border: 1px solid var(--mp-border);
+  border-radius: 9px;
+  background: var(--mp-surface);
+  color: var(--mp-text);
+  font-size: .88rem;
+}
+.indipay-marketplace .mp-wallet-page button:hover:not(:disabled) { border-color: #ce7522; }
+.indipay-marketplace .mp-wallet-page button:disabled { opacity: .52; cursor: default; }
+.indipay-marketplace .mp-wallet-page .mp-wallet-primary { background: var(--mp-accent); color: #162139; border-color: transparent; font-weight: 700; }
+.indipay-marketplace .mp-wallet-tabs {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 6px;
+  margin: 16px 0;
+}
+.indipay-marketplace .mp-wallet-tabs button { min-width: 0; padding-inline: 4px; overflow-wrap: anywhere; }
+.indipay-marketplace .mp-wallet-tabs button[aria-current="page"] { color: var(--mp-promo-text); background: var(--mp-promo-bg); border-color: #de8b46; font-weight: 700; }
+.indipay-marketplace .mp-wallet-balance-card {
+  position: relative;
+  display: grid;
+  gap: 10px;
+  padding: clamp(16px, 3vw, 24px);
+  padding-inline-end: 66px;
+  border-radius: 15px;
+  background: #101d36;
+  color: #fff;
+}
+.indipay-marketplace .mp-wallet-balance-card > div { display: flex; align-items: center; gap: 8px; }
+.indipay-marketplace .mp-wallet-balance-card svg,
+.indipay-marketplace .mp-wallet-balance-card strong { color: #ffb365; }
+.indipay-marketplace .mp-wallet-balance-card strong { font-size: clamp(1.7rem, 5vw, 2.55rem); line-height: 1.1; overflow-wrap: anywhere; }
+.indipay-marketplace .mp-wallet-balance-card small { color: #cfddf0; }
+.indipay-marketplace .mp-wallet-balance-card .mp-wallet-visibility { position: absolute; top: 13px; right: 13px; width: 42px; padding: 0; background: #263750; border-color: #557092; }
+.indipay-marketplace .mp-wallet-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 155px), 1fr));
+  gap: 8px;
+  margin: 10px 0 12px;
+}
+.indipay-marketplace .mp-wallet-metrics > div,
+.indipay-marketplace .mp-wallet-panel {
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid var(--mp-border);
+  border-radius: 12px;
+  background: var(--mp-surface);
+  overflow-wrap: anywhere;
+}
+.indipay-marketplace .mp-wallet-metrics dt, .indipay-marketplace .mp-wallet-detail-fields dt { color: var(--mp-muted); font-size: .84rem; }
+.indipay-marketplace .mp-wallet-metrics dd, .indipay-marketplace .mp-wallet-detail-fields dd { margin: 3px 0 0; font-weight: 700; }
+.indipay-marketplace .mp-wallet-panel { padding: clamp(12px, 2.3vw, 20px); margin: 12px 0; }
+.indipay-marketplace .mp-wallet-panel h2 { margin: 0 0 9px; font-size: 1.09rem; }
+.indipay-marketplace .mp-wallet-panel h2 svg { vertical-align: middle; }
+.indipay-marketplace .mp-wallet-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-block: 10px; }
+.indipay-marketplace .mp-wallet-affordable { margin-top: 14px; padding: 13px; border-radius: 10px; background: var(--mp-bg); }
+.indipay-marketplace .mp-wallet-affordable p { margin-top: 4px; font-size: .85rem; }
+.indipay-marketplace .mp-wallet-transactions { display: grid; gap: 6px; margin: 12px 0 0; padding: 0; list-style: none; }
+.indipay-marketplace .mp-wallet-transactions button {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  width: 100%;
+  gap: 8px;
+  padding: 10px;
+  text-align: left;
+}
+.indipay-marketplace .mp-wallet-transaction-icon { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: var(--mp-bg); }
+.indipay-marketplace .mp-wallet-transaction-main, .indipay-marketplace .mp-wallet-transaction-value { display: grid; gap: 3px; min-width: 0; }
+.indipay-marketplace .mp-wallet-transaction-main small, .indipay-marketplace .mp-wallet-transaction-value small { color: var(--mp-muted); }
+.indipay-marketplace .mp-wallet-transaction-value { text-align: right; }
+.indipay-marketplace .mp-wallet-page [data-tone="credit"] { color: var(--wallet-credit); }
+.indipay-marketplace .mp-wallet-page [data-tone="debit"] { color: var(--wallet-debit); }
+.indipay-marketplace .mp-wallet-page [data-tone="refund"] { color: var(--wallet-refund); }
+.indipay-marketplace .mp-wallet-page [data-status="completed"] { color: var(--wallet-credit); }
+.indipay-marketplace .mp-wallet-page [data-status="failed"] { color: var(--wallet-debit); }
+.indipay-marketplace .mp-wallet-fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 175px), 1fr)); gap: 8px; }
+.indipay-marketplace .mp-wallet-fields label { display: grid; gap: 4px; min-width: 0; font-size: .85rem; font-weight: 600; }
+.indipay-marketplace .mp-wallet-fields :is(input, select) {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  min-height: 42px;
+  padding: 6px 8px;
+  border: 1px solid var(--mp-border);
+  border-radius: 7px;
+  color: var(--mp-text);
+  background: var(--mp-bg);
+  font: inherit;
+}
+.indipay-marketplace .mp-wallet-fields select:focus-visible { outline: 2px solid #d97812; outline-offset: 2px; }
+.indipay-marketplace .mp-wallet-results { margin-top: 10px; color: var(--mp-muted); font-size: .86rem; }
+.indipay-marketplace .mp-wallet-page .mp-wallet-back { margin-bottom: 10px; }
+.indipay-marketplace .mp-wallet-detail-amount { display: block; font-size: 1.65rem; }
+.indipay-marketplace .mp-wallet-detail-fields { display: grid; gap: 7px; margin: 12px 0; }
+.indipay-marketplace .mp-wallet-detail-fields > div { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr); gap: 8px; align-items: baseline; }
+.indipay-marketplace .mp-wallet-analytics { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.indipay-marketplace .mp-wallet-analytics .mp-wallet-panel { margin: 0; }
+.indipay-marketplace .mp-wallet-legend { display: flex; flex-wrap: wrap; gap: 9px; margin: 9px 0; font-size: .83rem; }
+.indipay-marketplace .mp-wallet-bars { display: grid; gap: 8px; }
+.indipay-marketplace .mp-wallet-bars > div { display: grid; grid-template-columns: minmax(66px, 1fr) minmax(0, 2fr); gap: 8px; align-items: center; font-size: .8rem; }
+.indipay-marketplace .mp-wallet-bar { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 7px; }
+.indipay-marketplace .mp-wallet-bar progress { width: 100%; min-width: 0; height: 9px; accent-color: currentColor; }
+.indipay-marketplace .mp-wallet-bar span { font-variant-numeric: tabular-nums; }
+.indipay-marketplace .mp-wallet-earn button { justify-content: space-between; text-align: left; }
+.indipay-marketplace .mp-cart-wallet-estimate { margin: 12px 0; }
+@media (max-width: 650px) {
+  .indipay-marketplace .mp-wallet-tabs { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .indipay-marketplace .mp-wallet-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .indipay-marketplace .mp-wallet-analytics { grid-template-columns: minmax(0, 1fr); }
+  .indipay-marketplace .mp-wallet-transaction-chevron { display: none; }
+  .indipay-marketplace .mp-wallet-transactions button { grid-template-columns: auto minmax(0, 1fr) minmax(0, auto); }
+  .indipay-marketplace .mp-wallet-transaction-value { max-width: 100px; }
+}

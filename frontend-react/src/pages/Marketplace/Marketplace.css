@@ -1,0 +1,442 @@
+.indipay-marketplace {
+  --mp-bg: #f4f6fa;
+  --mp-surface: #fff;
+  --mp-text: #142139;
+  --mp-muted: #52617a;
+  --mp-border: #dce3ed;
+  --mp-accent: #ffb365;
+  --mp-photo-bg: #e9edf3;
+  --mp-promo-bg: #ffe7cb;
+  --mp-promo-text: #182239;
+  min-height: 100vh;
+  color: var(--mp-text);
+  background: var(--mp-bg);
+}
+
+.indipay-app-shell[data-theme="dark"] .indipay-marketplace {
+  color-scheme: dark;
+  --mp-bg: #0d1524;
+  --mp-surface: #172438;
+  --mp-text: #f3f6fc;
+  --mp-muted: #afbdd1;
+  --mp-border: #34465f;
+  --mp-photo-bg: #23334b;
+  --mp-promo-bg: #39291e;
+  --mp-promo-text: #ffe7cb;
+}
+
+.indipay-marketplace .mp-wrap { width: min(1120px, 100% - 32px); margin-inline: auto; }
+.indipay-marketplace .mp-header { position: relative; z-index: 40; background: #101d36; color: #fff; }
+.indipay-marketplace .mp-toolbar { display: flex; align-items: center; gap: clamp(7px, 2vw, 14px); min-height: 64px; padding-block: 6px; box-sizing: border-box; }
+.indipay-marketplace .mp-brand { flex: 1; min-width: 0; font-size: clamp(.88rem, 2.7vw, 1.1rem); font-weight: 750; line-height: 1.2; overflow-wrap: anywhere; }
+.indipay-marketplace button { font: inherit; cursor: pointer; }
+.indipay-marketplace button:focus-visible,
+.indipay-marketplace input:focus-visible { outline: 2px solid #d97812; outline-offset: 3px; }
+.indipay-marketplace .mp-photo button {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 12px;
+}
+.indipay-marketplace .mp-wallet {
+  display: flex;
+  flex: none;
+  align-items: center;
+  min-height: 44px;
+  gap: 8px;
+  padding: 6px clamp(7px, 2vw, 12px);
+  border: 1px solid #40516d;
+  border-radius: 11px;
+  background: #1e2e49;
+  color: var(--mp-accent);
+  text-align: left;
+}
+.indipay-marketplace .mp-wallet:hover { border-color: var(--mp-accent); }
+.indipay-marketplace .mp-wallet > svg { flex: none; }
+.indipay-marketplace .mp-profile-menu { position: relative; flex: none; }
+.indipay-marketplace .mp-profile-trigger {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 44px;
+  border-radius: 10px;
+  cursor: pointer;
+  list-style: none;
+  color: #ccd5e3;
+}
+.indipay-marketplace .mp-profile-trigger:hover,
+.indipay-marketplace .mp-profile-menu[open] > summary { color: var(--mp-accent); }
+.indipay-marketplace .mp-profile-trigger:focus-visible { outline: 2px solid var(--mp-accent); outline-offset: 2px; }
+.indipay-marketplace .mp-profile-menu[open] .mp-profile-chevron { transform: rotate(180deg); }
+.indipay-marketplace .mp-profile-avatar {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--mp-promo-bg);
+  color: var(--mp-promo-text);
+}
+.indipay-marketplace .mp-profile-trigger .mp-profile-avatar { background: #ffe7cb; color: #42301e; }
+.indipay-marketplace .mp-profile-menu summary::-webkit-details-marker { display: none; }
+.indipay-marketplace .mp-profile-panel {
+  position: absolute;
+  z-index: 20;
+  inset: calc(100% + 8px) auto auto 0;
+  display: grid;
+  gap: 2px;
+  width: min(232px, calc(100vw - 32px));
+  max-height: calc(100dvh - 80px);
+  box-sizing: border-box;
+  overflow-wrap: anywhere;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 8px;
+  border: 1px solid var(--mp-border);
+  border-radius: 12px;
+  background: var(--mp-surface);
+  color: var(--mp-text);
+  box-shadow: 0 10px 28px #101d3630;
+}
+.indipay-marketplace .mp-profile-identity { display: flex; align-items: center; gap: 10px; padding: 6px; }
+.indipay-marketplace .mp-profile-identity strong { display: block; font-size: .9rem; }
+.indipay-marketplace .mp-profile-identity small { display: block; margin-top: 2px; color: var(--mp-muted); font-size: .73rem; }
+.indipay-marketplace .mp-profile-panel hr { width: 100%; margin: 4px 0; border: 0; border-top: 1px solid var(--mp-border); }
+.indipay-marketplace .mp-profile-link {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 40px;
+  padding: 5px 8px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: inherit;
+  font-size: .85rem;
+  text-align: left;
+}
+.indipay-marketplace .mp-profile-link > svg { flex: none; color: var(--mp-muted); }
+.indipay-marketplace .mp-profile-link:hover,
+.indipay-marketplace .mp-profile-link:active,
+.indipay-marketplace .mp-profile-link[aria-current="page"] { background: var(--mp-promo-bg); color: var(--mp-promo-text); }
+.indipay-marketplace .mp-profile-link:hover > svg,
+.indipay-marketplace .mp-profile-link[aria-current="page"] > svg { color: #b65e12; }
+.indipay-app-shell[data-theme="dark"] .indipay-marketplace .mp-profile-link:hover > svg,
+.indipay-app-shell[data-theme="dark"] .indipay-marketplace .mp-profile-link[aria-current="page"] > svg { color: var(--mp-accent); }
+.indipay-marketplace .mp-profile-count { min-width: 22px; margin-left: auto; padding: 2px 5px; border-radius: 999px; background: var(--mp-bg); color: var(--mp-text); text-align: center; font-size: .72rem; font-weight: 700; }
+.indipay-marketplace .mp-profile-signin { min-height: 26px; padding: 0; border: 0; background: transparent; color: inherit; font-size: .78rem; text-decoration: underline; text-decoration-color: #d97812; text-underline-offset: 3px; }
+.indipay-marketplace .mp-wallet small,
+.indipay-marketplace .mp-wallet strong { display: block; }
+.indipay-marketplace .mp-wallet small { color: #d5deeb; font-size: clamp(.58rem, 2.3vw, .69rem); }
+.indipay-marketplace .mp-wallet strong { color: var(--mp-accent); font-size: .92rem; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.indipay-marketplace .mp-settings { max-width: 560px; }
+.indipay-marketplace .mp-settings-row { display: flex; align-items: center; gap: 10px; padding: 12px 0; border-top: 1px solid var(--mp-border); }
+.indipay-marketplace .mp-settings-row p { margin: 3px 0 0; color: var(--mp-muted); font-size: .85rem; }
+.indipay-marketplace .mp-settings-row button { margin-left: auto; min-width: 54px; min-height: 44px; border: 1px solid var(--mp-border); border-radius: 999px; background: var(--mp-bg); color: var(--mp-text); }
+.indipay-marketplace .mp-settings-row button[aria-checked="true"] { background: var(--mp-accent); border-color: transparent; color: #182239; }
+.indipay-marketplace .mp-main { padding-block: 24px 120px; }
+.indipay-marketplace h1 { margin: 0 0 16px; font-size: clamp(1.45rem, 4vw, 2rem); }
+.indipay-marketplace .mp-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border: 1px solid var(--mp-border);
+  border-radius: 12px;
+  background: var(--mp-surface);
+}
+.indipay-marketplace .mp-search input { min-width: 0; width: 100%; height: 38px; border: 0; background: transparent; color: inherit; font: inherit; }
+.indipay-marketplace .mp-search input::placeholder { color: var(--mp-muted); opacity: 1; }
+.indipay-marketplace .mp-categories {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: clamp(2px, 1vw, 8px);
+  padding: 16px 0 12px;
+}
+.indipay-marketplace .mp-empty button,
+.indipay-marketplace .mp-notice button {
+  min-height: 44px;
+  padding-inline: 14px;
+  border: 1px solid var(--mp-border);
+  border-radius: 10px;
+  color: var(--mp-text);
+  background: var(--mp-surface);
+  white-space: nowrap;
+}
+.indipay-marketplace .mp-categories button {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  justify-items: center;
+  gap: 6px;
+  min-width: 0;
+  min-height: 64px;
+  padding: 6px 1px 8px;
+  border: 0;
+  border-bottom: 3px solid transparent;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--mp-muted);
+  font-size: clamp(0.625rem, 2.65vw, 0.9rem);
+  line-height: 1.15;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.indipay-marketplace .mp-categories button svg {
+  width: clamp(16px, 4.4vw, 29px);
+  height: auto;
+}
+.indipay-marketplace .mp-category-icon {
+  display: grid;
+  place-items: center;
+  width: min(100%, clamp(32px, 8vw, 60px));
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--mp-photo-bg);
+  color: var(--mp-text);
+}
+.indipay-marketplace .mp-categories button[aria-pressed="true"] .mp-category-icon {
+  background: var(--mp-promo-bg);
+  color: var(--mp-promo-text);
+}
+.indipay-marketplace .mp-categories button[aria-pressed="true"] {
+  border-bottom-color: #d97812;
+  color: var(--mp-text);
+  font-weight: 700;
+}
+.indipay-marketplace .mp-add { background: var(--mp-accent); color: #182239; border-color: transparent; font-weight: 700; }
+.indipay-marketplace .mp-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.indipay-marketplace .mp-hero {
+  margin-top: 8px;
+  padding: clamp(12px, 2.5vw, 24px);
+  border-radius: 16px;
+  background: #101d36;
+  color: #fff;
+}
+.indipay-marketplace .mp-hero-slide {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  min-height: clamp(172px, 25vw, 255px);
+  gap: clamp(10px, 3vw, 32px);
+  touch-action: pan-y;
+}
+.indipay-marketplace .mp-hero-category { color: var(--mp-accent); font-size: .8rem; font-weight: 700; }
+.indipay-marketplace .mp-hero h2 { margin: 6px 0; max-width: 20ch; font-size: clamp(1.2rem, 3.5vw, 2.7rem); line-height: 1.1; letter-spacing: -.025em; }
+.indipay-marketplace .mp-hero p { margin: 0 0 12px; color: #d0dbeb; }
+.indipay-marketplace .mp-hero-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 7px 10px;
+  border: 0;
+  border-radius: 9px;
+  background: var(--mp-accent);
+  color: #182239;
+  font-weight: 700;
+}
+.indipay-marketplace .mp-hero-cta::after { position: absolute; z-index: 1; inset: 0; content: ""; }
+.indipay-marketplace .mp-hero-cta:hover { background: #ffc485; }
+.indipay-marketplace .mp-hero-art {
+  position: relative;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  align-self: stretch;
+  border-radius: 12px;
+  background: #263750;
+  color: var(--mp-accent);
+}
+.indipay-marketplace .mp-hero-art img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.indipay-marketplace .mp-hero-art img[hidden] { display: none; }
+.indipay-marketplace .mp-hero-controls { display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 10px; }
+.indipay-marketplace .mp-hero-controls button { display: grid; place-items: center; width: 40px; height: 40px; padding: 0; border: 1px solid #60728e; border-radius: 50%; background: #263750; color: white; }
+.indipay-marketplace .mp-hero-controls button:hover { border-color: var(--mp-accent); }
+.indipay-marketplace .mp-hero-controls .mp-hero-dot { width: 34px; border-color: transparent; background: transparent; }
+.indipay-marketplace .mp-hero-dot::before { width: 8px; height: 8px; border-radius: 99px; background: #9daec7; content: ""; }
+.indipay-marketplace .mp-hero-dot[aria-current="true"]::before { width: 18px; background: var(--mp-accent); }
+.indipay-marketplace .mp-hero-play { margin-left: 6px; }
+
+.indipay-marketplace .mp-flash-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.indipay-marketplace .mp-flash-heading h2 { flex: 1 1 auto; }
+.indipay-marketplace .mp-flash-countdown {
+  padding: 5px 8px;
+  border-radius: 6px;
+  background: var(--mp-promo-bg);
+  color: var(--mp-promo-text);
+  font-size: .88rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.indipay-marketplace .mp-promotion-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-height: 40px;
+  padding: 5px 10px;
+  border: 1px solid var(--mp-border);
+  border-radius: 8px;
+  background: var(--mp-surface);
+  color: var(--mp-text);
+  font-size: .86rem;
+  font-weight: 650;
+}
+.indipay-marketplace .mp-promotion-button:hover { border-color: #d97812; }
+.indipay-marketplace .mp-flash-strip {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding: 4px 4px 12px;
+  margin: 6px -4px 0;
+  scroll-snap-type: x proximity;
+  scroll-padding-inline: 4px;
+  scrollbar-color: var(--mp-muted) var(--mp-bg);
+}
+.indipay-marketplace .mp-flash-strip .mp-card { flex: 0 0 max(150px, calc((100% - 36px) / 4)); scroll-snap-align: start; }
+.indipay-marketplace .mp-deal-progress { display: grid; gap: 3px; color: var(--mp-muted); font-size: .78rem; }
+.indipay-marketplace .mp-deal-progress progress { width: 100%; height: 8px; accent-color: #d97812; }
+.indipay-marketplace .mp-budget-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 12px;
+}
+.indipay-marketplace .mp-budget-grid button {
+  display: grid;
+  place-content: center;
+  gap: 2px;
+  min-height: 64px;
+  padding: 7px 2px;
+  border: 1px solid var(--mp-border);
+  border-radius: 10px;
+  background: var(--mp-surface);
+  color: var(--mp-muted);
+  font-size: .8rem;
+}
+.indipay-marketplace .mp-budget-grid button strong { color: var(--mp-text); font-size: clamp(.94rem, 2.25vw, 1.22rem); }
+.indipay-marketplace .mp-budget-grid button:hover { border-color: #d97812; background: var(--mp-promo-bg); }
+.indipay-marketplace .mp-seller-promo { display: flex; align-items: flex-start; gap: 16px; margin-top: 18px; padding: clamp(16px, 4vw, 28px); border-radius: 16px; background: #101d36; color: #fff; }
+.indipay-marketplace .mp-seller-promo > svg { flex: none; color: var(--mp-accent); }
+.indipay-marketplace .mp-seller-promo h2 { margin: 0; font-size: clamp(1.15rem, 3vw, 1.5rem); }
+.indipay-marketplace .mp-seller-promo p { margin: 8px 0 14px; }
+.indipay-marketplace .mp-seller-promo div > div { display: flex; flex-wrap: wrap; gap: 8px; }
+.indipay-marketplace .mp-seller-promo button { min-height: 44px; padding: 8px 12px; border: 1px solid #8b99b0; border-radius: 8px; background: transparent; color: white; }
+.indipay-marketplace .mp-seller-promo button:first-child { border-color: transparent; background: var(--mp-accent); color: #182239; font-weight: 700; }
+.indipay-marketplace .mp-section h2 { position: relative; margin: 0; padding-bottom: 12px; border-bottom: 1px solid var(--mp-border); font-size: clamp(1.15rem, 3vw, 1.5rem); }
+.indipay-marketplace .mp-section h2::after { position: absolute; bottom: -1px; left: 0; width: 64px; height: 3px; border-radius: 2px; background: #d97812; content: ""; }
+.indipay-marketplace .mp-section { margin-top: clamp(26px, 4vw, 44px); }
+.indipay-marketplace .mp-section > p { color: var(--mp-muted); margin: 6px 0; }
+.indipay-marketplace .mp-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-top: 12px; }
+.indipay-marketplace .mp-card { display: flex; flex-direction: column; overflow: hidden; background: var(--mp-surface); border: 1px solid var(--mp-border); border-radius: 14px; box-shadow: 0 3px 12px #101d360b; }
+.indipay-marketplace .mp-photo { position: relative; display: grid; place-items: center; aspect-ratio: 16 / 10; background: var(--mp-photo-bg); font-size: 2.5rem; }
+.indipay-marketplace .mp-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.indipay-marketplace .mp-photo img[hidden] { display: none; }
+.indipay-marketplace .mp-photo button { position: absolute; top: 6px; right: 6px; color: var(--mp-text); background: var(--mp-surface); }
+.indipay-marketplace .mp-card .mp-photo { aspect-ratio: 5 / 4; }
+.indipay-marketplace .mp-card .mp-photo button { border-radius: 50%; }
+.indipay-marketplace .mp-card .mp-photo button[aria-pressed="true"] { color: #bb3651; }
+.indipay-marketplace .mp-card:hover { border-color: #d97812; }
+.indipay-marketplace .mp-discount { position: absolute; top: 8px; left: 8px; padding: 4px 7px; border-radius: 6px; background: #101d36; color: #fff; font-size: .72rem; font-weight: 700; }
+.indipay-marketplace .mp-savings { color: #187344; font-size: .82rem; font-weight: 700; }
+.indipay-app-shell[data-theme="dark"] .indipay-marketplace .mp-savings { color: #83dca8; }
+.indipay-marketplace .mp-card-body { display: flex; flex-direction: column; flex: 1; gap: 7px; padding: 12px; }
+.indipay-marketplace .mp-card h3 { margin: 0; font-size: 1rem; line-height: 1.25; }
+.indipay-marketplace .mp-card p { margin: 0; color: var(--mp-muted); font-size: .82rem; }
+.indipay-marketplace .mp-rating { display: flex; gap: 4px; align-items: center; color: var(--mp-muted); font-size: .8rem; }
+.indipay-marketplace .mp-rating svg { fill: #ffad56; color: #92500c; }
+.indipay-marketplace .mp-price { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 8px; color: var(--mp-muted); font-size: .8rem; }
+.indipay-marketplace .mp-price strong { color: var(--mp-text); font-size: 1.05rem; }
+.indipay-marketplace .mp-add { min-height: 44px; margin-top: auto; border: 0; border-radius: 8px; font-size: .9rem; }
+.indipay-marketplace .mp-notice,
+.indipay-marketplace .mp-empty { padding: 14px; background: var(--mp-surface); border: 1px solid var(--mp-border); border-radius: 12px; }
+.indipay-marketplace .mp-notice {
+  position: fixed;
+  z-index: 150;
+  inset: auto 16px calc(145px + env(safe-area-inset-bottom)) auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: calc(100% - 32px);
+}
+.indipay-marketplace .mp-empty { margin-top: 12px; }
+.indipay-marketplace .mp-empty p { margin: 0 0 10px; }
+.indipay-marketplace .mp-panel > button,
+.indipay-marketplace .mp-cart-line button {
+  min-height: 44px;
+  padding: 0 12px;
+  border: 1px solid var(--mp-border);
+  border-radius: 8px;
+  background: var(--mp-surface);
+  color: var(--mp-text);
+}
+.indipay-marketplace .mp-panel > button:disabled { opacity: .55; cursor: not-allowed; }
+.indipay-marketplace .mp-product-link { padding: 0; border: 0; background: transparent; color: inherit; text-align: left; font-weight: inherit; }
+.indipay-marketplace .mp-product-link:hover { text-decoration: underline; }
+.indipay-marketplace .mp-panel {
+  padding: clamp(14px, 4vw, 24px);
+  border: 1px solid var(--mp-border);
+  border-radius: 14px;
+  background: var(--mp-surface);
+}
+.indipay-marketplace .mp-panel > button { margin: 0 8px 8px 0; }
+.indipay-marketplace .mp-panel > strong { display: block; margin-bottom: 10px; }
+.indipay-marketplace .mp-panel > .mp-add { background: var(--mp-accent); color: #182239; }
+.indipay-marketplace .mp-cart-line,
+.indipay-marketplace .mp-order { padding: 14px 0; border-top: 1px solid var(--mp-border); }
+.indipay-marketplace .mp-cart-line { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
+.indipay-marketplace .mp-cart-line > strong { flex: 1 1 150px; }
+.indipay-marketplace .mp-panel dl { display: grid; grid-template-columns: 1fr auto; gap: 10px; max-width: 440px; }
+.indipay-marketplace .mp-panel dd { margin: 0; font-weight: 700; }
+.indipay-marketplace .mp-seller .mp-panel { margin-top: 16px; }
+.indipay-marketplace .mp-seller form { display: grid; gap: 12px; margin-block: 12px; max-width: 560px; justify-items: start; }
+.indipay-marketplace .mp-seller label { display: grid; gap: 5px; width: 100%; max-width: 560px; }
+.indipay-marketplace .mp-seller :is(input, textarea, select, button) {
+  box-sizing: border-box;
+  max-width: 100%;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid var(--mp-border);
+  border-radius: 8px;
+  background: var(--mp-bg);
+  color: var(--mp-text);
+  font: inherit;
+}
+.indipay-marketplace .mp-seller button[type="submit"] { background: var(--mp-accent); color: #182239; }
+.indipay-marketplace .mp-add:disabled { opacity: .6; cursor: not-allowed; }
+.indipay-marketplace .mp-notice { flex-wrap: wrap; }
+.indipay-marketplace .mp-tab-placeholder { min-height: 55vh; display: grid; align-content: center; justify-items: center; text-align: center; }
+.indipay-marketplace .mp-tab-placeholder p { color: var(--mp-muted); }
+.indipay-marketplace .mp-tab-placeholder button { min-height: 44px; padding: 0 16px; border: 0; border-radius: 9px; background: var(--mp-accent); font-weight: 700; }
+.indipay-marketplace .mp-bottom-nav { position: fixed; z-index: 120; right: 0; bottom: 0; left: 0; display: grid; grid-template-columns: repeat(4, 1fr); padding: 6px max(8px, env(safe-area-inset-right)) calc(6px + env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left)); background: #101d36; box-shadow: 0 -4px 18px #101d3622; }
+.indipay-marketplace .mp-bottom-nav button { display: grid; justify-items: center; align-content: center; gap: 3px; min-height: 54px; border: 0; border-radius: 8px; color: #c4cfdf; background: transparent; font-size: .7rem; }
+.indipay-marketplace .mp-bottom-nav button[aria-current="page"] { color: #ffb365; }
+
+@media (max-width: 650px) {
+  .indipay-marketplace .mp-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .indipay-marketplace .mp-hero-slide { grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); }
+  .indipay-marketplace .mp-flash-strip .mp-card { flex-basis: max(136px, 46%); }
+  .indipay-marketplace .mp-hero-category { font-size: .72rem; }
+  .indipay-marketplace .mp-hero-cta { font-size: .86rem; }
+  .indipay-marketplace .mp-hero p { font-size: .82rem; }
+  .indipay-marketplace .mp-seller-promo > svg { width: 24px; }
+  .indipay-marketplace .mp-card-body { padding: 9px; }
+  .indipay-marketplace .mp-card h3 { font-size: .9rem; }
+}

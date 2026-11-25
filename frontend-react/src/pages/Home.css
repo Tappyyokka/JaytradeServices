@@ -7252,6 +7252,65 @@ body:has(.indipay-chat-window) .indipay-support-float {
   color-scheme: dark;
 }
 
+.indipay-marketplace-card {
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(10px, 2vw, 16px);
+  width: 100%;
+  padding: 12px clamp(12px, 2vw, 18px);
+  border: 1px solid var(--home-border);
+  border-radius: 13px;
+  background: var(--home-surface);
+  box-shadow: 0 3px 12px rgba(16, 29, 54, .035);
+  color: var(--home-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color .15s ease, border-color .15s ease;
+}
+
+.indipay-marketplace-card-icon {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--home-orange);
+  background: var(--home-navy);
+}
+
+.indipay-marketplace-card-copy {
+  display: grid;
+  gap: 2px;
+  line-height: 1.3;
+}
+
+.indipay-marketplace-card-copy small {
+  color: #a64e0a;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .07em;
+}
+
+.indipay-marketplace-card-copy strong { font-size: clamp(15px, 2vw, 17px); }
+.indipay-marketplace-card-copy > span { color: var(--home-muted); font-size: 12px; }
+.indipay-marketplace-card-arrow { color: var(--home-muted); }
+.indipay-app-home.dark-mode .indipay-marketplace-card-copy small { color: var(--home-orange); }
+
+.indipay-marketplace-card:hover,
+.indipay-marketplace-card:focus-visible {
+  border-color: var(--home-orange);
+}
+
+.indipay-marketplace-card:focus-visible {
+  outline: 2px solid var(--home-orange);
+  outline-offset: 3px;
+}
+
+.indipay-marketplace-card:active { background: var(--home-surface-soft); }
+
 /* Page canvas and header */
 .indipay-app-home.dark-mode,
 .indipay-app-home.dark-mode .indipay-app-main {

@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react";
 
 import Footer from "./components/common/Footer";
 import API_BASE_URL from "./config/api";
+import useMarketplaceWallet from "./wallet/useMarketplaceWallet";
 import { MessageCircle, Phone, X, Bot } from "lucide-react";
 import Chatbot from "./components/common/Chatbot";
 import Announcements from "./pages/Announcements";
@@ -12,6 +13,8 @@ import BottomNav from "./components/common/BottomNav";
 import LearnAndEarn from "./pages/LearnAndEarn";
 import CustomerApplications from "./pages/CustomerApplications";
 import Wallet from "./pages/Wallet";
+import Marketplace from "./pages/Marketplace/Marketplace";
+import MarketplaceSellerFlow from "./pages/Marketplace/MarketplaceSellerFlow";
 import Rewards from "./pages/Rewards";
 import Refer from "./pages/Refer";
 import Jobs from "./pages/Jobs";
@@ -27,6 +30,10 @@ import DetailedServices from "./pages/DetailedServices";
 import ServiceDetail from "./pages/ServiceDetail";
 
 const PAGE_PATHS = {
+  marketplace: "/marketplace",
+  "seller-register": "/marketplace/seller/register",
+  "seller-login": "/marketplace/seller/login",
+  "seller-dashboard": "/marketplace/seller/dashboard",
   home: "/",
   login: "/login",
   register: "/register",
@@ -68,6 +75,7 @@ useEffect(() => {
   localStorage.setItem("indipay-theme", darkMode ? "dark" : "light");
 }, [darkMode]);
   const [customer, setCustomer] = useState(null);
+  const marketplaceWallet = useMarketplaceWallet(customer);
   const [selectedService, setSelectedService] = useState(null);
   const [applicationReturnPage, setApplicationReturnPage] = useState("service-detail");
   const [timesReturnPage, setTimesReturnPage] = useState("home");
@@ -76,14 +84,17 @@ const [chatOpenSignal, setChatOpenSignal] = useState(0);
 
   useEffect(() => {
     const handlePopState = () => {
-      isHistoryNavigation.current = true;
-      setCurrentPage(pageFromPath(window.location.pathname));
+      const nextPage = pageFromPath(window.location.pathname);
+      if (nextPage !== currentPage) {
+        isHistoryNavigation.current = true;
+        setCurrentPage(nextPage);
+      }
       window.scrollTo(0, 0);
     };
 
     window.addEventListener("popstate", handlePopState);
     return () => window.removeEventListener("popstate", handlePopState);
-  }, []);
+  }, [currentPage]);
 
   useEffect(() => {
     const path = PAGE_PATHS[currentPage] || PAGE_PATHS.home;
@@ -131,10 +142,15 @@ const pageToTab = {
   rewards: "Rewards",
   times: "Learn & Earn",
   "learn-earn": "Learn & Earn",
-  "about-us": "About Us",
 };
 
 const activeTab = pageToTab[currentPage] || "";
+
+  function openMarketplaceWallet(view) {
+    const path = PAGE_PATHS.marketplace + "#wallet?" + new URLSearchParams({ view });
+    window.history.pushState({ page: "marketplace" }, "", path);
+    handleBottomNavigation("marketplace");
+  }
 
   useEffect(() => {
     const checkCustomerSession = async () => {
@@ -206,7 +222,7 @@ const requiresLogin = !sessionLoading && !customer && isProtectedPage;
 
    let pageContent;
 
-  if (sessionLoading && isProtectedPage) {
+  if (sessionLoading && (isProtectedPage || ["seller-register", "seller-login", "seller-dashboard"].includes(currentPage))) {
   pageContent = (
     <div className="indipay-login-required" aria-live="polite">
       <div className="indipay-login-required-card">
@@ -437,10 +453,38 @@ onOpenAboutUs={handleOpenAboutUs}
 />
     );
     
+  } else if (["seller-register", "seller-login"].includes(currentPage)) {
+    pageContent = (
+      <MarketplaceSellerFlow customer={customer} page={currentPage} navigate={(page) => {
+        setCurrentPage(page);
+        window.scrollTo(0, 0);
+      }} />
+    );
+  } else if (currentPage === "marketplace" || currentPage === "seller-dashboard") {
+    pageContent = (
+      <Marketplace
+        initialTab={currentPage === "seller-dashboard" ? "my-store" : "shop"}
+        customer={customer}
+        walletState={{ ...marketplaceWallet, loading: sessionLoading || marketplaceWallet.loading }}
+        darkMode={darkMode}
+        onThemeChange={setDarkMode}
+        onOpenSellerRegistration={() => { setCurrentPage("seller-register"); window.scrollTo(0, 0); }}
+        onOpenSellerLogin={() => { setCurrentPage("seller-login"); window.scrollTo(0, 0); }}
+        onOpenWallet={() => { setCurrentPage("wallet"); window.scrollTo(0, 0); }}
+        onOpenIndipayPage={handleBottomNavigation}
+        onBack={() => { setCurrentPage("home"); window.scrollTo(0, 0); }}
+        onLogin={() => { setCurrentPage("login"); window.scrollTo(0, 0); }}
+      />
+    );
   } else if (currentPage === "home") {
   pageContent = (
     <Home
+  onOpenMarketplace={() => handleBottomNavigation("marketplace")}
+  onOpenAboutUs={handleOpenAboutUs}
   customer={customer}
+  wallet={marketplaceWallet.wallet}
+  walletLoading={sessionLoading || marketplaceWallet.loading}
+  onOpenWalletHistory={() => openMarketplaceWallet("statements")}
   darkMode={darkMode}
   setDarkMode={setDarkMode}
     onLogout={async () => {
@@ -502,7 +546,6 @@ onOpenWallet={() => {
       }}
       onOpenJobs={handleOpenJobs}
       onOpenTimes={handleOpenTimes}
-      onOpenAboutUs={handleOpenAboutUs}
     />
   );
   
@@ -511,6 +554,8 @@ else if (currentPage === "rewards") {
   pageContent = (
     <Rewards
       customer={customer}
+      wallet={marketplaceWallet.wallet}
+      onOpenMarketplaceWallet={() => openMarketplaceWallet("overview")}
       onBack={() => {
         setCurrentPage("wallet");
         window.scrollTo(0, 0);
@@ -523,6 +568,9 @@ else if (currentPage === "wallet") {
   pageContent = (
     <Wallet
       customer={customer}
+      wallet={marketplaceWallet.wallet}
+      walletLoading={marketplaceWallet.loading}
+      onOpenWalletHistory={() => openMarketplaceWallet("history")}
       onBack={() => {
         setCurrentPage("home");
         window.scrollTo(0, 0);
@@ -655,7 +703,7 @@ else {
 }
 
   const isAuthPage =
-  currentPage === "login" || currentPage === "register";
+    ["login", "register", "seller-register", "seller-login", "seller-dashboard"].includes(currentPage);
 
 return (
   <div
@@ -664,14 +712,14 @@ return (
   >
     {pageContent}
 
-  {!["login", "register"].includes(currentPage) && (
+  {!isAuthPage && !["marketplace", "seller-dashboard"].includes(currentPage) && (
     <BottomNav
       activeTab={activeTab}
       onNavigate={handleBottomNavigation}
     />
   )}
 
-   {!isAuthPage && (
+   {!isAuthPage && !["marketplace", "seller-dashboard"].includes(currentPage) && (
       <Chatbot
         customer={customer}
         hideLauncher
@@ -719,6 +767,7 @@ return (
  currentPage !== "customer-applications" &&
  currentPage !== "business-development" &&
  currentPage !== "wallet" &&
+ !["marketplace", "seller-dashboard"].includes(currentPage) &&
  currentPage !== "refer" &&
  currentPage !== "rewards" &&
  currentPage !== "about-us" &&
@@ -731,7 +780,7 @@ return (
 )}
 
     
-<div className="indipay-support-float">
+{!["marketplace", "seller-dashboard"].includes(currentPage) && <div className="indipay-support-float">
   {supportMenuOpen && (
     <div className="indipay-support-options">
       <button
@@ -770,7 +819,7 @@ return (
   >
     {supportMenuOpen ? <X size={25} /> : <MessageCircle size={25} />}
   </button>
-</div>
+</div>}
    
       </>
     )}

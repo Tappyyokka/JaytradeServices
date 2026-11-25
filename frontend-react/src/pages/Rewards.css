@@ -501,7 +501,21 @@
   line-height: 1.6;
 }
 
-.rewards-note > svg:last-child { color: #e77e20; }
+.rewards-note .rewards-wallet-link {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  flex: none;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #c3611c;
+  cursor: pointer;
+}
+.rewards-note .rewards-wallet-link:hover { background: #ee8b2820; }
+.rewards-note .rewards-wallet-link:focus-visible { outline: 2px solid #d97812; }
+.indipay-app-shell.dark-mode .rewards-note .rewards-wallet-link { color: #ffb365; }
 
 .rewards-disclaimer {
   margin-top: 20px;

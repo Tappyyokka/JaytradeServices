@@ -19,12 +19,13 @@ import {
 } from "lucide-react";
 
 import Jaytradelogo from "../assets/images/Jaytrade-logo.jpg";
+import { formatPaise } from "../wallet/walletData";
 import "./Wallet.css";
 
 function Wallet({
   customer,
-  walletBalance = 0,
-  transactions = [],
+  wallet,
+  walletLoading,
   onBack,
   onOpenServices,
   onOpenAnnouncements,
@@ -55,11 +56,8 @@ useEffect(() => {
   const [profileOpen, setProfileOpen] = useState(false);
   const [showAddMoneyInfo, setShowAddMoneyInfo] = useState(false);
   const [showRewardsInfo, setShowRewardsInfo] = useState(false);
-  const formatAmount = (amount) =>
-    Number(amount || 0).toLocaleString("en-IN", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    });
+  const transactions = wallet?.transactions ?? [];
+  const balance = wallet?.totalPaise ?? wallet?.availablePaise;
 
   const handleUseBalance = () => {
     onOpenServices?.();
@@ -228,8 +226,8 @@ useEffect(() => {
       </div>
 
       <div className="wallet-balance-area">
-        <span>AVAILABLE BALANCE</span>
-        <h1>₹ {formatAmount(walletBalance)}</h1>
+        <span>{wallet?.totalPaise != null ? "INDIPAY MONEY BALANCE" : "MARKETPLACE SPENDING BALANCE"}</span>
+        <h1>{walletLoading ? "Loading…" : formatPaise(balance)}</h1>
       </div>
 
       <div className="wallet-card-divider" />
@@ -370,7 +368,7 @@ useEffect(() => {
           {transactions.length > 0 ? (
             <div className="wallet-transaction-list">
               {transactions.slice(0, 5).map((transaction) => {
-                const isCredit = transaction.type === "credit";
+                const isCredit = transaction.direction === "credit";
 
                 return (
                   <div
@@ -388,15 +386,13 @@ useEffect(() => {
                     <div className="wallet-transaction-details">
                       <strong>{transaction.description}</strong>
                       <small>
-                        {transaction.date}
-                        {transaction.expiresAt
-                          ? ` • Expires ${transaction.expiresAt}`
-                          : ""}
+                        {new Date(transaction.timestamp).toLocaleDateString("en-IN")}
+                        {transaction.status !== "completed" && ` · ${transaction.status}`}
                       </small>
                     </div>
 
                     <strong className={isCredit ? "credit-amount" : "debit-amount"}>
-                      {isCredit ? "+" : "-"} ₹{formatAmount(transaction.amount)}
+                      {isCredit ? "+" : "−"}{formatPaise(transaction.amountPaise)}
                     </strong>
                   </div>
                 );
@@ -407,8 +403,8 @@ useEffect(() => {
               <span>
                 <History size={30} />
               </span>
-              <strong>No transactions yet</strong>
-              <p>Your wallet credits and service payments will appear here.</p>
+              <strong>{walletLoading ? "Loading wallet activity…" : "No transactions to display"}</strong>
+              {!walletLoading && <p>Marketplace wallet activity will appear here.</p>}
             </div>
           )}
         </section>

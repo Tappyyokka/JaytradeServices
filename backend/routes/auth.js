@@ -4,6 +4,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { randomInt } = require("crypto");
 const prisma = require("../src/config/prisma");
+const rateLimit = require("../src/rateLimit");
 
 const router = express.Router();
 
@@ -40,27 +41,13 @@ function generateAccountId() {
     return String(randomInt(100000000000, 1000000000000));
 }
 
-// PostgreSQL can discard an idle pooled connection. Retrying a read once lets
-// the pool obtain a fresh connection without retrying any database writes.
-async function readWithConnectionRetry(query) {
-    try {
-        return await query();
-    } catch (error) {
-        if (error?.code !== "P1017") {
-            throw error;
-        }
-
-        console.warn("PostgreSQL connection closed; retrying read query once.");
-        return query();
-    }
-}
-
 // REGISTER CUSTOMER
-router.post("/register", async (req, res) => {
+router.post("/register", rateLimit({ limit: 60, windowMs: 15 * 60 * 1000 }), async (req, res) => {
     try {
-        const { fullName, mobile, email, password, referralCode } = req.body;
+        const { fullName, mobile, email, password, referralCode } = req.body ?? {};
 
-        if (!fullName || !mobile || !email || !password) {
+        if (![fullName, mobile, email, password].every((value) => typeof value === "string" && value.trim()) ||
+            (referralCode != null && (typeof referralCode !== "string" || referralCode.length > 20))) {
             return res.status(400).json({
                 success: false,
                 message: "Please fill in all required fields.",
@@ -71,6 +58,10 @@ router.post("/register", async (req, res) => {
         const cleanMobile = mobile.trim();
         const cleanEmail = email.trim().toLowerCase();
 
+        if (cleanEmail.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
+            return res.status(400).json({ success: false, message: "Enter a valid email address." });
+        }
+
         if (!/^[0-9]{10}$/.test(cleanMobile)) {
             return res.status(400).json({
                 success: false,
@@ -78,10 +69,10 @@ router.post("/register", async (req, res) => {
             });
         }
 
-        if (password.length < 8) {
+        if (password.length < 8 || Buffer.byteLength(password, "utf8") > 72) {
             return res.status(400).json({
                 success: false,
-                message: "Password must contain at least 8 characters.",
+                message: "Password must contain at least 8 characters and be at most 72 bytes.",
             });
         }
 
@@ -92,26 +83,26 @@ router.post("/register", async (req, res) => {
             });
         }
 
-        const existingUser = await readWithConnectionRetry(() => prisma.user.findFirst({
+        const existingUser = await prisma.user.findFirst({
             where: {
                 OR: [
                     { email: cleanEmail },
                     { phone: cleanMobile },
                 ],
             },
-        }));
+        });
 
         let referrer = null;
 
 if (referralCode && referralCode.trim()) {
-    referrer = await readWithConnectionRetry(() => prisma.user.findUnique({
+    referrer = await prisma.user.findUnique({
         where: {
             referralCode: referralCode.trim().toUpperCase(),
         },
         select: {
             id: true,
         },
-    }));
+    });
 
     if (!referrer) {
         return res.status(400).json({
@@ -187,6 +178,9 @@ if (referralCode && referralCode.trim()) {
             success: true,
             message: "Account created successfully!",
             user: {
+                id: user.id,
+                role: user.role,
+                referralCode: user.referralCode,
                 accountId: user.accountId,
                 name: user.name,
                 email: user.email,
@@ -195,7 +189,10 @@ if (referralCode && referralCode.trim()) {
         });
 
     } catch (error) {
-        console.error("Registration error:", error);
+        if (error.code === "P2002") {
+            return res.status(409).json({ success: false, message: "An account already exists with those details." });
+        }
+        console.error("Registration error:", error.code || error.name);
 
         return res.status(500).json({
             success: false,
@@ -205,11 +202,19 @@ if (referralCode && referralCode.trim()) {
 });
 
 // LOGIN CUSTOMER
-router.post("/login", async (req, res) => {
+router.post("/login",
+    rateLimit({ limit: 300, windowMs: 15 * 60 * 1000 }),
+    rateLimit({
+        limit: 15,
+        windowMs: 15 * 60 * 1000,
+        key: (req) => typeof req.body?.email === "string" ? req.body.email.trim().toLowerCase().slice(0, 254) : null,
+    }),
+    async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const { email, password } = req.body ?? {};
 
-        if (!email || !password) {
+        if (typeof email !== "string" || !email.trim() || email.length > 254 ||
+            typeof password !== "string" || !password || password.length > 1024) {
             return res.status(400).json({
                 success: false,
                 message: "Email and password are required.",
@@ -218,9 +223,9 @@ router.post("/login", async (req, res) => {
 
         const cleanEmail = email.trim().toLowerCase();
 
-        const user = await readWithConnectionRetry(() => prisma.user.findUnique({
+        const user = await prisma.user.findUnique({
             where: { email: cleanEmail },
-        }));
+        });
 
         if (!user || !(await bcrypt.compare(password, user.password))) {
             return res.status(401).json({
@@ -244,6 +249,9 @@ router.post("/login", async (req, res) => {
             success: true,
             message: "Login successful!",
             user: {
+                id: user.id,
+                role: user.role,
+                referralCode: user.referralCode,
                 accountId: user.accountId,
                 name: user.name,
                 email: user.email,
@@ -252,7 +260,7 @@ router.post("/login", async (req, res) => {
         });
 
     } catch (error) {
-        console.error("Login error:", error);
+        console.error("Login error:", error.code || error.name);
 
         return res.status(500).json({
             success: false,
@@ -262,7 +270,7 @@ router.post("/login", async (req, res) => {
 });
 
 // AUTHENTICATION MIDDLEWARE
-function authenticateCustomer(req, res, next) {
+async function authenticateCustomer(req, res, next) {
     const token = req.cookies?.[COOKIE_NAME];
 
     if (!token) {
@@ -272,30 +280,37 @@ function authenticateCustomer(req, res, next) {
         });
     }
 
+    let decoded;
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-        req.user = {
-            id: decoded.userId,
-            role: decoded.role,
-        };
-
-        next();
-
-    } catch (error) {
+        decoded = jwt.verify(token, process.env.JWT_SECRET, { algorithms: ["HS256"] });
+        if (typeof decoded?.userId !== "string" || !decoded.userId) throw new Error("Invalid session");
+    } catch {
         return res.status(401).json({
             success: false,
             message: "Your session has expired. Please log in again.",
         });
+    }
+    try {
+        const user = await prisma.user.findUnique({
+            where: { id: decoded.userId },
+            select: { id: true, isActive: true, role: true },
+        });
+        if (!user?.isActive) return res.status(401).json({ success: false, message: "Account not found or inactive." });
+        req.user = { id: user.id, role: user.role };
+        next();
+    } catch (error) {
+        console.error("Session lookup failed:", error.code || error.name);
+        res.status(503).json({ success: false, message: "Account service temporarily unavailable." });
     }
 }
 
 // GET LOGGED-IN CUSTOMER
 router.get("/me", authenticateCustomer, async (req, res) => {
     try {
-        const user = await readWithConnectionRetry(() => prisma.user.findUnique({
+        const user = await prisma.user.findUnique({
             where: { id: req.user.id },
             select: {
+                id: true,
                 accountId: true,
                 referralCode: true,
                 name: true,
@@ -304,7 +319,7 @@ router.get("/me", authenticateCustomer, async (req, res) => {
                 role: true,
                 isActive: true,
             },
-        }));
+        });
 
         if (!user || !user.isActive) {
             return res.status(401).json({
@@ -333,14 +348,14 @@ router.get("/me", authenticateCustomer, async (req, res) => {
 // GET CUSTOMER REFERRALS
 router.get("/referrals", authenticateCustomer, async (req, res) => {
     try {
-        let user = await readWithConnectionRetry(() => prisma.user.findUnique({
+        let user = await prisma.user.findUnique({
             where: { id: req.user.id },
             select: {
                 id: true,
                 accountId: true,
                 referralCode: true,
             },
-        }));
+        });
 
         if (!user) {
             return res.status(404).json({
@@ -366,7 +381,7 @@ router.get("/referrals", authenticateCustomer, async (req, res) => {
             });
         }
 
-        const referrals = await readWithConnectionRetry(() => prisma.user.findMany({
+        const referrals = await prisma.user.findMany({
             where: {
                 referredById: req.user.id,
             },
@@ -378,7 +393,7 @@ router.get("/referrals", authenticateCustomer, async (req, res) => {
             orderBy: {
                 createdAt: "desc",
             },
-        }));
+        });
 
         return res.json({
             success: true,

@@ -20,17 +20,30 @@ function requireAdmin(req, res, next) {
 }
 
 const app = express();
+const allowedOrigins = new Set([
+    "http://localhost:5173",
+    process.env.FRONTEND_URL?.trim().replace(/\/+$/, ""),
+].filter(Boolean));
 
+app.disable("x-powered-by");
 app.use(cors({
-    origin: [
-        "http://localhost:5173",
-        process.env.FRONTEND_URL
-    ].filter(Boolean),
+    origin: [...allowedOrigins],
     credentials: true
 }));
 
-app.use(express.json());
+app.use("/api", (req, res, next) => {
+    res.set("Cache-Control", "no-store");
+    res.set("X-Content-Type-Options", "nosniff");
+    const origin = req.get("Origin");
+    if (!["GET", "HEAD", "OPTIONS"].includes(req.method) && origin && !allowedOrigins.has(origin)) {
+        return res.status(403).json({ success: false, message: "Request origin is not allowed." });
+    }
+    next();
+});
+
 app.use(cookieParser());
+app.use("/api/marketplace", express.json({ limit: "600kb" }), require("./routes/marketplace"));
+app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/chatbot", chatbotRoutes);
 
@@ -42,14 +55,14 @@ app.get("/", (req, res) => {
 // Database test
 app.get("/api/db-test", async (req, res) => {
     try {
-        await prisma.$connect();
+        await prisma.$queryRaw`SELECT 1`;
 
         res.json({
             success: true,
             message: "PostgreSQL connected successfully!",
         });
     } catch (error) {
-        console.error(error);
+        console.error("Database health check failed:", error.code || error.name);
 
         res.status(500).json({
             success: false,
@@ -61,6 +74,18 @@ app.get("/api/db-test", async (req, res) => {
 // CREATE APPLICATION + FORWARD TO JAYTRADE
 app.post("/api/applications", authenticateCustomer, async (req, res) => {
     try {
+        const fields = {
+            fullName: 100, mobile: 20, email: 254, service: 180, address: 500,
+            district: 100, state: 100, pincode: 6, remarks: 2000,
+        };
+        const cleaned = {};
+        for (const [name, maxLength] of Object.entries(fields)) {
+            const value = req.body?.[name] ?? "";
+            if (typeof value !== "string" || value.trim().length > maxLength || (name !== "remarks" && !value.trim())) {
+                return res.status(400).json({ success: false, message: "Check the required application details and field lengths." });
+            }
+            cleaned[name] = value.trim();
+        }
         const {
             fullName,
             mobile,
@@ -71,42 +96,33 @@ app.post("/api/applications", authenticateCustomer, async (req, res) => {
             state,
             pincode,
             remarks,
-        } = req.body;
+        } = cleaned;
 
         if (
-            !fullName ||
-            !mobile ||
-            !email ||
-            !service ||
-            !address ||
-            !district ||
-            !state ||
-            !pincode
+            !/^[0-9]{10}$/.test(mobile) ||
+            !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ||
+            !/^[0-9]{6}$/.test(pincode)
         ) {
             return res.status(400).json({
                 success: false,
-                message: "Please provide all required application details.",
+                message: "Enter a valid mobile number, email, and PIN code.",
             });
         }
 
-        const applicationId = `IND-${Date.now()}`;
-
-        // 1. Save application in Indipay PostgreSQL
-        const application = await prisma.application.create({
-            data: {
-    applicationId,
-    userId: req.user.id,
-    fullName,
-                mobile,
-                email,
-                service,
-                address,
-                district,
-                state,
-                pincode,
-                remarks: remarks || null,
-            },
-        });
+        let syncStatus = "PENDING";
+        let applicationId;
+        const submittedAt = Date.now();
+        for (let attempt = 0; attempt < 5; attempt++) {
+            applicationId = `IND-${submittedAt + attempt}`;
+            try {
+                await prisma.application.create({
+                    data: { ...cleaned, applicationId, userId: req.user.id, remarks: remarks || null },
+                });
+                break;
+            } catch (error) {
+                if (error.code !== "P2002" || attempt === 4) throw error;
+            }
+        }
 
         // 2. Forward the saved application to JAYTRADE
         try {
@@ -114,6 +130,7 @@ app.post("/api/applications", authenticateCustomer, async (req, res) => {
                 process.env.JAYTRADE_LEADS_API_URL,
                 {
                     method: "POST",
+                    signal: AbortSignal.timeout(10000),
                     headers: {
                         "Content-Type": "application/json",
                         "X-API-Key": process.env.INDIPAY_API_KEY,
@@ -153,33 +170,22 @@ app.post("/api/applications", authenticateCustomer, async (req, res) => {
                     leadSyncStatus: "SYNCED",
                 },
             });
+            syncStatus = "SYNCED";
 
         } catch (syncError) {
             // Keep the application even if JAYTRADE is unavailable
-            console.error("JAYTRADE sync failed:", syncError.message);
-
-            await prisma.application.update({
-                where: { applicationId },
-                data: {
-                    leadSyncStatus: "PENDING",
-                },
-            });
+            console.error("JAYTRADE sync failed:", syncError.code || syncError.name);
         }
 
         return res.status(201).json({
             success: true,
             message: "Application submitted successfully!",
             applicationId,
-            syncStatus: (
-                await prisma.application.findUnique({
-                    where: { applicationId },
-                    select: { leadSyncStatus: true },
-                })
-            ).leadSyncStatus,
+            syncStatus,
         });
 
     } catch (error) {
-        console.error("Application submission failed:", error);
+        console.error("Application submission failed:", error.code || error.name);
 
         return res.status(500).json({
             success: false,
@@ -231,16 +237,13 @@ if (application.userId !== req.user.id) {
 
         const response = await fetch(jaytradeUrl, {
             method: "GET",
+            signal: AbortSignal.timeout(10000),
             headers: {
                 "X-API-Key": process.env.INDIPAY_API_KEY,
             },
         });
 
         const responseText = await response.text();
-
-console.log("Jaytrade HTTP status:", response.status);
-console.log("Jaytrade Content-Type:", response.headers.get("content-type"));
-console.log("Jaytrade raw response:", responseText);
 
 let result;
 
@@ -272,7 +275,7 @@ if (!response.ok || !result.success) {
         });
 
     } catch (error) {
-        console.error("Jaytrade status lookup failed:", error.message);
+        console.error("Jaytrade status lookup failed:", error.code || error.name);
 
         return res.status(502).json({
             success: false,
@@ -335,7 +338,7 @@ app.get("/api/applications", authenticateCustomer, requireAdmin, async (req, res
 // UPDATE APPLICATION STATUS
 app.patch("/api/applications/:applicationId/status", authenticateCustomer, requireAdmin, async (req, res) => {
     try {
-        const { status } = req.body;
+        const { status } = req.body ?? {};
 
         const allowedStatuses = [
             "Pending",
@@ -366,9 +369,9 @@ app.patch("/api/applications/:applicationId/status", authenticateCustomer, requi
         });
 
     } catch (error) {
-        console.error("Status update failed:", error);
+        console.error("Status update failed:", error.code || error.name);
 
-        return res.status(404).json({
+        return res.status(error.code === "P2025" ? 404 : 500).json({
             success: false,
             message: "Application not found or status update failed.",
         });
@@ -377,6 +380,26 @@ app.patch("/api/applications/:applicationId/status", authenticateCustomer, requi
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
-    console.log(`Indipay backend running on port ${PORT}`);
+app.use("/api", (req, res) => {
+    res.status(404).json({ success: false, message: "API endpoint not found." });
 });
+
+app.use((error, req, res, next) => {
+    if (res.headersSent) return next(error);
+    if (error.type === "entity.parse.failed") {
+        return res.status(400).json({ success: false, message: "Invalid JSON request." });
+    }
+    if (error.type === "entity.too.large") {
+        return res.status(413).json({ success: false, message: "Request is too large." });
+    }
+    console.error("Unhandled API error:", error.code || error.name);
+    res.status(500).json({ success: false, message: "Something went wrong." });
+});
+
+if (require.main === module) {
+    app.listen(PORT, () => {
+        console.log(`Indipay backend running on port ${PORT}`);
+    });
+}
+
+module.exports = app;

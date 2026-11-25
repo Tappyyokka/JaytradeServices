@@ -1,0 +1,135 @@
+.indipay-marketplace .indibot {
+  --ib-purple: #6c38ca;
+  --ib-highlight: #f2e4ff;
+  --ib-user: #eee3ff;
+  --ib-user-text: #392264;
+  --ib-link: #5c29ae;
+  position: fixed;
+  z-index: 160;
+  right: max(16px, env(safe-area-inset-right));
+  bottom: calc(78px + env(safe-area-inset-bottom));
+}
+
+.indipay-app-shell[data-theme="dark"] .indibot {
+  --ib-user: #362657;
+  --ib-user-text: #f2e4ff;
+  --ib-link: #d5b7ff;
+}
+
+.indipay-marketplace .indibot :is(button, input):focus-visible {
+  outline: 2px solid var(--ib-link);
+  outline-offset: 2px;
+}
+
+.indibot .indibot-launcher {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  padding: 0;
+  border: 1px solid #b897fb;
+  border-radius: 50%;
+  background: var(--ib-purple);
+  color: white;
+  box-shadow: 0 5px 20px #48218770;
+}
+
+.indibot .indibot-launcher[aria-expanded="false"] svg {
+  fill: var(--ib-highlight);
+  animation: indibot-zap 3.2s ease-in-out infinite;
+}
+
+@keyframes indibot-zap {
+  0%, 55%, 90%, 100% { transform: scale(1) rotate(0); filter: none; }
+  63% { transform: scale(1.16) rotate(-10deg); filter: drop-shadow(0 0 5px #f2e4ff); }
+  73% { transform: scale(1.04) rotate(7deg); }
+}
+
+.indibot .indibot-panel {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 10px);
+  display: flex;
+  flex-direction: column;
+  width: min(390px, calc(100vw - 32px));
+  height: min(495px, calc(100dvh - 157px - env(safe-area-inset-bottom)));
+  box-sizing: border-box;
+  overflow: hidden;
+  border: 1px solid var(--mp-border);
+  border-radius: 16px;
+  background: var(--mp-surface);
+  color: var(--mp-text);
+  box-shadow: 0 16px 45px #100d2645;
+}
+
+.indibot .indibot-heading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  background: var(--ib-purple);
+  color: white;
+}
+.indibot .indibot-heading h2,
+.indibot .indibot-heading p { margin: 0; }
+.indibot .indibot-heading h2 { font-size: 1.05rem; }
+.indibot .indibot-heading p { color: var(--ib-highlight); font-size: .78rem; }
+.indibot .indibot-heading button { margin-left: auto; background: transparent; color: white; }
+.indibot .indibot-heading button,
+.indibot .indibot-form button {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 9px;
+}
+.indibot .indibot-log {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 12px;
+}
+.indibot .indibot-message {
+  width: fit-content;
+  max-width: 92%;
+  margin-bottom: 8px;
+  padding: 8px 10px;
+  border: 1px solid var(--mp-border);
+  border-radius: 3px 12px 12px;
+  background: var(--mp-bg);
+  font-size: .88rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.indibot .indibot-message p { margin: 0; }
+.indibot .indibot-user { margin-left: auto; border-color: transparent; border-radius: 12px 3px 12px 12px; background: var(--ib-user); color: var(--ib-user-text); }
+.indibot .indibot-link,
+.indibot .indibot-prompts button {
+  min-height: 44px;
+  padding: 5px 8px;
+  border: 1px solid var(--mp-border);
+  border-radius: 8px;
+  background: var(--mp-surface);
+  color: var(--ib-link);
+  font-size: .8rem;
+  text-align: left;
+}
+.indibot .indibot-link { display: flex; align-items: center; justify-content: space-between; gap: 6px; width: 100%; margin-top: 6px; }
+.indibot .indibot-link svg { flex: none; }
+.indibot .indibot-prompts { display: flex; flex-wrap: wrap; gap: 5px; padding: 0 10px 8px; }
+.indibot .indibot-form { display: flex; flex: none; gap: 6px; padding: 8px; border-top: 1px solid var(--mp-border); }
+.indibot .indibot-form input { flex: 1; min-width: 0; padding: 0 8px; border: 1px solid var(--mp-border); border-radius: 8px; background: var(--mp-bg); color: var(--mp-text); font: inherit; }
+.indibot .indibot-form button { background: var(--ib-purple); color: white; }
+.indibot .indibot-form button:disabled { opacity: .55; cursor: not-allowed; }
+
+@media (max-height: 490px) {
+  .indibot .indibot-prompts { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .indibot .indibot-launcher[aria-expanded="false"] svg { animation: none; }
+}

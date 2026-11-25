@@ -147,6 +147,7 @@ const categories = [
       {
         name: "MSME Loan",
         icon: "building",
+        image: `${import.meta.env.BASE_URL}images/icons/MSME-loan.png`,
       },
     ],
   },
@@ -169,6 +170,7 @@ const categories = [
       {
         name: "Mudra Project Report (up to ₹5 lakh)",
         icon: "file",
+        image: `${import.meta.env.BASE_URL}images/icons/PR-upto5.png`,
       },
       {
         name: "Mudra Project Report (above ₹5 lakh)",
@@ -218,6 +220,7 @@ const categories = [
       {
         name: "Import Export Code",
         icon: "world",
+        image: `${import.meta.env.BASE_URL}images/icons/import-export.png`,
       },
       {
         name: "ISO Certificate",
@@ -227,22 +230,27 @@ const categories = [
       {
         name: "Private Limited Company Registration",
         icon: "building",
+        image: `${import.meta.env.BASE_URL}images/icons/PVT-LTD.png`,
       },
       {
         name: "Partnership Registration Only",
         icon: "users",
+        image: `${import.meta.env.BASE_URL}images/icons/partner-reg.png`,
       },
       {
         name: "Partnership Without Registration (PAN + Deed)",
         icon: "file",
+        image: `${import.meta.env.BASE_URL}images/icons/partnership-without-reg.png`,
       },
       {
         name: "Partnership With Registration (REG + PAN + Deed)",
         icon: "report",
+        image: `${import.meta.env.BASE_URL}images/icons/partnership-with-reg.png`,
       },
       {
         name: "Limited Liability Partnership Registration (LLP)",
         icon: "building",
+        image: `${import.meta.env.BASE_URL}images/icons/LLP.png`,
       },
       {
         name: "Trademark - Individual, MSME (Without Track Records)",
@@ -272,18 +280,22 @@ const categories = [
       {
         name: "PCC - Police Clearance Certificate",
         icon: "shield",
+        image: `${import.meta.env.BASE_URL}images/icons/PCC.png`,
       },
       {
         name: "Vyapar Mithra",
         icon: "user",
+        image: `${import.meta.env.BASE_URL}images/icons/vyaparmithra.png`,
       },
       {
         name: "Vyapar Mithra Plus",
         icon: "user",
+        image: `${import.meta.env.BASE_URL}images/icons/vyaparmithra-plus.png`,
       },
       {
         name: "Vyapar Mithra All In One",
         icon: "user",
+        image: `${import.meta.env.BASE_URL}images/icons/vyaparmithra-allinone.png`,
       },
     ],
   },

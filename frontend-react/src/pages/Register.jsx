@@ -45,8 +45,8 @@ function Register({ onBack, onLogin, onSuccess }) {
     event.preventDefault();
     setMessage("");
 
-    if (formData.password.length < 8) {
-        setMessage("Password must contain at least 8 characters.");
+    if (formData.password.length < 8 || new TextEncoder().encode(formData.password).length > 72) {
+        setMessage("Use at least 8 characters and at most 72 bytes. Some characters use more than one byte.");
         return;
     }
 

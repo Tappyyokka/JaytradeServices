@@ -12,6 +12,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import "./Rewards.css";
+import { formatPaise } from "../wallet/walletData";
 
 const dummyRewards = [
   {
@@ -299,7 +300,7 @@ return (
 
 
 
-export default function Rewards({ customer, onBack }) {
+export default function Rewards({ customer, onBack, wallet, onOpenMarketplaceWallet }) {
   const [activeFilter, setActiveFilter] = useState("All");
   const [selectedReward, setSelectedReward] = useState(null);
 const [revealedRewards, setRevealedRewards] = useState([]);
@@ -493,8 +494,11 @@ const handleReveal = (rewardId) => {
               Copy your revealed coupon code and use it when applying for an
               eligible Indipay service. Each offer has its own conditions.
             </p>
+            {wallet?.availablePaise != null && <p>Marketplace spending balance · {formatPaise(wallet.availablePaise)}</p>}
           </div>
-          <ChevronRight size={18} />
+          <button className="rewards-wallet-link" type="button" onClick={onOpenMarketplaceWallet} aria-label="Open Marketplace Wallet">
+            <ChevronRight size={18} aria-hidden="true" />
+          </button>
         </section>
 
         <p className="rewards-disclaimer">

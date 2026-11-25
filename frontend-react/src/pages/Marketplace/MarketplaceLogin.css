@@ -1,0 +1,5 @@
+.mp-seller-flow .mp-seller-login { max-width: 500px; }
+.mp-seller-flow .mp-seller-login-options { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+.mp-seller-flow .mp-seller-login-demo { margin-bottom: 16px; padding: 12px; border: 1px solid var(--mp-border); border-radius: 10px; }
+.mp-seller-flow .mp-seller-login-demo > div { display: flex; flex-wrap: wrap; gap: 6px; }
+.mp-seller-flow .mp-seller-login-demo button { text-transform: capitalize; }
