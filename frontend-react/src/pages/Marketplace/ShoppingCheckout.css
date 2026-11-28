@@ -1,0 +1,103 @@
+.indipay-marketplace .mp-checkout-page {
+  display: grid;
+  justify-items: start;
+  gap: 12px;
+}
+
+.indipay-marketplace .mp-checkout-page :is(button, input, select, textarea),
+.indipay-marketplace .mp-checkout-success button {
+  min-height: 44px;
+  border: 1px solid var(--mp-border);
+  border-radius: 8px;
+  background: var(--mp-surface, var(--mp-bg));
+  color: var(--mp-text);
+  padding: 8px 12px;
+}
+
+.indipay-marketplace .mp-checkout-page button:disabled { opacity: .5; cursor: not-allowed; }
+.indipay-marketplace .mp-checkout-page :is(input, button, select, textarea, summary):focus-visible,
+.indipay-marketplace .mp-checkout-receipt summary:focus-visible {
+  outline: 2px solid var(--mp-accent);
+  outline-offset: 3px;
+}
+
+.indipay-marketplace .mp-checkout-store,
+.indipay-marketplace .mp-checkout-summary {
+  width: 100%;
+  min-width: 0;
+  padding: 14px;
+  margin: 0;
+  border-radius: 12px;
+  border: 1px solid var(--mp-border);
+  background: var(--mp-surface, var(--mp-bg));
+}
+
+.indipay-marketplace .mp-checkout-store :is(h2, legend) { margin: 0 0 8px; font-size: 1rem; font-weight: 750; }
+.indipay-marketplace .mp-checkout-page p { margin: 4px 0; }
+.indipay-marketplace .mp-checkout-item {
+  display: grid;
+  grid-template-columns: auto 64px minmax(0, 1fr);
+  align-items: start;
+  gap: 10px;
+  padding: 10px 0;
+  border-top: 1px solid var(--mp-border);
+}
+.indipay-marketplace .mp-checkout-item.compact { grid-template-columns: 64px minmax(0, 1fr); }
+.indipay-marketplace .mp-checkout-image {
+  width: 64px;
+  height: 64px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  background: var(--mp-bg);
+  overflow: hidden;
+}
+.indipay-marketplace .mp-checkout-image img { width: 100%; height: 100%; object-fit: cover; }
+.indipay-marketplace .mp-checkout-check,
+.indipay-marketplace .mp-checkout-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; }
+.indipay-marketplace .mp-checkout-check { min-height: 44px; cursor: pointer; }
+.indipay-marketplace .mp-checkout-check input { width: 26px; min-height: 26px; margin: 4px; accent-color: var(--mp-accent); }
+.indipay-marketplace .mp-checkout-address { padding: 8px 0; border-bottom: 1px solid var(--mp-border); margin-bottom: 8px; }
+.indipay-marketplace .mp-checkout-address-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 10px; }
+.indipay-marketplace .mp-checkout-page label:not(.mp-checkout-check) { display: grid; gap: 5px; min-width: 0; }
+.indipay-marketplace .mp-checkout-page :is(input:not([type="radio"], [type="checkbox"]), textarea, select) { width: 100%; box-sizing: border-box; }
+.indipay-marketplace .mp-checkout-summary { align-self: start; }
+.indipay-marketplace .mp-checkout-summary dl,
+.indipay-marketplace .mp-checkout-receipt dl { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 4px 10px; }
+.indipay-marketplace :is(.mp-checkout-summary, .mp-checkout-receipt) dd { margin: 0; overflow-wrap: anywhere; }
+.indipay-marketplace .mp-checkout-summary dd { text-align: right; }
+.indipay-marketplace .mp-checkout-summary button:not(:disabled) { background: #ffad62; color: #101d36; font-weight: 750; }
+.indipay-marketplace .mp-checkout-summary button { margin: 6px 7px 0 0; }
+.indipay-marketplace .mp-checkout-receipt summary { min-height: 44px; display: list-item; align-content: center; cursor: pointer; }
+.indipay-marketplace .mp-checkout-empty { display: grid; justify-items: start; gap: 8px; }
+.indipay-marketplace .mp-checkout-success {
+  position: fixed;
+  z-index: 100001;
+  inset: 0;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 10px;
+  padding: 20px;
+  background: var(--mp-bg);
+  color: var(--mp-text);
+  text-align: center;
+}
+.indipay-marketplace .mp-checkout-success svg { color: #27a86b; animation: mp-checkout-tick .25s ease-out both; }
+.indipay-marketplace .mp-checkout-success :is(h1, p) { margin: 0; }
+@keyframes mp-checkout-tick { from { opacity: .5; transform: scale(.85); } }
+@media (min-width: 800px) {
+  .indipay-marketplace .mp-checkout-page { grid-template-columns: minmax(0, 2fr) minmax(260px, 1fr); }
+  .indipay-marketplace .mp-checkout-page > :not(.mp-checkout-summary) { grid-column: 1; }
+  .indipay-marketplace .mp-checkout-summary { position: sticky; top: 16px; grid-area: 2 / 2; }
+}
+@media (max-width: 799px) {
+  .indipay-marketplace .mp-checkout-summary { position: sticky; bottom: calc(72px + env(safe-area-inset-bottom)); z-index: 5; }
+}
+@media (max-width: 440px) {
+  .indipay-marketplace .mp-checkout-address-form { grid-template-columns: minmax(0, 1fr); }
+  .indipay-marketplace .mp-checkout-summary { padding: 9px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .indipay-marketplace .mp-checkout-success svg { animation: none; }
+}

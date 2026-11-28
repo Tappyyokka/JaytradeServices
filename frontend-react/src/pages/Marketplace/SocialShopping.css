@@ -1,0 +1,19 @@
+.mp-social-store-list, .mp-social-actions, .mp-social-share-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; list-style: none; padding: 0; }
+.mp-social-share > button, .mp-social-actions > button { display: inline-flex; align-items: center; gap: 6px; }
+.mp-social-share-actions { margin-block: 8px; }
+.mp-social :is(button, select, textarea), .mp-social-share button, .mp-review-form :is(button, input, select, textarea) {
+  min-height: 42px; padding: 6px 10px; border: 1px solid var(--mp-border); border-radius: 8px;
+  color: var(--mp-text); background: var(--mp-surface); font: inherit;
+}
+.mp-social button[aria-pressed="true"] { background: var(--mp-accent); color: #182239; }
+.mp-social-feed-card { display: grid; grid-template-columns: 92px minmax(0, 1fr); gap: 12px; padding: 12px 0; border-top: 1px solid var(--mp-border); }
+.mp-social-feed-card img { object-fit: contain; border-radius: 8px; background: var(--mp-photo-bg); }
+.mp-social-feed-card h3 { margin: 5px 0; }
+.mp-social-feed-card strong { display: block; margin: 7px 0; }
+.mp-social-feed-card p { overflow-wrap: anywhere; white-space: pre-wrap; }
+.mp-social-share input { max-width: 100%; min-width: 0; }
+.mp-review-form { display: grid; gap: 8px; margin-block: 10px; }
+.mp-review-form label { display: grid; gap: 4px; }
+.mp-review-form button { justify-self: start; }
+.mp-reviews [data-merchant-reply] { margin: 10px 0; padding: 8px 12px; border-inline-start: 3px solid var(--mp-accent); background: var(--mp-bg); white-space: pre-wrap; overflow-wrap: anywhere; }
+@media (max-width: 420px) { .mp-social-feed-card { grid-template-columns: 64px minmax(0, 1fr); } .mp-social-feed-card img { width: 64px; height: 64px; } }

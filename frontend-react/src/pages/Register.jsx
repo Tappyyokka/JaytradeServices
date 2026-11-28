@@ -14,7 +14,7 @@ import {
 import "./Register.css";
 import API_BASE_URL from "../config/api";
 
-function Register({ onBack, onLogin, onSuccess }) {
+function Register({ onBack, onLogin, onSuccess, merchantPlan }) {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -120,7 +120,7 @@ if (onSuccess) {
 </button>
 
         <button className="auth-back-link" onClick={onBack} type="button">
-          Back to Home
+          {merchantPlan ? "Back to Merchant Plans" : "Back to Home"}
         </button>
       </header>
 
@@ -175,8 +175,9 @@ if (onSuccess) {
                 <UserRound size={24} />
               </span>
               <span className="auth-form-label">CREATE YOUR ACCOUNT</span>
-              <h2>Join Indipay</h2>
-              <p>Fill in your details to get started.</p>
+              <h2>{merchantPlan ? "Merchant Registration" : "Join Indipay"}</h2>
+              <p>{merchantPlan ? merchantPlan + " demo plan · Create an Indipay account to continue to store registration."
+                : "Fill in your details to get started."}</p>
             </div>
 
             <form onSubmit={handleSubmit} aria-busy={isSubmitting}>
@@ -300,7 +301,7 @@ if (onSuccess) {
               </label>
 
               <button type="submit" className="auth-submit-button" disabled={isSubmitting}>
-                {isSubmitting ? "Creating account…" : "Create My Account"} <ArrowRight size={19} />
+                {isSubmitting ? "Creating account…" : merchantPlan ? "Continue to Store Registration" : "Create My Account"} <ArrowRight size={19} />
               </button>
 
               {message && (

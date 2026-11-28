@@ -21,7 +21,7 @@ export function productImages(product, variant) {
 export function productOffer(product, variantId) {
   const options = product.variantOptions ?? [];
   const variant = options.find((option) => option.id === variantId);
-  const needsVariant = options.length > 0 && !variant;
+  const needsVariant = (options.length > 0 || product.hasVariants) && !variant;
   const price = variant?.price ?? product.price;
   const original = variant?.original ?? Math.max(price, product.original ?? price);
   const stock = product.sample || product.available === false || needsVariant || (variantId && !variant)
@@ -39,13 +39,19 @@ export function validQuantity(quantity, offer, alreadyInCart = 0) {
   return Number.isSafeInteger(quantity) && quantity >= 1 && quantity + alreadyInCart <= offer.quantityLimit;
 }
 
-export function cartLines(cart, products) {
+export function cartLines(cart, products, details = {}) {
   const byId = new Map(products.map((product) => [product.id, product]));
   return Object.entries(cart).flatMap(([key, quantity]) => {
     const [productId, variantId] = itemIds(key);
     const product = byId.get(productId);
-    if (!product || !Number.isSafeInteger(quantity) || quantity < 1) return [];
-    return [{ ...productOffer(product, variantId), quantity }];
+    if (!productId || !Number.isSafeInteger(quantity) || quantity < 1 || quantity > 100) return [];
+    const saved = details[key];
+    if (!product) return [{
+      ...saved, id: productId, key, variantId, quantity, stock: 0, quantityLimit: 0,
+      name: saved?.name ?? "Unavailable product", missing: true,
+    }];
+    const offer = productOffer(product, variantId);
+    return [{ ...offer, quantity, priceChanged: saved?.price != null && saved.price !== offer.price }];
   });
 }
 

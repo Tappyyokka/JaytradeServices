@@ -1,0 +1,158 @@
+.mp-orders {
+  display: grid;
+  gap: 14px;
+}
+
+.mp-order-card {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+  padding: clamp(14px, 2vw, 22px);
+  border: 1px solid var(--mp-border);
+  border-radius: 16px;
+  background: var(--mp-surface);
+}
+
+.mp-order-heading, .mp-order-lines li, .mp-order-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mp-order-heading {
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.mp-order-heading h2, .mp-order-card p {
+  margin: 0;
+}
+
+.mp-order-heading small, .mp-order-facts dd {
+  overflow-wrap: anywhere;
+}
+
+.mp-order-status {
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: var(--mp-promo-bg);
+  color: var(--mp-promo-text);
+  font-size: .8rem;
+  font-weight: 700;
+}
+
+.mp-order-lines, .mp-order-timeline {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mp-order-lines img, .mp-order-lines li > span {
+  display: grid;
+  place-items: center;
+  flex: 0 0 48px;
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  background: var(--mp-photo-bg);
+  object-fit: contain;
+}
+
+.mp-order-card small, .mp-order-facts dt {
+  display: block;
+  color: var(--mp-muted);
+}
+
+.mp-order-facts, .mp-order-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0;
+}
+
+.mp-order-facts dd { margin: 2px 0 0; }
+.mp-order-disclosure { border-top: 1px solid var(--mp-border); }
+
+.mp-order-disclosure > summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  cursor: pointer;
+  font-weight: 750;
+}
+
+.mp-order-disclosure > summary::after {
+  margin-inline-start: auto;
+  content: "+";
+}
+
+.mp-order-disclosure[open] > summary::after { content: "−"; }
+.mp-order-disclosure > summary::-webkit-details-marker { display: none; }
+.mp-order-timeline { margin-block: 14px; }
+
+.mp-order-timeline li {
+  display: grid;
+  position: relative;
+  grid-template-columns: 24px minmax(0, 1fr);
+  align-items: start;
+  gap: 10px;
+  color: var(--mp-muted);
+}
+
+.mp-order-timeline li:not(:last-child)::before {
+  position: absolute;
+  inset: 24px auto -10px 11px;
+  border-inline-start: 2px solid var(--mp-border);
+  content: "";
+}
+
+.mp-order-timeline li[data-reached="true"] { color: var(--mp-text); }
+.mp-order-marker {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--mp-border);
+  border-radius: 50%;
+}
+
+.mp-order-timeline li[data-reached="true"] .mp-order-marker {
+  border-color: var(--mp-accent);
+  background: var(--mp-accent);
+  color: #142139;
+}
+
+.mp-order-timeline li[aria-current="step"] .mp-order-marker { outline: 2px solid var(--mp-text); }
+.mp-order-updates { padding-inline-start: 20px; }
+.mp-order-actions { flex-wrap: wrap; }
+.mp-order-request { display: grid; gap: 6px; padding: 10px; border: 1px solid var(--mp-border); border-radius: 8px; }
+.mp-order-evidence { display: block; max-width: min(100%, 260px); max-height: 250px; object-fit: contain; }
+
+.mp-order-card form, .mp-order-card label, .mp-order-filter {
+  display: grid;
+  gap: 6px;
+}
+
+.mp-order-filter { width: min(100%, 18rem); }
+.mp-orders :is(button, input, textarea, select) {
+  min-height: 44px;
+  max-width: 100%;
+  padding: 7px 10px;
+  border: 1px solid var(--mp-border);
+  border-radius: 8px;
+  background: var(--mp-surface);
+  color: var(--mp-text);
+  font: inherit;
+}
+
+.mp-orders button { width: fit-content; }
+.mp-orders button[type="submit"] { background: var(--mp-accent); color: #142139; font-weight: 700; }
+.mp-orders button:disabled { opacity: .6; cursor: wait; }
+.mp-orders :focus-visible { outline: 2px solid var(--mp-accent); outline-offset: 2px; }
+
+@media (max-width: 440px) {
+  .mp-order-facts, .mp-order-fields { grid-template-columns: 1fr; }
+}

@@ -1,19 +1,23 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import PublishedAdminContent from "../PublishedAdminContent";
 import { ChevronDown, ChevronRight, Heart, Star, UserRound, Package, PackageCheck, Home, LayoutGrid, Wallet, ShoppingBag, ShoppingCart, Laptop, Shirt, ShoppingBasket, Sparkles, Lamp, Watch, Store, Settings, Moon } from "lucide-react";
-import { budgetPreviews, categories, deliveryStages, flashDealProgress, sampleDiscovery } from "./marketplaceData";
+import { budgetPreviews, categories, flashDealProgress, isClosedOrder, orderStage, sampleDiscovery } from "./marketplaceData";
 import { FlashDeals, PromotionalCarousel, ShopByBudget } from "./MarketplacePromotions";
 import MarketplaceSearch from "./MarketplaceSearch";
 import MarketplaceWallet from "./MarketplaceWallet";
-import WalletEstimate from "./WalletEstimate";
-import { formatPaise, rupeesToPaise } from "../../wallet/walletData";
+import { ShoppingCartPage, ShoppingCheckout } from "./ShoppingCheckout";
+import OrderManagement from "./OrderManagement";
+import { formatPaise, shoppingWallet } from "../../wallet/walletData";
 import ProductDetails from "./ProductDetails";
 import { sampleProductDetails } from "./productDetailData";
-import { buyNowRoute, cartLines, detailsRoute, itemIds, productOffer, validQuantity } from "./productDetailUtils";
+import { buyNowRoute, cartLines, detailsRoute, itemKey, productOffer, validQuantity } from "./productDetailUtils";
 import { ProductListing, StoreProductListing } from "./ProductListing";
 import { collectionNames, discountPercent, productRoute, readProductParams } from "./productDiscovery";
 import { StoreDirectory, StoreProfile } from "./StoreProfiles";
-import { endStoreSession, getDirectory, ownedStore, subscribeStores, toggleFollow } from "./storeDirectory";
-import { subscriptionPlans } from "./subscriptionPlans";
+import { getDirectory, subscribeStores, toggleFollow } from "./storeDirectory";
+import { recordStoreActivity } from "./merchantInsights";
+import useSuperstoreSocial from "./useSuperstoreSocial";
+import { FollowingFeed, StoreAnnouncementEditor } from "./SocialShopping";
 import SellerDashboard from "./SellerDashboard";
 import MarketplaceAdmin from "./MarketplaceAdmin";
 import Indibot from "./Indibot";
@@ -38,14 +42,29 @@ const storageKey = "indipay-marketplace-demo-v1";
 const recentKey = "indipay-marketplace-recent-v1";
 const searchesKey = "indipay-marketplace-searches-v1";
 const recentLimit = 8;
-const initialShop = { cart: {}, saved: [] };
+const initialShop = { cart: {}, saved: [], excluded: {}, details: {} };
+const guestTransferKey = storageKey + ":guest-transfer";
 
 
 
-function readShop() {
+function readShop(viewer) {
   try {
-    const savedShop = JSON.parse(localStorage.getItem(storageKey));
-    return { cart: savedShop?.cart ?? {}, saved: savedShop?.saved ?? [] };
+    const savedShop = JSON.parse(localStorage.getItem(storageKey + ":" + viewer) ??
+      (viewer === "guest" ? localStorage.getItem(storageKey) : null));
+    const shop = { ...initialShop, ...savedShop };
+    const transfer = viewer !== "guest" && window.location.hash === "#checkout"
+      ? JSON.parse(sessionStorage.getItem(guestTransferKey)) : null;
+    if (!Array.isArray(transfer) || !transfer.length) return shop;
+    const cart = { ...shop.cart };
+    const details = { ...shop.details };
+    const excluded = Object.fromEntries(Object.keys(cart).map((key) => [key, true]));
+    for (const entry of transfer) {
+      if (typeof entry.key !== "string" || !Number.isSafeInteger(entry.quantity) || entry.quantity < 1 || entry.quantity > 100) continue;
+      cart[entry.key] = entry.quantity;
+      details[entry.key] = entry.details;
+      delete excluded[entry.key];
+    }
+    return { ...shop, cart, details, excluded };
   } catch {
     return initialShop;
   }
@@ -75,7 +94,7 @@ function ProductCard({ product, saved, canAdd, onSave, onAdd, onDetails, onStore
       <div className="mp-card-body">
         <h3><button type="button" className="mp-product-link" onClick={onDetails}>{product.name}</button></h3>
         <p>{onStore ? <button type="button" className="mp-card-store" onClick={onStore}>{product.seller}</button> : product.seller}{product.demo && " · Demo"}</p>
-        <span className="mp-rating"><Star size={14} aria-hidden="true" /> {product.rating === undefined ? "Not rated yet" : `${product.rating.toFixed(1)} / 5`}</span>
+        <span className="mp-rating"><Star size={14} aria-hidden="true" /> {Number.isFinite(product.rating) ? `${product.rating.toFixed(1)} / 5` : "Not rated yet"}</span>
         <div className="mp-price">
           <strong>{money.format(product.price)}</strong>
           {savings > 0 && <del>{money.format(product.original)}</del>}
@@ -98,12 +117,12 @@ function ProductCard({ product, saved, canAdd, onSave, onAdd, onDetails, onStore
 
 function marketplaceTab(fallback) {
   const fragment = window.location.hash.slice(1);
-  if (["products", "details", "checkout", "wallet", "orders"].some((tab) => fragment === tab || fragment.startsWith(tab + "?"))) return fragment;
-  if (/^store\/[a-zA-Z0-9_-]+$/.test(fragment) || ["my-store", "stores", "cart", "wishlist", "orders", "wallet", "categories", "settings", "seller", "admin", "flash-deals"].includes(fragment)) return fragment;
+  if (["products", "details", "checkout", "wallet", "orders", "seller"].some((tab) => fragment === tab || fragment.startsWith(tab + "?"))) return fragment;
+  if (/^store\/[a-zA-Z0-9_-]+$/.test(fragment) || ["my-store", "stores", "following", "cart", "wishlist", "orders", "wallet", "categories", "settings", "seller", "admin", "flash-deals"].includes(fragment)) return fragment;
   return fallback;
 }
 
-export default function Marketplace({ initialTab = "shop", customer, walletState, darkMode, onThemeChange, onBack, onLogin, onOpenWallet, onOpenIndipayPage, onOpenSellerRegistration, onOpenSellerLogin }) {
+export default function Marketplace({ initialTab = "shop", customer, identity, walletState, darkMode, onThemeChange, onBack, onLogin, onOpenWallet, onOpenIndipayPage, onOpenMerchantPlans, onAddMoney }) {
   const profileMenu = useRef(null);
 
   useEffect(() => {
@@ -126,7 +145,7 @@ export default function Marketplace({ initialTab = "shop", customer, walletState
   const requestedId = routeParams.get("id");
   const requestedVariant = routeParams.get("variant");
   const requestedQuantity = Number(routeParams.get("quantity") ?? 1);
-  const directCheckout = activeRoute.startsWith("checkout?");
+  const directCheckout = activeTab === "checkout" && Boolean(requestedId);
   useEffect(() => {
     const restore = () => {
       setActiveRoute(marketplaceTab(initialTab));
@@ -137,20 +156,27 @@ export default function Marketplace({ initialTab = "shop", customer, walletState
     return () => { window.removeEventListener("popstate", restore); window.removeEventListener("hashchange", restore); };
   }, [initialTab]);
   const directory = useSyncExternalStore(subscribeStores, getDirectory);
-  const myStore = useSyncExternalStore(subscribeStores, () => ownedStore(customer, getDirectory()) || null);
-  const viewer = customer ? "customer-" + customer.id : myStore ? "seller-" + myStore.id : "guest";
-  const [shop, setShop] = useState(readShop);
+  const viewer = customer ? "customer-" + customer.id : "guest";
+  const [shop, setShop] = useState(() => readShop(viewer));
+  const social = useSuperstoreSocial(customer?.id, shop.saved, directory.follows[viewer] ?? []);
+  const saved = new Set(social.data ? social.data.products.filter((item) => item.saved).map((item) => item.productKey) : shop.saved);
+  const liked = new Set(social.data?.products.filter((item) => item.liked).map((item) => item.productKey));
+  const follows = new Set([...(directory.follows[viewer] ?? []).filter((id) => !id.startsWith("live-") || !customer),
+    ...(social.data?.following ?? []).map((id) => "live-" + id)]);
+  const [followerCounts, setFollowerCounts] = useState({});
   const [remote, setRemote] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState("");
-  const [busy, setBusy] = useState(false);
-  const [pendingOrderId, setPendingOrderId] = useState(null);
   const [returnTab, setReturnTab] = useState("shop");
-  const [confirmation, setConfirmation] = useState(null);
   const liveProducts = (remote?.catalog ?? []).map((product) => ({
     ...product, storeId: "live-" + product.sellerId, seller: product.store.name, section: "Featured", icon: "📦",
+    variantOptions: product.variants ?? [],
+    stock: product.hasVariants ? Math.max(0, ...(product.variants ?? []).map((variant) => variant.stock)) : product.stock,
   }));
-  const liveStores = new Map();
+  const liveStores = new Map((remote?.stores ?? []).map(({ userId, profile, ...store }) => {
+    const id = "live-" + userId;
+    return [id, { ...profile, ...store, id, category: profile?.category || "Other" }];
+  }));
   for (const product of liveProducts) {
     if (!liveStores.has(product.storeId)) liveStores.set(product.storeId, {
       id: product.storeId, name: product.seller, username: product.storeId, category: product.category, cover: product.image,
@@ -158,7 +184,7 @@ export default function Marketplace({ initialTab = "shop", customer, walletState
   }
   const stores = [...directory.stores, ...liveStores.values()];
   const storesById = new Map(stores.map((store) => [store.id, store]));
-  const products = [...liveProducts, ...directory.products.map((product) => {
+  const products = [...liveProducts, ...directory.products.filter((product) => !product.deletedAt && product.active !== false).map((product) => {
     const sample = sampleProductDetails.get(product.id);
     const options = product.variantOptions ?? sample?.variantOptions ?? [];
     const availableStock = options.length ? Math.max(...options.map((option) => option.stock ?? product.stock)) : product.stock;
@@ -181,19 +207,29 @@ export default function Marketplace({ initialTab = "shop", customer, walletState
   const selectedStoreProducts = selectedStore ? catalogProducts.filter((product) => product.storeId === selectedStore.id) : [];
   const checkoutProduct = directCheckout ? products.find((product) => product.id === requestedId) : null;
   const checkoutOffer = checkoutProduct ? productOffer(checkoutProduct, requestedVariant) : null;
-  const isOwnerPage = activeTab === "my-store";
-  const currentStore = isOwnerPage ? myStore : stores.find((store) => "store/" + store.id === activeTab);
-  const storeProducts = currentStore ? (isOwnerPage ? products : catalogProducts).filter((product) => product.storeId === currentStore.id) : [];
+  const showMerchantDashboard = activeTab === "seller" || (activeTab === "my-store" && identity.canManageLive);
+  const currentStore = stores.find((store) => "store/" + store.id === activeTab);
+  const storeProducts = currentStore ? catalogProducts.filter((product) => product.storeId === currentStore.id) : [];
+  const activityStoreId = currentStore?.id ?? selectedStore?.id;
+  const lastActivity = useRef("");
+  useEffect(() => {
+    const key = activityStoreId ? activityStoreId + ":" + (viewedId ?? "") : "";
+    if (key && key !== lastActivity.current) recordStoreActivity(activityStoreId, viewedId);
+    lastActivity.current = key;
+  }, [activityStoreId, viewedId]);
   const { account, wallet, refresh: refreshAccount, error: walletError, loading: walletLoading } = walletState;
   const balance = wallet.availablePaise === null ? null : wallet.availablePaise / 100;
   const orders = account?.orders ?? [];
-  const visibleOrders = requestedId ? orders.filter((order) => order.id === requestedId) : orders;
+  const followerCount = (store) => !store ? 0 : store.id.startsWith("live-")
+    ? followerCounts[store.id] ?? store.followers ?? 0
+    : (store.followers ?? 0) + Object.values(directory.follows).filter((ids) => ids.includes(store.id)).length;
+  const visibleOrders = requestedId ? orders.filter((order) => order.id === requestedId || order.checkoutDetails?.checkoutId === requestedId) : orders;
   const walletDemoActive = routeParams.get("demo") === "1";
   const walletView = routeParams.get("view");
   const walletWithOrderDetails = activeTab === "wallet" ? {
     ...wallet,
-    transactions: wallet.transactions.map((transaction) => {
-      const order = orders.find((item) => item.id === transaction.orderId);
+    transactions: shoppingWallet(wallet).transactions.map((transaction) => {
+      const order = orders.find((item) => item.id === transaction.orderId || item.checkoutDetails?.checkoutId === transaction.orderId);
       if (!order?.lines?.length) return transaction;
       const store = storesById.get("live-" + order.lines[0].sellerId);
       const categories = [...new Set(order.lines.map((line) => products.find((product) => product.id === line.id)?.category).filter(Boolean))];
@@ -216,7 +252,7 @@ export default function Marketplace({ initialTab = "shop", customer, walletState
 
   async function loadRemote() {
     const [catalog] = await Promise.all([marketplaceRequest("/catalog"), refreshAccount()]);
-    return { catalog: catalog.products };
+    return { catalog: catalog.products, stores: catalog.stores };
   }
 
   useEffect(() => {
@@ -224,7 +260,7 @@ export default function Marketplace({ initialTab = "shop", customer, walletState
     marketplaceRequest("/catalog")
       .then((catalog) => {
         if (cancelled) return;
-        setRemote({ catalog: catalog.products });
+        setRemote({ catalog: catalog.products, stores: catalog.stores });
       })
       .catch((failure) => {
         if (cancelled) return;
@@ -238,20 +274,23 @@ export default function Marketplace({ initialTab = "shop", customer, walletState
     await marketplaceRequest(path, method, body);
     setRemote(await loadRemote());
   }
-  const lines = cartLines(shop.cart, products);
-  const stockIssue = lines.some((line) => !validQuantity(line.quantity, line));
-  const demoLines = lines.some((line) => line.demo || line.variantId);
-  const mixedSellers = new Set(lines.map((line) => line.sellerId)).size > 1;
-  const total = lines.reduce((sum, line) => sum + line.price * line.quantity, 0);
+
+  async function orderAction(path, method, body) {
+    await marketplaceRequest(path, method, body);
+    await refreshAccount();
+  }
+  const lines = cartLines(shop.cart, products, shop.details);
+  const selectedLines = lines.filter((line) => !shop.excluded[line.key]);
   const cartCount = lines.reduce((sum, line) => sum + line.quantity, 0);
 
   useEffect(() => {
     try {
-      localStorage.setItem(storageKey, JSON.stringify(shop));
+      localStorage.setItem(storageKey + ":" + viewer, JSON.stringify(shop));
+      if (viewer !== "guest" && window.location.hash === "#checkout") sessionStorage.removeItem(guestTransferKey);
     } catch {
       // Shopping remains usable when browser storage is unavailable.
     }
-  }, [shop]);
+  }, [shop, viewer]);
 
   useEffect(() => {
     try {
@@ -280,47 +319,75 @@ export default function Marketplace({ initialTab = "shop", customer, walletState
   }, [searchHistory]);
 
   function changeQuantity(offer, delta, announce = false) {
-    if (busy || (delta > 0 && !validQuantity(delta, offer, shop.cart[offer.key] ?? 0))) return;
-    setPendingOrderId(null);
+    if (delta > 0 && !validQuantity(delta, offer, shop.cart[offer.key] ?? 0)) return;
     setShop((previous) => {
       const cart = { ...previous.cart };
+      const details = { ...previous.details };
       const quantity = (cart[offer.key] ?? 0) + delta;
       if (delta > 0 && !validQuantity(quantity, offer)) return previous;
-      if (quantity > 0) cart[offer.key] = quantity;
-      else delete cart[offer.key];
-      return { ...previous, cart };
+      if (quantity <= 0) return previous;
+      cart[offer.key] = quantity;
+      details[offer.key] ??= { storeId: offer.storeId, sellerId: offer.sellerId, seller: offer.seller, name: offer.name, price: offer.price };
+      return { ...previous, cart, details };
     });
     if (announce) setNotice("Added to cart");
   }
 
-  async function placeOrder() {
-    if (!customer) { onLogin(); return; }
-    if (!account || directCheckout || demoLines || busy || !lines.length || balance === null || total > balance || stockIssue || mixedSellers) return;
-    const id = pendingOrderId ?? crypto.randomUUID();
-    setPendingOrderId(id);
-    setBusy(true);
-    setError("");
-    try {
-      const order = await marketplaceRequest("/checkout", "POST", {
-        id, expectedTotal: total, items: lines.map(({ id: productId, quantity }) => ({ id: productId, quantity })),
-      });
-      setShop((previous) => ({ ...previous, cart: {} }));
-      setConfirmation(order.id);
-      setPendingOrderId(null);
-      openTab("orders");
-      setRemote(await loadRemote());
-    } catch (failure) {
-      setError(failure.message);
-    } finally {
-      setBusy(false);
-    }
+  function selectLines(items, selected) {
+    setShop((previous) => {
+      const excluded = { ...previous.excluded };
+      for (const { key } of items) {
+        if (selected) delete excluded[key];
+        else excluded[key] = true;
+      }
+      return { ...previous, excluded };
+    });
   }
 
-  function toggleSaved(id) {
+  async function removeLine(line, save) {
+    if (save && !saved.has(line.id) && !await toggleSaved(line.id)) return;
+    setShop((previous) => {
+      const cart = { ...previous.cart };
+      const excluded = { ...previous.excluded };
+      const details = { ...previous.details };
+      delete cart[line.key];
+      delete excluded[line.key];
+      delete details[line.key];
+      return { ...previous, cart, excluded, details };
+    });
+  }
+
+  function loginToCheckout() {
+    if (!directCheckout && !customer) {
+      try {
+        sessionStorage.setItem(guestTransferKey, JSON.stringify(selectedLines.map(({ key, quantity }) => ({ key, quantity, details: shop.details[key] }))));
+      } catch { /* Guest cart stays on this device. */ }
+    }
+    onLogin();
+  }
+
+  function finishCheckout(id) {
+    openTab("orders?" + new URLSearchParams({ id }));
+  }
+
+  async function toggleSaved(id) {
+    if (customer) return social.change("/social/products/" + encodeURIComponent(id) + "/state", "PUT", { field: "saved", value: !saved.has(id) });
     setShop((previous) => ({
       ...previous,
       saved: previous.saved.includes(id) ? previous.saved.filter((item) => item !== id) : [...previous.saved, id],
     }));
+    return true;
+  }
+
+  async function follow(store) {
+    if (!store.id.startsWith("live-")) {
+      try { toggleFollow(viewer, store.id); } catch (error) { setNotice(error.message); }
+      return;
+    }
+    if (!customer) { onLogin(); return; }
+    const following = !follows.has(store.id);
+    const result = await social.change("/social/stores/" + encodeURIComponent(store.userId ?? store.id.slice(5)) + "/follow", "PUT", { following });
+    if (result) setFollowerCounts((current) => ({ ...current, [store.id]: result.followers }));
   }
 
   function renderProduct(product, sold) {
@@ -334,8 +401,8 @@ export default function Marketplace({ initialTab = "shop", customer, walletState
         key={product.id}
         product={product}
         sold={sold}
-        saved={shop.saved.includes(product.id)}
-        canAdd={!busy && canAdd}
+        saved={saved.has(product.id)}
+        canAdd={canAdd}
         onSave={() => toggleSaved(product.id)}
         onAdd={() => options.length ? openProduct(product) : changeQuantity(offer, 1, true)}
         onDetails={() => openProduct(product)}
@@ -429,15 +496,17 @@ export default function Marketplace({ initialTab = "shop", customer, walletState
     error,
     onRetry: refreshCatalog,
   };
-  const role = account?.role ?? customer?.role;
-  const accountType = myStore ? "Marketplace seller" : !customer ? "Guest account" : role === "ADMIN" ? "Administrator" : role === "SELLER" ? "Seller account" : "Customer account";
+  const merchantPlan = identity.planName;
+  const showMyStore = identity.accountType === "merchant" && identity.canManageLive;
+  const canBecomeMerchant = !customer || identity.canUpgrade;
   const profileLinks = [
     { label: "Indipay Home", Icon: Home, tab: "home" },
     { label: "My Cart", Icon: ShoppingCart, tab: "cart", count: cartCount },
-    { label: "My Wishlist", Icon: Heart, tab: "wishlist", count: shop.saved.length },
+    { label: "My Wishlist", Icon: Heart, tab: "wishlist", count: saved.size },
+    { label: "Following Stores", Icon: Store, tab: "following" },
     { label: "My Orders", Icon: Package, tab: "orders" },
     { label: "My Wallet", Icon: Wallet, tab: "wallet" },
-    { label: "Seller Dashboard", Icon: Store, tab: "seller" },
+    ...(identity.canManageLive ? [{ label: "Seller Dashboard", Icon: Store, tab: "seller" }] : []),
   ];
 
   return (
@@ -450,7 +519,7 @@ export default function Marketplace({ initialTab = "shop", customer, walletState
               closeProfile(true);
             }
           }}>
-            <summary className="mp-profile-trigger" aria-label="Marketplace profile">
+            <summary className="mp-profile-trigger" aria-label="Superstore profile">
               <span className="mp-profile-avatar"><UserRound size={19} aria-hidden="true" /></span>
               <ChevronDown className="mp-profile-chevron" size={13} aria-hidden="true" />
             </summary>
@@ -458,18 +527,21 @@ export default function Marketplace({ initialTab = "shop", customer, walletState
               <div className="mp-profile-identity">
                 <span className="mp-profile-avatar"><UserRound size={19} aria-hidden="true" /></span>
                 <div>
-                  <strong>{customer?.name || myStore?.owner || myStore?.name || (customer ? "Indipay customer" : "Guest")}</strong>
-                  <small>{accountType}</small>
+                  <strong>{customer?.name || (customer ? "Indipay customer" : "Guest")}</strong>
+                  <small>{identity.label}</small>
                   {!customer && <button type="button" className="mp-profile-signin" onClick={() => { closeProfile(); onLogin(); }}>Sign in</button>}
                 </div>
               </div>
               <hr />
-              <button type="button" className="mp-profile-link store-menu-link" onClick={() => {
-                if (myStore) openTab("my-store"); else { closeProfile(); onOpenSellerRegistration(); }
+              {(showMyStore || canBecomeMerchant) && <button type="button" className="mp-profile-link store-menu-link" onClick={() => {
+                if (showMyStore) openTab("my-store");
+                else { closeProfile(); onOpenMerchantPlans(); }
               }}>
-                {myStore?.logo ? <img src={myStore.logo} alt="" /> : <Store size={19} />}
-                <span><strong>{myStore ? myStore.name : "Become a Seller"}</strong><small>{myStore ? "My Store · " + subscriptionPlans[myStore.plan].name + " plan" : "Choose a store plan"}</small></span><ChevronRight size={15} />
-              </button>
+                {account?.store?.profile?.logo ? <img src={account.store.profile.logo} alt="" /> : <Store size={19} />}
+                <span><strong>{showMyStore ? "My Store" : "Become a Merchant"}</strong>
+                  <small>{showMyStore ? [identity.storeName, merchantPlan && merchantPlan + " plan"].filter(Boolean).join(" · ") || "Merchant management"
+                    : "Explore merchant plans"}</small></span><ChevronRight size={15} />
+              </button>}
               {profileLinks.map(({ label, Icon, tab, count }) => (
                 <button key={label} className="mp-profile-link" type="button" aria-current={tab === activeTab ? "page" : undefined} onClick={() => {
                   if (tab === "home") {
@@ -490,36 +562,43 @@ export default function Marketplace({ initialTab = "shop", customer, walletState
               </button>
             </div>
           </details>
-          <div className="mp-brand">Indipay Marketplace</div>
+          <div className="mp-brand">Indipay Superstore</div>
           <button type="button" className="mp-wallet" onClick={() => openTab("wallet")} aria-label={balanceVisible && balance !== null
-            ? "Open Marketplace Wallet. Available spending balance " + formatPaise(wallet.availablePaise) : "Open Marketplace Wallet"}>
+            ? "Open Superstore Wallet. Available spending balance " + formatPaise(wallet.availablePaise) : "Open Superstore Wallet"}>
             <Wallet size={17} aria-hidden="true" />
-            <span><small>Marketplace balance</small><strong>{balance === null ? "—" : balanceVisible ? formatPaise(wallet.availablePaise) : "••••"}</strong></span>
+            <span><small>Superstore balance</small><strong>{balance === null ? "—" : balanceVisible ? formatPaise(wallet.availablePaise) : "••••"}</strong></span>
           </button>
         </div>
       </header>
       <main className="mp-wrap mp-main">
-        {error && activeTab !== "wallet" && !listingPage && !(currentStore && !isOwnerPage) && <p role="alert">{error} <button type="button" disabled={refreshing} onClick={refreshCatalog}>Refresh marketplace</button></p>}
+        {error && activeTab !== "wallet" && !listingPage && !currentStore && <p role="alert">{error} <button type="button" disabled={refreshing} onClick={refreshCatalog}>Refresh Superstore</button></p>}
         {activeTab === "admin" && account?.role === "ADMIN" && <MarketplaceAdmin request={marketplaceRequest} onChange={async () => setRemote(await loadRemote())} money={money} />}
         {activeTab === "stores" && <StoreDirectory stores={stores} products={catalogProducts} discovery onVisit={openStore} />}
-        {(isOwnerPage || activeTab.startsWith("store/")) && (currentStore ?
-          <StoreProfile key={activeTab + currentStore.id} store={currentStore} manage={isOwnerPage} customer={customer}
-            products={storeProducts} follows={directory.follows} viewer={viewer}
-            renderProduct={renderProduct} onPublic={() => openStore(currentStore.id)}
-            productListing={!isOwnerPage && <StoreProductListing {...listingProps} products={storeProducts}
+        {social.error && <p role="alert">{social.error}</p>}
+        {activeTab === "following" && <FollowingFeed stores={stores} products={catalogProducts} follows={follows}
+          feed={[...(social.data?.feed ?? []), ...(directory.posts ?? []).filter((post) => follows.has(post.storeId))]}
+          onRefresh={social.refresh}
+          liked={liked} saved={saved} onSave={toggleSaved} onLike={(id) => customer
+            ? social.change("/social/products/" + encodeURIComponent(id) + "/state", "PUT", { field: "liked", value: !liked.has(id) })
+            : onLogin()} onStore={openStore} onProduct={openProduct} busy={social.busy} money={money} signedIn={Boolean(customer)} onLogin={onLogin} />}
+        {activeTab.startsWith("store/") && (currentStore ?
+          <StoreProfile key={currentStore.id} store={currentStore}
+            products={storeProducts} following={follows.has(currentStore.id)} followers={followerCount(currentStore)} followBusy={social.busy}
+            onFollow={currentStore.id === "live-" + customer?.id ? undefined : () => follow(currentStore)}
+            productListing={<StoreProductListing {...listingProps} products={storeProducts}
               storeId={currentStore.id} renderProduct={renderProduct} />}
-            onSeeProducts={!isOwnerPage ? () => openListing({ scope: currentStore.id }) : undefined}
-            onExitSession={currentStore.ownerId == null ? () => { endStoreSession(); openTab("shop"); } : null}
-            onDelete={(id) => setShop((previous) => {
-              const cart = Object.fromEntries(Object.entries(previous.cart).filter(([key]) => itemIds(key)[0] !== id));
-              return { cart, saved: previous.saved.filter((item) => item !== id) };
-            })} />
-          : <section className="mp-panel"><h1>{isOwnerPage ? "My store" : "Store unavailable"}</h1>
-            <p>{isOwnerPage ? "Sign in to your demo seller account to manage a store." : "This store is unavailable in this browser."}</p>
-            <button onClick={isOwnerPage ? onOpenSellerLogin : () => openTab("stores")}>{isOwnerPage ? "Seller login" : "Explore stores"}</button></section>)}
+            onSeeProducts={() => openListing({ scope: currentStore.id })} />
+          : <section className="mp-panel"><h1>Store unavailable</h1>
+            <p>This store is unavailable in this browser.</p>
+            <button type="button" onClick={() => openTab("stores")}>Explore stores</button></section>)}
         {activeTab === "settings" && (
           <section className="mp-panel mp-settings" aria-labelledby="mp-settings-title">
             <h1 id="mp-settings-title">Settings</h1>
+            {customer && social.data && <label className="mp-settings-row">
+              <span>Notifications for new products, announcements and offers from followed stores</span>
+              <input type="checkbox" checked={social.data.storeUpdates} disabled={social.busy} onChange={(event) =>
+                social.change("/social/preferences", "PUT", { storeUpdates: event.target.checked })} />
+            </label>}
             <div className="mp-settings-row">
               <Moon size={20} aria-hidden="true" />
               <div><strong>Dark mode</strong><p>Applies across Indipay.</p></div>
@@ -527,7 +606,7 @@ export default function Marketplace({ initialTab = "shop", customer, walletState
                 {darkMode ? "On" : "Off"}
               </button>
             </div>
-            {account?.role === "ADMIN" && <button type="button" onClick={() => openTab("admin")}>Marketplace admin</button>}
+            {account?.role === "ADMIN" && <button type="button" onClick={() => openTab("admin")}>Superstore admin</button>}
           </section>
         )}
         {activeTab === "wallet" && (
@@ -538,27 +617,49 @@ export default function Marketplace({ initialTab = "shop", customer, walletState
             onView={openWalletView} onToggleDemo={() => openWalletView("overview", null, !walletDemoActive)}
             onRetry={refreshAccount} onLogin={onLogin} onShop={openShop} onAffordable={() => openListing({ affordable: "1" })}
             onMainWallet={onOpenWallet} onOpenIndipayPage={onOpenIndipayPage} onSupport={() => setIndibotOpen(true)}
+            onAddMoney={() => onAddMoney(0, "wallet")}
             orders={orders} onOrder={(id) => openTab("orders?" + new URLSearchParams({ id }))} />
         )}
-        {activeTab === "seller" && (
-          ["SELLER", "ADMIN"].includes(account?.role) || account?.store
+        {showMerchantDashboard && (
+          identity.canManageLive && account
             ? <SellerDashboard shop={{
-              store: account.store ?? { name: "", description: "" },
-              listings: account.store?.products ?? [],
-              orders: account.sellerOrders.filter((order) => !order.refunded).map((order) => ({
-                ...order, lines: order.lines.map((line) => ({ ...line, sellerListing: true })),
-              })),
-            }} action={sellerAction} money={money} />
-            : <p>{customer ? "Seller approval is required." : "Sign in to access your seller account."} {!customer && <button type="button" onClick={onLogin}>Sign in</button>}</p>
+              store: { ...account.store?.profile, ...account.store },
+              listings: (account.store?.products ?? []).map((item) => ({ ...item, variantOptions: item.variants })),
+              orders: account.sellerOrders ?? [],
+            }} storeId={"live-" + customer.id} subscriptionStatus={identity.subscriptionStatus} canPublish={identity.canPublish}
+              followers={followerCount(storesById.get("live-" + customer.id))}
+              onPublic={() => openStore("live-" + customer.id)} onPlans={onOpenMerchantPlans}
+              action={sellerAction} orderAction={orderAction} selectedOrder={requestedId} money={money}
+              onProduct={(item) => openTab(detailsRoute(item.id) + "&reviews=1")}
+              renderAnnouncements={(listings) => <StoreAnnouncementEditor listings={listings}
+                publish={(fields) => marketplaceRequest("/social/posts", "POST", fields)} />} />
+            : <section className="mp-panel"><h1>Merchant Dashboard</h1>
+              <p>{walletLoading ? "Loading merchant access…" : identity.canManageLive ? "Merchant information is unavailable." : "An approved Superstore seller account is required."}</p>
+              {identity.canManageLive && !account && !walletLoading && <button type="button" onClick={refreshAccount}>Try again</button>}
+              {!customer && !walletLoading && <button type="button" onClick={() => onLogin("merchant")}>Sign in to Indipay</button>}
+            </section>
+        )}
+        {activeTab === "my-store" && !showMerchantDashboard && (
+          <section className="mp-panel"><h1>My Store</h1>
+            {walletLoading ? <p role="status">Checking merchant access…</p> : <>
+              <p>{!customer ? "Sign in with your Indipay account to manage a store." : "Register a store and activate a subscription to publish products."}</p>
+              {!customer && <button type="button" onClick={() => onLogin("merchant")}>Sign in to Indipay</button>}
+              {canBecomeMerchant && <button type="button" onClick={onOpenMerchantPlans}>Become a Merchant</button>}
+            </>}
+          </section>
         )}
         {activeTab === "details" && (selected ? (
           <ProductDetails key={activeRoute} product={selected} initialVariant={requestedVariant}
             initialQuantity={Number.isSafeInteger(requestedQuantity) && requestedQuantity > 0 ? requestedQuantity : 1}
             money={money} balance={wallet.availablePaise} signedIn={Boolean(customer)} onEarn={openEarnMore}
-            saved={shop.saved.includes(selected.id)} cart={shop.cart} cartCount={cartCount} busy={busy}
+            saved={saved.has(selected.id)} cart={shop.cart} cartCount={cartCount}
             store={selectedStore} storeProducts={selectedStoreProducts}
-            following={directory.follows[viewer]?.includes(selected.storeId) ?? false}
-            onFollow={() => toggleFollow(viewer, selected.storeId)} onStore={() => openStore(selected.storeId)}
+            following={follows.has(selected.storeId)}
+            onFollow={selectedStore?.id === "live-" + customer?.id ? undefined : () => selectedStore && follow(selectedStore)} onStore={() => openStore(selected.storeId)}
+            reviewAccess={{ signedIn: Boolean(customer), onLogin, canReply: identity.canPublish && selected.sellerId === customer?.id,
+              alreadyReviewed: social.data?.reviewed.includes(selected.id),
+              canReview: orders.some((order) => !isClosedOrder(order) && orderStage(order) === 6 && order.lines.some((line) => line.id === selected.id)),
+              focus: routeParams.has("reviews") }}
             onBack={() => openTab(returnTab)} onCart={() => openTab("cart")} onSave={() => toggleSaved(selected.id)}
             onAdd={(offer, quantity) => changeQuantity(offer, quantity, true)}
             onBuy={(offer, quantity) => { if (validQuantity(quantity, offer)) openTab(buyNowRoute(offer, quantity)); }}
@@ -566,7 +667,7 @@ export default function Marketplace({ initialTab = "shop", customer, walletState
         ) : (
           <section className="mp-panel">
             <h1>{!remote || refreshing ? "Loading product…" : "Product unavailable"}</h1>
-            {!remote || refreshing ? <p role="status">Checking the marketplace catalog.</p>
+            {!remote || refreshing ? <p role="status">Checking the Superstore catalog.</p>
               : <p>This product may have been removed or may belong to a store saved in another browser.</p>}
             <button type="button" onClick={() => openTab(returnTab)}>Browse products</button>
           </section>
@@ -574,83 +675,44 @@ export default function Marketplace({ initialTab = "shop", customer, walletState
         {activeTab === "wishlist" && (
           <section className="mp-panel">
             <h1>Your wishlist</h1>
-            {catalogProducts.some(({ id }) => shop.saved.includes(id)) ? <div className="mp-grid">{catalogProducts.filter(({ id }) => shop.saved.includes(id)).map((product) => renderProduct(product))}</div> : <p>Save a product using its heart icon.</p>}
+            {catalogProducts.some(({ id }) => saved.has(id)) ? <div className="mp-grid">{catalogProducts.filter(({ id }) => saved.has(id)).map((product) => renderProduct(product))}</div> : <p>Save a product using its heart icon.</p>}
+            {[...saved].filter((id) => remote && !catalogProducts.some((item) => item.id === id)).map((id) =>
+              <p key={id}>Unavailable saved product <button type="button" onClick={() => toggleSaved(id)}>Remove</button></p>)}
           </section>
         )}
-        {activeTab === "cart" && (
-          <section className="mp-panel">
-            <h1>Your cart</h1>
-            {!lines.length && <p>Your cart is empty.</p>}
-            {lines.map((line) => (
-              <div className="mp-cart-line" key={line.key}>
-                <div><strong>{line.name}{line.demo && " · Demo"}</strong>
-                  {line.variantName && <div className="mp-detail-muted">{line.variantName}</div>}
-                  {line.needsVariant && <button type="button" onClick={() => openProduct(line)}>Choose available options</button>}
-                  {!line.needsVariant && line.stock === 0 && <div className="mp-detail-muted">Unavailable</div>}
-                </div>
-                <span>{money.format(line.quantity * line.price)}</span>
-                <div>
-                  <button type="button" disabled={busy} aria-label={`Decrease quantity of ${line.name} ${line.variantName}`} onClick={() => changeQuantity(line, -1)}>−</button>
-                  <span> {line.quantity} </span>
-                  <button type="button" disabled={busy || !validQuantity(line.quantity + 1, line)} aria-label={`Increase quantity of ${line.name} ${line.variantName}`} onClick={() => changeQuantity(line, 1)}>+</button>
-                </div>
-              </div>
-            ))}
-            {lines.length > 0 && <div className="mp-cart-wallet-estimate">
-              <WalletEstimate balance={wallet.availablePaise} subtotal={rupeesToPaise(total)} subtotalLabel="Cart subtotal"
-                signedIn={Boolean(customer)} onEarn={openEarnMore} />
-            </div>}
-            <button type="button" onClick={() => lines.length ? openTab("checkout") : openTab("shop")}>{lines.length ? "Review checkout" : "Browse products"}</button>
-          </section>
-        )}
-        {directCheckout && (
-          <section className="mp-panel">
-            <h1>Buy Now preview</h1>
-            {checkoutOffer && validQuantity(requestedQuantity, checkoutOffer) ? (
-              <>
-                <h2>{checkoutOffer.name}</h2>
-                {checkoutOffer.variantName && <p>{checkoutOffer.variantName}</p>}
-                <p>Quantity {requestedQuantity}</p>
-                <WalletEstimate balance={wallet.availablePaise} subtotal={rupeesToPaise(checkoutOffer.price * requestedQuantity)}
-                  subtotalLabel="Product subtotal" signedIn={Boolean(customer)} onEarn={openEarnMore} />
-                <p>Preview only · No payment or order is created. Delivery charges are excluded.</p>
-                {!customer && <button type="button" onClick={onLogin}>Sign in to view balance</button>}
-              </>
-            ) : <p role="status">{!remote || refreshing ? "Checking product availability…" : "This selection is unavailable. Choose a product or update your options."}</p>}
-            <button type="button" onClick={() => openTab(checkoutProduct ? detailsRoute(checkoutProduct.id, requestedVariant, requestedQuantity) : "shop")}>
-              {checkoutProduct ? "Back to product" : "Browse products"}
-            </button>
-          </section>
-        )}
-        {activeTab === "checkout" && !directCheckout && (
-          <section className="mp-panel">
-            <h1>Marketplace wallet checkout</h1>
-            <WalletEstimate balance={wallet.availablePaise} subtotal={rupeesToPaise(total)} subtotalLabel="Order subtotal"
-              signedIn={Boolean(customer)} onEarn={openEarnMore} />
-            <button type="button" onClick={() => openTab("cart")}>Back to cart</button>
-            {demoLines && <p role="status">Demo products can be saved in your cart. Remove them to check out live products.</p>}
-            {stockIssue && <p role="alert">A cart item or quantity is unavailable. Update your cart before placing the order.</p>}
-            {mixedSellers && <p role="alert">Checkout supports one store per order. Remove items from other stores to continue.</p>}
-            {customer
-              ? <button type="button" disabled={demoLines || busy || !account || !lines.length || stockIssue || mixedSellers || balance === null || total > balance} onClick={placeOrder}>{busy ? "Placing order…" : "Place order"}</button>
-              : <button type="button" onClick={onLogin}>Sign in to place order</button>}
-          </section>
-        )}
+        {activeTab === "cart" && <ShoppingCartPage lines={lines} selected={selectedLines} excluded={shop.excluded}
+          loading={!remote || refreshing} onSelect={selectLines} onQuantity={changeQuantity} onRemove={removeLine}
+          onProduct={openProduct} onCheckout={() => openTab("checkout")} onBrowse={openShop} />}
+        {activeTab === "checkout" && <ShoppingCheckout key={activeRoute} lines={directCheckout
+          ? checkoutOffer ? [{ ...checkoutOffer, quantity: requestedQuantity }] : []
+          : selectedLines} customer={customer} availablePaise={wallet.availablePaise}
+          draftKey={`indipay-checkout-draft:${viewer}:${activeRoute}`}
+          onBack={() => openTab(directCheckout && checkoutProduct ? detailsRoute(checkoutProduct.id, requestedVariant, requestedQuantity) : "cart")}
+          onLogin={loginToCheckout} onAddMoney={(required) => onAddMoney(required, activeRoute)}
+          onComplete={finishCheckout} onPurchased={(purchase) => {
+            if (!directCheckout) {
+              setShop((previous) => {
+                const cart = { ...previous.cart };
+                const excluded = { ...previous.excluded };
+                const details = { ...previous.details };
+                for (const line of purchase.purchased) {
+                  const key = itemKey(line.id, line.variantId);
+                  if ((cart[key] ?? 0) > line.quantity) cart[key] -= line.quantity;
+                  else { delete cart[key]; delete excluded[key]; delete details[key]; }
+                }
+                return { ...previous, cart, excluded, details };
+              });
+            }
+            void refreshCatalog();
+          }} refresh={refreshCatalog} />}
         {activeTab === "orders" && (
           <section className="mp-panel">
             <h1>{requestedId ? "Related order" : "Your orders"}</h1>
             {requestedId && <button type="button" onClick={() => openTab("orders")}>View all orders</button>}
-            {visibleOrders.length === 0 &&
-              <p>{walletLoading ? "Loading orders…" : customer ? "No orders to display." : "Sign in to view your orders."}</p>}
-            {visibleOrders.map((order) => (
-              <article className="mp-order" key={order.id}>
-                {confirmation === order.id && <p role="status"><strong>Order confirmed.</strong></p>}
-                <h2>Order {order.id.slice(0, 8).toUpperCase()}</h2>
-                <p>{new Date(order.createdAt).toLocaleDateString("en-IN")} · {money.format(order.total)}{order.refunded && " · Refunded"}</p>
-                <ul>{order.lines.map((line) => <li key={line.id ?? line.name}>{line.quantity} × {line.name}{line.sellerListing && ` · ${deliveryStages[order.sellerStage ?? 0]}`}</li>)}</ul>
-                {!order.refunded && <details><summary>Track order</summary><ol>{deliveryStages.map((stage, index) => <li key={stage}>{stage}{index > (order.sellerStage ?? 0) ? " (pending)" : ""}</li>)}</ol></details>}
-              </article>
-            ))}
+            {walletError && <p role="alert">{walletError} <button type="button" onClick={refreshAccount}>Retry</button></p>}
+            <OrderManagement key={requestedId || "all"} orders={visibleOrders} money={money}
+              products={new Map(products.map((product) => [product.id, product]))} action={orderAction}
+              empty={walletLoading ? "Loading orders…" : customer ? "No orders to display." : "Sign in to view your orders."} />
           </section>
         )}
         {listingPage && (
@@ -661,7 +723,7 @@ export default function Marketplace({ initialTab = "shop", customer, walletState
         )}
         {showCatalog && (
           <>
-            <h1 className="mp-visually-hidden">Indipay Marketplace</h1>
+            <h1 className="mp-visually-hidden">Indipay Superstore</h1>
             <MarketplaceSearch {...searchProps} products={catalogProducts} stores={stores} onSearch={(q) => {
               rememberSearch(q);
               openListing({ q });
@@ -678,6 +740,8 @@ export default function Marketplace({ initialTab = "shop", customer, walletState
               })}
             </nav>
             <PromotionalCarousel onExplore={(category) => openListing({ category })} />
+            <PublishedAdminContent channel="superstore" />
+            <PublishedAdminContent channel="offers" />
             <FlashDeals products={flashDeals} renderProduct={renderProduct} onViewAll={() => openListing({ collection: "flash" })} />
             <StoreDirectory stores={stores} products={catalogProducts} onVisit={openStore} onDiscover={() => openTab("stores")} />
             <ShopByBudget money={money} onSelect={(budget) => openListing({ budget })} />
@@ -697,15 +761,15 @@ export default function Marketplace({ initialTab = "shop", customer, walletState
                 </section>
               );
             })}
-            {!myStore && (
+            {(canBecomeMerchant || showMyStore) && (
               <section className="mp-seller-promo">
                 <Store size={36} aria-hidden="true" />
                 <div>
-                  <h2>Want to list your products on Indipay Marketplace?</h2>
-                  <p>Reach new customers, showcase your products and grow your business with Indipay. Register as a marketplace user today.</p>
+                  <h2>{showMyStore ? "My Store" : "Become a Merchant"}</h2>
+                  <p>{showMyStore ? [identity.storeName, merchantPlan && merchantPlan + " plan"].filter(Boolean).join(" · ") || "Manage your Superstore listings and orders."
+                    : "Choose a merchant plan and link a storefront to your Indipay account."}</p>
                   <div>
-                    <button type="button" onClick={onOpenSellerRegistration}>Become a Seller</button>
-                    <button type="button" onClick={onOpenSellerLogin}>Already registered? Seller Login</button>
+                    <button type="button" onClick={showMyStore ? () => openTab("my-store") : onOpenMerchantPlans}>{showMyStore ? "Open My Store" : "Explore Merchant Plans"}</button>
                   </div>
                 </div>
               </section>
@@ -714,7 +778,7 @@ export default function Marketplace({ initialTab = "shop", customer, walletState
         )}
       </main>
       {notice && <div className="mp-notice"><span role="status">{notice}</span><button type="button" onClick={() => openTab("cart")}>View cart</button><button type="button" onClick={() => setNotice("")}>Dismiss</button></div>}
-      <nav className="mp-bottom-nav" aria-label="Marketplace navigation">
+      <nav className="mp-bottom-nav" aria-label="Superstore navigation">
         {[["shop", Home, "Home"], ["categories", LayoutGrid, "Categories"], ["orders", PackageCheck, "Orders"], ["wallet", Wallet, "Wallet"]].map(([tab, Icon, label]) => (
           <button type="button" key={tab} aria-current={activeTab === tab ? "page" : undefined} onClick={tab === "shop" ? openShop : () => openTab(tab)}>
             <Icon size={20} aria-hidden="true" />

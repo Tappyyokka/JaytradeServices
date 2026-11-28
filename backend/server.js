@@ -4,20 +4,14 @@ const cors = require("cors");
 require("dotenv").config();
 
 const prisma = require("./src/config/prisma");
+const { registrationDemoEnabled } = require("./src/registrationDemoIsolation");
+const { enqueueDelivery, startApplicationDelivery } = require("./src/applicationDelivery");
 const cookieParser = require("cookie-parser");
 const authRoutes = require("./routes/auth");
 const authenticateCustomer = authRoutes.authenticateCustomer;
 const chatbotRoutes = require("./routes/chatbot");
-function requireAdmin(req, res, next) {
-    if (req.user?.role !== "ADMIN") {
-        return res.status(403).json({
-            success: false,
-            message: "Access denied. Admin privileges required.",
-        });
-    }
-
-    next();
-}
+const { requireAdminArea, canAdmin } = require("./src/adminAccess");
+const requireAdmin = requireAdminArea("applications");
 
 const app = express();
 const allowedOrigins = new Set([
@@ -42,9 +36,32 @@ app.use("/api", (req, res, next) => {
 });
 
 app.use(cookieParser());
-app.use("/api/marketplace", express.json({ limit: "600kb" }), require("./routes/marketplace"));
+app.use("/api/admin-centre", express.json({ limit: "600kb" }), require("./routes/adminCentre"));
+app.use("/api/marketplace", require("./routes/marketplace"));
+app.use("/api/registration-demo", express.json({ limit: "1150kb" }), require("./routes/registrationDemo"));
+app.use("/api/service-processing", require("./routes/serviceProcessing"));
 app.use(express.json());
 app.use("/api/auth", authRoutes);
+app.get("/api/customer-money", authenticateCustomer, async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const [wallet, creditRequests] = await prisma.$transaction([
+            prisma.marketplaceWallet.findUnique({ where: { userId }, select: {
+                balancePaise: true, entries: { orderBy: [{ createdAt: "desc" }, { id: "desc" }],
+                    select: { id: true, reference: true, amountPaise: true, createdAt: true } },
+            } }),
+            prisma.applicationDemoCredit.findMany({ where: { userId }, orderBy: { createdAt: "desc" },
+                select: { id: true, purpose: true, amountPaise: true, status: true, remarks: true, createdAt: true } }),
+        ], { isolationLevel: "RepeatableRead" });
+        const registrationDemoAvailable = await registrationDemoEnabled(prisma);
+        const entries = wallet?.entries ?? [];
+        res.json({ wallet: { balancePaise: wallet?.balancePaise ?? 0, entries }, creditRequests,
+            registrationDemoAvailable });
+    } catch (error) {
+        console.error("Customer Money read failed:", error.code || error.name);
+        res.status(503).json({ success: false, message: "Customer Money is temporarily unavailable. Please retry." });
+    }
+});
 app.use("/api/chatbot", chatbotRoutes);
 
 // Test route
@@ -75,7 +92,7 @@ app.get("/api/db-test", async (req, res) => {
 app.post("/api/applications", authenticateCustomer, async (req, res) => {
     try {
         const fields = {
-            fullName: 100, mobile: 20, email: 254, service: 180, address: 500,
+            fullName: 100, mobile: 20, email: 150, service: 180, address: 500,
             district: 100, state: 100, pincode: 6, remarks: 2000,
         };
         const cleaned = {};
@@ -98,6 +115,11 @@ app.post("/api/applications", authenticateCustomer, async (req, res) => {
             remarks,
         } = cleaned;
 
+        const serviceOverride = await prisma.serviceOverride.findUnique({ where: { id: service.toLowerCase() } });
+        if (serviceOverride?.available === false) {
+            return res.status(409).json({ success: false, message: "This service is currently unavailable." });
+        }
+
         if (
             !/^[0-9]{10}$/.test(mobile) ||
             !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ||
@@ -115,21 +137,31 @@ app.post("/api/applications", authenticateCustomer, async (req, res) => {
         for (let attempt = 0; attempt < 5; attempt++) {
             applicationId = `IND-${submittedAt + attempt}`;
             try {
-                await prisma.application.create({
-                    data: { ...cleaned, applicationId, userId: req.user.id, remarks: remarks || null },
-                });
+                const data = { ...cleaned, applicationId, userId: req.user.id, remarks: remarks || null };
+                if (process.env.INDIPAY_DURABLE_DELIVERY === "1") {
+                    await prisma.$transaction(async (tx) => {
+                        await tx.application.create({ data });
+                        await enqueueDelivery(tx, applicationId);
+                    });
+                } else await prisma.application.create({ data });
                 break;
             } catch (error) {
                 if (error.code !== "P2002" || attempt === 4) throw error;
             }
         }
 
-        // 2. Forward the saved application to JAYTRADE
+        if (process.env.INDIPAY_DURABLE_DELIVERY === "1") {
+            return res.status(201).json({ success: true, applicationId, syncStatus,
+                message: "Application saved and queued for Jaytrade." });
+        }
+
+        // Compatibility for environments that have not applied the delivery migration.
         try {
             const response = await fetch(
                 process.env.JAYTRADE_LEADS_API_URL,
                 {
                     method: "POST",
+                    redirect: "error",
                     signal: AbortSignal.timeout(10000),
                     headers: {
                         "Content-Type": "application/json",
@@ -215,7 +247,7 @@ app.get(
             });
         }
         // Make sure this application belongs to the logged-in customer
-if (application.userId !== req.user.id) {
+if (application.userId !== req.user.id && !canAdmin(req.user, "applications")) {
     return res.status(403).json({
         success: false,
         message: "You are not authorized to view this application.",
@@ -237,31 +269,23 @@ if (application.userId !== req.user.id) {
 
         const response = await fetch(jaytradeUrl, {
             method: "GET",
+            redirect: "error",
             signal: AbortSignal.timeout(10000),
             headers: {
                 "X-API-Key": process.env.INDIPAY_API_KEY,
             },
         });
 
-        const responseText = await response.text();
-
-let result;
-
-try {
-    result = JSON.parse(responseText);
-} catch (parseError) {
-    throw new Error(
-        `Jaytrade returned invalid JSON. HTTP ${response.status}`
-    );
-}
-
-if (!response.ok || !result.success) {
-    throw new Error(
-        result.error || result.message || "Could not retrieve Jaytrade status."
-    );
-}
+        if (response.status === 404) return res.status(404).json({ success: false, message: "The linked Jaytrade enquiry is missing." });
+        if (!response.ok) throw new Error("Jaytrade status unavailable");
+        const result = await response.json();
+        if (!result.success) throw new Error("Jaytrade status unavailable");
+        if (result.application_id !== applicationId || (application.leadId && result.lead_id && application.leadId !== String(result.lead_id))) {
+            return res.status(409).json({ success: false, message: "The application link needs reconciliation." });
+        }
 
         // 4. Return application and employee details
+        const registration = result.registration;
         return res.json({
             success: true,
             synced: true,
@@ -270,7 +294,24 @@ if (!response.ok || !result.success) {
                 status: result.status,
                 customer_status: result.customer_status,
                 department: result.department,
-                assigned_employee: result.assigned_employee,
+                assigned_employee: result.assigned_employee ? {
+                    name: result.assigned_employee.name,
+                    phone: result.assigned_employee.business_phone ?? null,
+                    designation: result.assigned_employee.designation,
+                    department: result.assigned_employee.department,
+                } : null,
+                registration: registration ? {
+                    stage: registration.stage,
+                    eligible: registration.eligible,
+                    amount_paise: registration.amount_paise,
+                    service: registration.service,
+                    department: registration.department,
+                    staff: registration.staff,
+                    paid: registration.paid,
+                    payment_reference: registration.payment_reference,
+                    registered_at: registration.registered_at,
+                    demo: registration.demo === true && await registrationDemoEnabled(prisma),
+                } : null,
             },
         });
 
@@ -336,46 +377,8 @@ app.get("/api/applications", authenticateCustomer, requireAdmin, async (req, res
 });
 
 // UPDATE APPLICATION STATUS
-app.patch("/api/applications/:applicationId/status", authenticateCustomer, requireAdmin, async (req, res) => {
-    try {
-        const { status } = req.body ?? {};
-
-        const allowedStatuses = [
-            "Pending",
-            "Under Review",
-            "Approved",
-            "Rejected",
-        ];
-
-        if (!allowedStatuses.includes(status)) {
-            return res.status(400).json({
-                success: false,
-                message: "Invalid application status.",
-            });
-        }
-
-        const application = await prisma.application.update({
-            where: {
-                applicationId: req.params.applicationId,
-            },
-            data: {
-                status,
-            },
-        });
-
-        return res.json({
-            success: true,
-            application,
-        });
-
-    } catch (error) {
-        console.error("Status update failed:", error.code || error.name);
-
-        return res.status(error.code === "P2025" ? 404 : 500).json({
-            success: false,
-            message: "Application not found or status update failed.",
-        });
-    }
+app.patch("/api/applications/:applicationId/status", authenticateCustomer, requireAdmin, (_req, res) => {
+    res.status(409).json({ message: "Jaytrade manages application stages." });
 });
 
 const PORT = process.env.PORT || 5000;
@@ -397,6 +400,9 @@ app.use((error, req, res, next) => {
 });
 
 if (require.main === module) {
+    if (process.env.INDIPAY_DURABLE_DELIVERY === "1") {
+        startApplicationDelivery(prisma, process.env.JAYTRADE_LEADS_API_URL, process.env.INDIPAY_API_KEY);
+    }
     app.listen(PORT, () => {
         console.log(`Indipay backend running on port ${PORT}`);
     });

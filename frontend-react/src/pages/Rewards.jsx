@@ -494,9 +494,9 @@ const handleReveal = (rewardId) => {
               Copy your revealed coupon code and use it when applying for an
               eligible Indipay service. Each offer has its own conditions.
             </p>
-            {wallet?.availablePaise != null && <p>Marketplace spending balance · {formatPaise(wallet.availablePaise)}</p>}
+            {wallet?.availablePaise != null && <p>Superstore spending balance · {formatPaise(wallet.availablePaise)}</p>}
           </div>
-          <button className="rewards-wallet-link" type="button" onClick={onOpenMarketplaceWallet} aria-label="Open Marketplace Wallet">
+          <button className="rewards-wallet-link" type="button" onClick={onOpenMarketplaceWallet} aria-label="Open Superstore Wallet">
             <ChevronRight size={18} aria-hidden="true" />
           </button>
         </section>

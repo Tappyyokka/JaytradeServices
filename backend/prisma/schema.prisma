@@ -16,6 +16,7 @@ model User {
   password     String
   phone        String?  @unique
   role         String   @default("CUSTOMER")
+  adminRole    String?
   isActive     Boolean  @default(true)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
@@ -24,6 +25,13 @@ model User {
   marketplaceStore MarketplaceStore?
   marketplaceWallet MarketplaceWallet?
   marketplaceOrders MarketplaceOrder[]
+  marketplaceAddresses MarketplaceAddress[]
+  marketplaceCheckouts MarketplaceCheckout[]
+  marketplaceFollows MarketplaceFollow[]
+  marketplaceProductStates MarketplaceProductState[]
+  marketplaceReviews MarketplaceReview[]
+  marketplaceReviewReports MarketplaceReviewReport[]
+  marketplaceSocialPreference MarketplaceSocialPreference?
     // Referral system
   referralCode String? @unique @db.VarChar(20)
   referredById String?
@@ -34,12 +42,75 @@ model User {
   @@index([referredById])
 }
 
+model AdminAudit {
+  id String @id @default(uuid())
+  actorId String
+  action String
+  target String
+  reason String
+  createdAt DateTime @default(now())
+  @@index([createdAt])
+}
+
+model AdminContent {
+  id String @id @default(uuid())
+  channel String
+  title String
+  body String
+  image String?
+  position Int @default(0)
+  active Boolean @default(false)
+  startsAt DateTime?
+  endsAt DateTime?
+  updatedAt DateTime @updatedAt
+  @@index([channel, active, position])
+}
+
+model SupportRequest {
+  id String @id @default(uuid())
+  userId String
+  kind String
+  subject String
+  message String
+  status String @default("open")
+  createdAt DateTime @default(now())
+  @@index([status, createdAt])
+}
+
+model ServiceOverride {
+  id String @id
+  description String
+  available Boolean @default(true)
+  createdAt DateTime @default(now())
+}
+
+model MerchantPlanOverride {
+  id String @id
+  amountPaise Int
+  days Int
+  limit Int?
+  available Boolean @default(true)
+  createdAt DateTime @default(now())
+}
+
 model MarketplaceStore {
   userId String @id
   user User @relation(fields: [userId], references: [id])
   name String
   description String
+  username String? @unique
+  profile Json?
+  plan String?
+  pendingPlan String?
+  subscriptionIntent String? @unique
+  subscriptionStatus String @default("pending")
+  subscriptionStart DateTime?
+  subscriptionEnd DateTime?
+  subscriptionReference String?
+  subscriptionProductLimit Int?
+  merchantSuspended Boolean @default(false)
   products MarketplaceProduct[]
+  followers MarketplaceFollow[]
 }
 
 model MarketplaceProduct {
@@ -54,13 +125,119 @@ model MarketplaceProduct {
   stock Int
   image String
   active Boolean @default(true)
+  images Json?
+  lowStockThreshold Int @default(5)
+  deletedAt DateTime?
+  createdAt DateTime? @default(now())
+  reviews MarketplaceReview[]
+  announcements MarketplacePost[]
+  variants MarketplaceVariant[]
   @@index([sellerId])
+}
+
+model MarketplaceFollow {
+  userId String
+  storeId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  store MarketplaceStore @relation(fields: [storeId], references: [userId], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  following Boolean @default(true)
+  @@id([userId, storeId])
+  @@index([storeId, createdAt])
+}
+
+model MarketplaceProductState {
+  userId String
+  productKey String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  saved Boolean @default(false)
+  liked Boolean @default(false)
+  @@id([userId, productKey])
+}
+
+model MarketplaceSocialPreference {
+  userId String @id
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  storeUpdates Boolean @default(true)
+}
+
+model MarketplaceReview {
+  id String @id @default(uuid())
+  userId String
+  productId String
+  orderId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product MarketplaceProduct @relation(fields: [productId], references: [id])
+  rating Int
+  text String
+  image String?
+  reply String?
+  repliedAt DateTime?
+  createdAt DateTime @default(now())
+  reports MarketplaceReviewReport[]
+  @@unique([userId, productId])
+  @@index([productId, createdAt])
+  @@index([userId, repliedAt])
+}
+
+model MarketplaceReviewReport {
+  reviewId String
+  userId String
+  reason String
+  createdAt DateTime @default(now())
+  review MarketplaceReview @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@id([reviewId, userId])
+  @@index([createdAt])
+}
+
+model MarketplacePost {
+  id String @id @default(uuid())
+  productId String
+  product MarketplaceProduct @relation(fields: [productId], references: [id])
+  kind String
+  text String
+  createdAt DateTime @default(now())
+  @@index([productId, createdAt])
+}
+
+model MarketplaceVariant {
+  id String @id @default(uuid())
+  productId String
+  product MarketplaceProduct @relation(fields: [productId], references: [id], onDelete: Cascade)
+  attributes Json
+  price Int
+  original Int
+  stock Int
+  active Boolean @default(true)
+  @@index([productId])
+}
+
+model MarketplaceAddress {
+  id String @id @default(uuid())
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  details Json
+  isDefault Boolean @default(false)
+  createdAt DateTime @default(now())
+  @@index([userId])
+}
+
+model MarketplaceCheckout {
+  id String @id
+  userId String
+  user User @relation(fields: [userId], references: [id])
+  paymentReference String @unique
+  orderIds String[]
+  total Int
+  createdAt DateTime @default(now())
+  @@index([userId])
 }
 
 model MarketplaceWallet {
   userId String @id
   user User @relation(fields: [userId], references: [id])
-  balance Int @default(0)
+  balancePaise Int @default(0)
   entries MarketplaceLedgerEntry[]
 }
 
@@ -68,7 +245,7 @@ model MarketplaceLedgerEntry {
   id String @id @default(uuid())
   userId String
   wallet MarketplaceWallet @relation(fields: [userId], references: [userId])
-  amount Int
+  amountPaise Int
   reference String @unique
   createdAt DateTime @default(now())
   @@index([userId, createdAt])
@@ -80,7 +257,11 @@ model MarketplaceOrder {
   user User @relation(fields: [userId], references: [id])
   lines Json
   total Int
+  checkoutDetails Json?
   sellerStage Int @default(0)
+  management Json?
+  managementVersion Int @default(0)
+  managementUpdatedAt DateTime?
   refunded Boolean @default(false)
   createdAt DateTime @default(now())
   @@index([userId, createdAt])
@@ -109,6 +290,59 @@ model Application {
 
   leadId          String?
   leadSyncStatus  String   @default("PENDING")
+  delivery        ApplicationDelivery?
 
   @@index([userId])
+}
+
+model ApplicationDelivery {
+  applicationId String @id
+  application Application @relation(fields: [applicationId], references: [applicationId], onDelete: Restrict, onUpdate: NoAction)
+  attempts Int @default(0)
+  lastAttemptAt DateTime? @db.Timestamptz(6)
+  nextAttemptAt DateTime? @default(now()) @db.Timestamptz(6)
+  reason String?
+}
+
+model ApplicationDemoRegistration {
+  applicationId String   @id
+  userId        String
+  service       String
+  department    String
+  staff         String
+  amountPaise   Int
+  reference     String   @unique
+  termsVersion  String
+  acceptedAt    DateTime @default(now())
+  syncedAt      DateTime?
+  confirmationDelivery RegistrationConfirmationDelivery?
+
+  @@index([userId])
+}
+
+model RegistrationConfirmationDelivery {
+  applicationId String @id
+  registration ApplicationDemoRegistration @relation(fields: [applicationId], references: [applicationId], onDelete: Restrict, onUpdate: NoAction)
+  attempts Int @default(0)
+  lastAttemptAt DateTime? @db.Timestamptz(6)
+  nextAttemptAt DateTime? @default(now()) @db.Timestamptz(6)
+  reason String?
+}
+
+model ApplicationDemoCredit {
+  id           String    @id @default(uuid())
+  userId       String
+  applicationId String?
+  purpose      String    @default("application")
+  amountPaise  Int
+  utr          String    @unique
+  mime         String
+  evidence     Bytes
+  status       String    @default("pending")
+  remarks      String?
+  reviewedBy   String?
+  reviewedAt   DateTime?
+  createdAt    DateTime  @default(now())
+
+  @@index([userId, createdAt])
 }

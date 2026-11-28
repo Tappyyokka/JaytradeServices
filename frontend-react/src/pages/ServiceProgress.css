@@ -1,0 +1,9 @@
+.service-progress h4 { margin-block: 14px 5px; }
+.service-progress progress { width: 100%; accent-color: #e58c40; }
+.service-progress :is(ol, ul) { padding-inline-start: 1.2rem; }
+.service-progress li { margin: 5px 0; }
+.service-progress time { display: block; font-size: .85rem; }
+.service-progress-document { padding-block: 10px; border-bottom: 1px solid var(--registration-border); }
+.service-progress-document form { display: flex; flex-wrap: wrap; gap: 10px; align-items: end; }
+.service-progress-document label { display: grid; gap: 6px; max-width: 100%; }
+.service-progress-document input { max-width: 100%; }

@@ -35,6 +35,7 @@ import {
 } from "react-icons/fa6";
 
 import indipayLogo from "../assets/images/logo-transparent2.png";
+import { selectCatalogService, serviceCatalog as categories } from "./serviceCatalog";
 import "./Home.css";
 import "./DetailedServices.css";
 
@@ -90,6 +91,7 @@ function AnimatedIcon({
 }
 
 function DetailedServices({
+  serviceOverrides = {},
   onBack,
   onSelectService,
   onSelectLegalService,
@@ -107,283 +109,6 @@ function DetailedServices({
 
 
   
-const categories = [
-  {
-    id: "financial-services",
-    title: "Financial Services",
-    description: "Financial solutions for your needs",
-    icon: "bank",
-    services: [
-      {
-        name: "Housing Loan",
-        icon: "home",
-        image: `${import.meta.env.BASE_URL}images/icons/housing-loan.jpeg`,
-      },
-      {
-        name: "Property Loan",
-        icon: "building",
-        image: `${import.meta.env.BASE_URL}images/icons/property-loan.jpeg`,
-      },
-      {
-        name: "Personal Loan",
-        icon: "user",
-        image: `${import.meta.env.BASE_URL}images/icons/personal-loan.jpeg`,
-      },
-      {
-        name: "Business Loan – Secured",
-        icon: "briefcase",
-        image: `${import.meta.env.BASE_URL}images/icons/bl-secured.jpeg`,
-      },
-      {
-        name: "Business Loan – Unsecured",
-        icon: "briefcase",
-        image: `${import.meta.env.BASE_URL}images/icons/bl-unsecured.jpeg`,
-      },
-      {
-        name: "Take Over Loan",
-        icon: "exchange",
-        image: `${import.meta.env.BASE_URL}images/icons/Takeover-loan.png`,
-      },
-      {
-        name: "MSME Loan",
-        icon: "building",
-        image: `${import.meta.env.BASE_URL}images/icons/MSME-loan.png`,
-      },
-    ],
-  },
-  {
-    id: "legal-services",
-    title: "Legal Services",
-    description: "Documentation, registration and compliance services.",
-    icon: "file",
-    services: [
-      {
-        name: "CIBIL Report",
-        icon: "report",
-        image: `${import.meta.env.BASE_URL}images/icons/Cibil.png`,
-      },
-      {
-        name: "MSME",
-        icon: "building",
-        image: `${import.meta.env.BASE_URL}images/icons/MSME.png`,
-      },
-      {
-        name: "Mudra Project Report (up to ₹5 lakh)",
-        icon: "file",
-        image: `${import.meta.env.BASE_URL}images/icons/PR-upto5.png`,
-      },
-      {
-        name: "Mudra Project Report (above ₹5 lakh)",
-        icon: "file",
-        image: `${import.meta.env.BASE_URL}images/icons/PR-above5.png`,
-      },
-      {
-        name: "GST Registration",
-        icon: "receipt",
-        image: `${import.meta.env.BASE_URL}images/icons/GST.png`,
-      },
-      {
-        name: "ITR – Income Tax Filing",
-        icon: "file",
-        image: `${import.meta.env.BASE_URL}images/icons/ITR.png`,
-      },
-      {
-        name: "FSSAI Registration Fee",
-        icon: "certificate",
-        image: `${import.meta.env.BASE_URL}images/icons/FSSAI.png`,
-      },
-      {
-        name: "FSSAI License Fee",
-        icon: "shield",
-        image: `${import.meta.env.BASE_URL}images/icons/FSSAI.png`,
-      },
-      {
-        name: "FSSAI Registration Modification",
-        icon: "file",
-        image: `${import.meta.env.BASE_URL}images/icons/FSSAI.png`,
-      },
-      {
-        name: "FSSAI License Modification",
-        icon: "shield",
-        image: `${import.meta.env.BASE_URL}images/icons/FSSAI.png`,
-      },
-      {
-        name: "FSSAI Manufacture Registration",
-        icon: "certificate",
-        image: `${import.meta.env.BASE_URL}images/icons/FSSAI.png`,
-      },
-      {
-        name: "FSSAI Manufacture License",
-        icon: "shield",
-        image: `${import.meta.env.BASE_URL}images/icons/FSSAI.png`,
-      },
-      {
-        name: "Import Export Code",
-        icon: "world",
-        image: `${import.meta.env.BASE_URL}images/icons/import-export.png`,
-      },
-      {
-        name: "ISO Certificate",
-        icon: "certificate",
-        image: `${import.meta.env.BASE_URL}images/icons/ISO.png`,
-      },
-      {
-        name: "Private Limited Company Registration",
-        icon: "building",
-        image: `${import.meta.env.BASE_URL}images/icons/PVT-LTD.png`,
-      },
-      {
-        name: "Partnership Registration Only",
-        icon: "users",
-        image: `${import.meta.env.BASE_URL}images/icons/partner-reg.png`,
-      },
-      {
-        name: "Partnership Without Registration (PAN + Deed)",
-        icon: "file",
-        image: `${import.meta.env.BASE_URL}images/icons/partnership-without-reg.png`,
-      },
-      {
-        name: "Partnership With Registration (REG + PAN + Deed)",
-        icon: "report",
-        image: `${import.meta.env.BASE_URL}images/icons/partnership-with-reg.png`,
-      },
-      {
-        name: "Limited Liability Partnership Registration (LLP)",
-        icon: "building",
-        image: `${import.meta.env.BASE_URL}images/icons/LLP.png`,
-      },
-      {
-        name: "Trademark - Individual, MSME (Without Track Records)",
-        icon: "trademark",
-        image: `${import.meta.env.BASE_URL}images/icons/Trademark.png`,
-      },
-      {
-        name: "Trademark - Individual, MSME (With Track Records)",
-        icon: "trademark",
-        image: `${import.meta.env.BASE_URL}images/icons/Trademark.png`,
-      },
-      {
-        name: "Trademark - LLP/Co/PS (Other Than MSME Without Track Records)",
-        icon: "trademark",
-        image: `${import.meta.env.BASE_URL}images/icons/Trademark.png`,
-      },
-      {
-        name: "Trademark - LLP/Co/PS (Other Than MSME With Track Records)",
-        icon: "trademark",
-        image: `${import.meta.env.BASE_URL}images/icons/Trademark.png`,
-      },
-      {
-        name: "Trademark - Ownership Change",
-        icon: "trademark",
-        image: `${import.meta.env.BASE_URL}images/icons/Trademark.png`,
-      },
-      {
-        name: "PCC - Police Clearance Certificate",
-        icon: "shield",
-        image: `${import.meta.env.BASE_URL}images/icons/PCC.png`,
-      },
-      {
-        name: "Vyapar Mithra",
-        icon: "user",
-        image: `${import.meta.env.BASE_URL}images/icons/vyaparmithra.png`,
-      },
-      {
-        name: "Vyapar Mithra Plus",
-        icon: "user",
-        image: `${import.meta.env.BASE_URL}images/icons/vyaparmithra-plus.png`,
-      },
-      {
-        name: "Vyapar Mithra All In One",
-        icon: "user",
-        image: `${import.meta.env.BASE_URL}images/icons/vyaparmithra-allinone.png`,
-      },
-    ],
-  },
-  {
-    id: "business-development",
-    title: "Business Development",
-    description: "Business opportunities and partnership programmes.",
-    icon: "briefcase",
-    services: [
-      {
-        name: "Business Associate",
-        icon: "users",
-        image: `${import.meta.env.BASE_URL}images/icons/BA.png`,
-      },
-      {
-        name: "Premium Franchise",
-        icon: "store",
-        image: `${import.meta.env.BASE_URL}images/icons/PF.png`,
-      },
-      {
-        name: "Normal Franchise",
-        icon: "building",
-        image: `${import.meta.env.BASE_URL}images/icons/NF.png`,
-      },
-      {
-        name: "Virtual Franchise",
-        icon: "world",
-        image: `${import.meta.env.BASE_URL}images/icons/VF.png`,
-      },
-    ],
-  },
-  {
-    id: "jaytrade-jobs",
-    title: "Jaytrade Jobs",
-    description: "Explore our registration and employment-related services.",
-    icon: "school",
-    services: [
-      {
-        name: "Udyog Registration",
-        icon: "report",
-        image: `${import.meta.env.BASE_URL}images/icons/Udyog.png`,
-      },
-      {
-        name: "Udyog Plus Registration",
-        icon: "shield",
-        image: `${import.meta.env.BASE_URL}images/icons/Udplus.png`,
-      },
-      {
-        name: "Standard Registration",
-        icon: "file",
-        image: `${import.meta.env.BASE_URL}images/icons/Standard.png`,
-      },
-      {
-        name: "Corporate Plus",
-        icon: "building",
-        image: `${import.meta.env.BASE_URL}images/icons/Corporate.png`,
-      },
-    ],
-  },
-  {
-    id: "jaytrade-times",
-    title: "Jaytrade Times & Technologies",
-    description: "Media, advertising and technology solutions.",
-    icon: "news",
-    services: [
-      {
-        name: "Growup Package",
-        icon: "briefcase",
-        image: `${import.meta.env.BASE_URL}images/icons/growup.png`,
-      },
-      {
-        name: "Standard Package",
-        icon: "file",
-        image: `${import.meta.env.BASE_URL}images/icons/ST.png`,
-      },
-      {
-        name: "Premium Package",
-        icon: "certificate",
-        image: `${import.meta.env.BASE_URL}images/icons/premium.png`,
-      },
-      {
-        name: "Corporate Package",
-        icon: "building",
-        image: `${import.meta.env.BASE_URL}images/icons/Corp.png`,
-      },
-    ],
-  },
-];
 
 const normalizedSearch = serviceSearch.trim().toLowerCase();
 
@@ -393,7 +118,8 @@ const filteredCategories = categories
       .toLowerCase()
       .includes(normalizedSearch);
 
-    const matchingServices = category.services.filter((service) =>
+    const available = category.services.filter((service) => serviceOverrides[service.name.toLowerCase()]?.available !== false);
+    const matchingServices = available.filter((service) =>
       service.name.toLowerCase().includes(normalizedSearch)
     );
 
@@ -401,7 +127,7 @@ const filteredCategories = categories
       ...category,
       services:
         !normalizedSearch || categoryMatches
-          ? category.services
+          ? available
           : matchingServices,
     };
   })
@@ -421,20 +147,9 @@ const filteredCategories = categories
   "jaytrade-times",
 ];
 
-  const handleServiceClick = (category, service) => {
-  if (category.id === "legal-services") {
-    onSelectLegalService?.(service);
-  } else if (
-    category.id === "financial-services" ||
-    category.id === "business-development"
-  ) {
-    onSelectService?.(service);
-  } else if (category.id === "jaytrade-jobs") {
-    onOpenJobs?.();
-  } else if (category.id === "jaytrade-times") {
-    onOpenTimes?.();
-  }
-};
+  const handleServiceClick = (category, service) => selectCatalogService(category.id, service, {
+    onSelectService, onSelectLegalService, onOpenJobs, onOpenTimes,
+  });
 
   const handleServiceKeyDown = (event, category, service) => {
     if (event.key === "Enter" || event.key === " ") {
@@ -629,15 +344,14 @@ const filteredCategories = categories
         </section>
 
         <div className="indipay-services-list">
-  {filteredCategories.map((category, index) => {
+          {normalizedSearch && filteredCategories.length === 0 && (
+            <div className="indipay-services-no-results" role="status">
+              <strong>No services found</strong>
+              <p>Try another service name or category.</p>
+            </div>
+          )}
+          {filteredCategories.map((category) => {
             const isClickable = clickableCategories.includes(category.id);
-
-            {normalizedSearch && filteredCategories.length === 0 && (
-  <div className="indipay-services-no-results" role="status">
-    <strong>No services found</strong>
-    <p>Try another service name or category.</p>
-  </div>
-)}
 
             return (
               <section
@@ -646,14 +360,7 @@ const filteredCategories = categories
                 id={category.id}
               >
                 <div className="indipay-detail-category-heading">
-                  <div className="indipay-detail-category-icon">
-                    <AnimatedIcon name={category.icon} size={27} />
-                  </div>
-
                   <div className="indipay-detail-category-heading-text">
-                    <span className="indipay-detail-category-number">
-                      CATEGORY {String(index + 1).padStart(2, "0")}
-                    </span>
                     <h2>{category.title}</h2>
                     <p>{category.description}</p>
                   </div>

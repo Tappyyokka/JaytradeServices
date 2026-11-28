@@ -15,6 +15,13 @@
   padding: 35px 5% 110px;
 }
 
+.indipay-wallet-back {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 42px;
+  margin-bottom: 12px; padding: 6px 0; border: 0; background: transparent;
+  color: #bd6415; font-weight: 750; cursor: pointer;
+}
+.wallet-load-error { padding: 12px 14px; border: 1px solid #dc8663; border-radius: 10px; color: #9e3c21; background: #fff3ee; }
+
 /* Wallet header */
 .indipay-wallet-page .indipay-app-header {
   background: #101D36 !important;
@@ -71,6 +78,30 @@
   background: #fff0df;
   color: #101D36;
   border-radius: 15px;
+}
+
+.indipay-wallet-page .wallet-heading-controls { display: flex; align-items: center; gap: 8px; }
+.indipay-wallet-page .wallet-heading-controls > button {
+  display: grid; place-items: center; width: 44px; height: 44px;
+  border: 1px solid #d9e2ed; border-radius: 12px; background: #fff;
+  color: #101d36; cursor: pointer;
+}
+.indipay-wallet-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin: 24px 0 0; }
+.indipay-wallet-tabs button {
+  min-height: 44px; padding: 9px 16px; border: 1px solid #d9e2ed;
+  border-radius: 10px; background: #fff; color: #101d36;
+  font-weight: 700; cursor: pointer;
+}
+.indipay-wallet-tabs button:hover,
+.indipay-wallet-tabs button[aria-current="page"] {
+  border-color: #f28c28; background: #fff0df; color: #a95812;
+}
+.indipay-app-shell.dark-mode .indipay-wallet-page .wallet-heading-controls > button,
+.indipay-app-shell.dark-mode .indipay-wallet-tabs button {
+  border-color: #30425c; background: #172438; color: #e8edf5;
+}
+.indipay-app-shell.dark-mode .indipay-wallet-tabs button[aria-current="page"] {
+  border-color: #f28c28; color: #ffb269;
 }
 
 /* Physical Wallet Card */
@@ -714,6 +745,27 @@
   overflow-wrap: anywhere;
 }
 
+.wallet-profile-merchant {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  width: 100%;
+  margin: 12px 0;
+  padding: 8px 12px;
+  border: 1px solid #efcba6;
+  border-radius: 9px;
+  background: #fff1e0;
+  color: #8b4109;
+  cursor: pointer;
+}
+.wallet-profile-merchant:focus-visible { outline: 2px solid #d97812; }
+.indipay-app-shell[data-theme="dark"] .wallet-profile-merchant {
+  background: #39291e;
+  border-color: #835932;
+  color: #ffe7cb;
+}
+
 .wallet-profile-logout {
   width: 100%;
   display: flex;
@@ -742,7 +794,6 @@
   margin: 0 auto 30px;
   perspective: 1200px;
   cursor: pointer;
-  animation: walletFloat 4s ease-in-out infinite;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -885,11 +936,6 @@
   pointer-events: none;
 }
 
-/* Floating animation */
-.wallet-card-scene {
-  animation: walletFloat 4s ease-in-out infinite;
-}
-
 /* Mobile adjustments */
 @media (max-width: 650px) {
   .wallet-card-scene,
@@ -923,24 +969,11 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .wallet-card-scene {
-    animation: none;
-  }
-
   .wallet-card-flipper {
     transition: none;
   }
 }
 
-@keyframes walletFloat {
-  0%, 100% {
-    transform: translateY(0);
-  }
-
-  50% {
-    transform: translateY(-9px);
-  }
-}
 
 
 /* =========================================
@@ -1169,4 +1202,36 @@
 .indipay-wallet-page .wallet-info-modal,
 .indipay-wallet-page .wallet-profile-panel {
   transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+}
+
+/* =====================================
+   WALLET HEADER FIX
+===================================== */
+
+.indipay-wallet-page .indipay-wallet-header-title {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  color: #ffffff;
+  white-space: nowrap;
+}
+
+.indipay-wallet-page .indipay-app-header {
+  gap: 16px;
+}
+
+@media (max-width: 650px) {
+  .indipay-wallet-page .indipay-wallet-header-title {
+    font-size: 15px;
+    letter-spacing: 0;
+  }
+
+  .indipay-wallet-page .indipay-app-header {
+    gap: 10px;
+  }
 }

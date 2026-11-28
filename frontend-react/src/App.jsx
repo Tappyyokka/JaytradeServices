@@ -1,20 +1,23 @@
-import { useState, useEffect, useRef } from "react";
+import { lazy, Suspense, useState, useEffect, useRef } from "react";
 
 
 import Footer from "./components/common/Footer";
+import { LoadingSkeleton } from "./components/common/Feedback";
 import API_BASE_URL from "./config/api";
 import useMarketplaceWallet from "./wallet/useMarketplaceWallet";
 import { MessageCircle, Phone, X, Bot } from "lucide-react";
 import Chatbot from "./components/common/Chatbot";
 import Announcements from "./pages/Announcements";
 import ApplicationForm from "./pages/ApplicationForm";
-import ApplicationStatus from "./pages/ApplicationStatus";
+import AdminCentre from "./pages/AdminCentre";
 import BottomNav from "./components/common/BottomNav";
 import LearnAndEarn from "./pages/LearnAndEarn";
 import CustomerApplications from "./pages/CustomerApplications";
+import ApplicationRegistrationPayment from "./pages/ApplicationRegistration";
+import AddMoney from "./pages/AddMoney";
 import Wallet from "./pages/Wallet";
-import Marketplace from "./pages/Marketplace/Marketplace";
-import MarketplaceSellerFlow from "./pages/Marketplace/MarketplaceSellerFlow";
+import { accountIdentity } from "./auth/accountIdentity";
+import { canonicalAccountUrl, safeReturnUrl, SUPERSTORE_PATH } from "./auth/accountRoutes";
 import Rewards from "./pages/Rewards";
 import Refer from "./pages/Refer";
 import Jobs from "./pages/Jobs";
@@ -28,20 +31,30 @@ import Register from "./pages/Register";
 import Home from "./pages/Home";
 import DetailedServices from "./pages/DetailedServices";
 import ServiceDetail from "./pages/ServiceDetail";
+import "./pages/Marketplace/Marketplace.css";
+
+const Marketplace = lazy(() =>
+  import("./pages/Marketplace/MarketplacePreview")
+);
 
 const PAGE_PATHS = {
-  marketplace: "/marketplace",
-  "seller-register": "/marketplace/seller/register",
-  "seller-login": "/marketplace/seller/login",
-  "seller-dashboard": "/marketplace/seller/dashboard",
+  marketplace: SUPERSTORE_PATH,
+  "merchant-plans": "/merchant/plans",
+  "merchant-register": "/merchant/register",
+  "seller-dashboard": SUPERSTORE_PATH + "/seller/dashboard",
   home: "/",
   login: "/login",
+  "admin-login": "/admin/login",
+  admin: "/admin",
   register: "/register",
   services: "/services",
   "service-detail": "/services/detail",
   "legal-details": "/legal-services/detail",
   "application-form": "/apply",
   "customer-applications": "/applications",
+  "application-payment": "/applications/payment",
+  "wallet-add-money": "/wallet/add-money",
+  "wallet-credit-admin": "/admin/wallet-credit-requests",
   "application-status": "/admin/applications",
   announcements: "/announcements",
   wallet: "/wallet",
@@ -63,8 +76,9 @@ function pageFromPath(pathname) {
 
 function App() {
   const [currentPage, setCurrentPage] = useState(() =>
-    pageFromPath(window.location.pathname)
+    pageFromPath(canonicalAccountUrl(window.location.href).pathname)
   );
+  const [, updateLocation] = useState(0);
   const [sessionLoading, setSessionLoading] = useState(true);
   const isHistoryNavigation = useRef(false);
   const [darkMode, setDarkMode] = useState(() => {
@@ -76,19 +90,37 @@ useEffect(() => {
 }, [darkMode]);
   const [customer, setCustomer] = useState(null);
   const marketplaceWallet = useMarketplaceWallet(customer);
+  const refreshWallet = marketplaceWallet.refresh;
+  useEffect(() => {
+    if (customer?.id) void refreshWallet();
+  }, [currentPage, customer?.id, refreshWallet]);
+  const identity = accountIdentity(customer, marketplaceWallet.account);
   const [selectedService, setSelectedService] = useState(null);
+  const [serviceOverrides, setServiceOverrides] = useState({});
+  useEffect(() => {
+    const controller = new AbortController();
+    fetch(API_BASE_URL + "/api/admin-centre/service-catalogue", { signal: controller.signal })
+      .then((response) => response.ok ? response.json() : [])
+      .then((rows) => { if (Array.isArray(rows) && !controller.signal.aborted) setServiceOverrides(Object.fromEntries(rows.map((row) => [row.id, row]))); })
+      .catch(() => {});
+    return () => controller.abort();
+  }, []);
   const [applicationReturnPage, setApplicationReturnPage] = useState("service-detail");
   const [timesReturnPage, setTimesReturnPage] = useState("home");
   const [supportMenuOpen, setSupportMenuOpen] = useState(false);
+  const [addMoneyResultScreen, setAddMoneyResultScreen] = useState(false);
 const [chatOpenSignal, setChatOpenSignal] = useState(0);
 
   useEffect(() => {
     const handlePopState = () => {
-      const nextPage = pageFromPath(window.location.pathname);
+      const route = canonicalAccountUrl(window.location.href);
+      if (route.href !== window.location.href) window.history.replaceState(window.history.state, "", route.href);
+      const nextPage = pageFromPath(route.pathname);
       if (nextPage !== currentPage) {
         isHistoryNavigation.current = true;
         setCurrentPage(nextPage);
       }
+      updateLocation((value) => value + 1);
       window.scrollTo(0, 0);
     };
 
@@ -98,6 +130,10 @@ const [chatOpenSignal, setChatOpenSignal] = useState(0);
 
   useEffect(() => {
     const path = PAGE_PATHS[currentPage] || PAGE_PATHS.home;
+    const route = canonicalAccountUrl(window.location.href);
+    if (route.href !== window.location.href && route.pathname === path) {
+      window.history.replaceState({ page: currentPage }, "", route.href);
+    }
 
     if (isHistoryNavigation.current) {
       isHistoryNavigation.current = false;
@@ -109,11 +145,50 @@ const [chatOpenSignal, setChatOpenSignal] = useState(0);
     }
   }, [currentPage]);
 
+  const route = canonicalAccountUrl(window.location.href);
+  const params = route.pathname === PAGE_PATHS[currentPage] ? route.searchParams : new URLSearchParams();
+  const returnTo = safeReturnUrl(params.get("next") ?? params.get("returnTo"), window.location.origin, PAGE_PATHS);
+  const loginMode = currentPage === "admin-login" ? "admin" : params.get("mode") === "merchant" ? "merchant" : "customer";
+
+  function visitUrl(url, replace = false) {
+    const page = pageFromPath(new URL(url, window.location.origin).pathname);
+    const currentUrl = window.location.pathname + window.location.search + window.location.hash;
+    if (currentUrl !== url) {
+      if (replace) window.history.replaceState({ page }, "", url);
+      else window.history.pushState({ page }, "", url);
+    }
+    setCurrentPage(page);
+    updateLocation((value) => value + 1);
+    window.scrollTo(0, 0);
+  }
+
+  function visitPage(page, options = {}, hash = "", replace = false) {
+    const query = new URLSearchParams(Object.entries(options).filter(([, value]) => value)).toString();
+    visitUrl(PAGE_PATHS[page] + (query ? "?" + query : "") + hash, replace);
+  }
+
+  function openLogin(next, mode = "customer", replace = false) {
+    visitPage(mode === "admin" ? "admin-login" : "login", { next, mode: mode === "merchant" ? mode : null }, "", replace);
+  }
+
+  function finishAuthentication(user, next = returnTo) {
+    setCustomer(user);
+    visitUrl(next ?? PAGE_PATHS.home, true);
+  }
+
+  const openMerchantPlans = () => visitPage("marketplace");
+const openMyStore = () => visitPage("marketplace");
+
+  function activeUrl() {
+    return window.location.pathname + window.location.search + window.location.hash;
+  }
+
   const handleBottomNavigation = (page) => {
   if (page === "me") {
     setCurrentPage(customer ? "home" : "login");
   } else if (page === "refer") {
-    setCurrentPage(customer ? "refer" : "login");
+    if (!customer) { openLogin(PAGE_PATHS.refer); return; }
+    setCurrentPage("refer");
   } else {
     setCurrentPage(page);
   }
@@ -147,9 +222,7 @@ const pageToTab = {
 const activeTab = pageToTab[currentPage] || "";
 
   function openMarketplaceWallet(view) {
-    const path = PAGE_PATHS.marketplace + "#wallet?" + new URLSearchParams({ view });
-    window.history.pushState({ page: "marketplace" }, "", path);
-    handleBottomNavigation("marketplace");
+    visitPage("marketplace", {}, "#wallet?" + new URLSearchParams({ view }));
   }
 
   useEffect(() => {
@@ -210,7 +283,11 @@ const handleOpenTimes = () => {
 
 const protectedPages = [
   "customer-applications",
+  "application-payment",
+  "wallet-add-money",
+  "wallet-credit-admin",
   "application-status",
+  "admin",
   "application-form",
   "wallet",
   "rewards",
@@ -222,7 +299,7 @@ const requiresLogin = !sessionLoading && !customer && isProtectedPage;
 
    let pageContent;
 
-  if (sessionLoading && (isProtectedPage || ["seller-register", "seller-login", "seller-dashboard"].includes(currentPage))) {
+  if (sessionLoading && (isProtectedPage || ["merchant-plans", "merchant-register", "seller-dashboard", "login", "admin-login"].includes(currentPage))) {
   pageContent = (
     <div className="indipay-login-required" aria-live="polite">
       <div className="indipay-login-required-card">
@@ -241,19 +318,13 @@ const requiresLogin = !sessionLoading && !customer && isProtectedPage;
         </p>
 
         <button
-          onClick={() => {
-            setCurrentPage("login");
-            window.scrollTo(0, 0);
-          }}
+          onClick={() => openLogin(activeUrl(), ["admin", "application-status", "wallet-credit-admin"].includes(currentPage) ? "admin" : "customer")}
         >
           Login to Continue
         </button>
 
         <button
-          onClick={() => {
-            setCurrentPage("register");
-            window.scrollTo(0, 0);
-          }}
+          onClick={() => visitPage("register", { next: activeUrl() })}
         >
           Create Account
         </button>
@@ -269,22 +340,17 @@ const requiresLogin = !sessionLoading && !customer && isProtectedPage;
       </div>
     </div>
   );
-} else if (currentPage === "login") {
+} else if (currentPage === "login" || currentPage === "admin-login") {
   pageContent = (
     <Login
-      onBack={() => {
-        setCurrentPage("home");
-        window.scrollTo(0, 0);
-      }}
-      onRegister={() => {
-        setCurrentPage("register");
-        window.scrollTo(0, 0);
-      }}
-      onSuccess={(user) => {
-    setCustomer(user);
-    setCurrentPage("home");
-    window.scrollTo(0, 0);
-}}
+      mode={loginMode}
+      onModeChange={(mode) => openLogin(returnTo, mode, true)}
+      onBack={() => visitPage("home")}
+      onRegister={() => visitPage("register", { next: returnTo })}
+      onMerchantRegister={openMerchantPlans}
+      onPlans={openMerchantPlans}
+      onAdmin={() => openLogin(null, "admin")}
+      onSuccess={(user) => finishAuthentication(user, returnTo ?? (loginMode === "admin" ? PAGE_PATHS.admin : null))}
     />
   );
 } else if (currentPage === "register") {
@@ -294,20 +360,26 @@ const requiresLogin = !sessionLoading && !customer && isProtectedPage;
         setCurrentPage("home");
         window.scrollTo(0, 0);
       }}
-      onLogin={() => {
-        setCurrentPage("login");
-        window.scrollTo(0, 0);
-      }}
-      onSuccess={(user) => {
-    setCustomer(user);
-    setCurrentPage("home");
-    window.scrollTo(0, 0);
-}}
+      onLogin={() => openLogin(returnTo)}
+      onSuccess={finishAuthentication}
     />
   );
 } else if (currentPage === "announcements"){
     pageContent = (
       <Announcements
+        customer={customer}
+        onOpenRegistrationActivity={({ id, section, billId }) => {
+          if (section === "superstore-credit") visitPage("wallet-add-money", { request: id, purchase: "checkout" });
+          else if (section === "credit") visitPage("wallet-add-money", { request: id });
+          else if (section === "bill") visitPage("customer-applications", { id, view: "completed", bill: billId });
+          else visitPage("customer-applications", { id, view: section === "completed" ? "completed" : null });
+        }}
+        onOpenSuperstoreActivity={({ id, seller, feed, storeId, productId }) => {
+          if (feed) visitPage("marketplace", {}, "#following");
+          else if (storeId) visitPage("marketplace", {}, "#store/live-" + encodeURIComponent(storeId));
+          else if (productId) visitPage("marketplace", {}, "#details?" + new URLSearchParams({ id: productId }) + "&reviews=1");
+          else visitPage("marketplace", {}, (seller ? "#seller?" : "#orders?") + new URLSearchParams({ id }));
+        }}
         onBack={() => {
           setCurrentPage("home");
           window.scrollTo(0, 0);
@@ -318,6 +390,12 @@ const requiresLogin = !sessionLoading && !customer && isProtectedPage;
  } else if (currentPage === "customer-applications") {
     pageContent = (
       <CustomerApplications
+        key={params.get("view") + ":" + params.get("id") + ":" + params.get("bill")}
+        initialFilter={params.get("view") === "completed" ? "completed" : "all"}
+        targetId={params.get("id")}
+        targetBillId={params.get("bill")}
+        onPay={(id) => visitPage("application-payment", { id })}
+        onAddMoney={(id, additional) => visitPage("wallet-add-money", { id, additional })}
         onBack={() => {
           setCurrentPage("home");
           window.scrollTo(0, 0);
@@ -327,16 +405,37 @@ const requiresLogin = !sessionLoading && !customer && isProtectedPage;
           window.scrollTo(0, 0);
         }}
       />
-    );   
-      } else if (currentPage === "application-status") {
-    pageContent = (
-      <ApplicationStatus
-        onBack={() => {
-          setCurrentPage("home");
-          window.scrollTo(0, 0);
-        }}
-      />
     );
+  } else if (currentPage === "application-payment") {
+    const id = params.get("id") ?? "";
+    pageContent = <ApplicationRegistrationPayment key={id} id={id}
+      onBack={() => visitPage("customer-applications", { id })}
+      onComplete={() => visitPage("customer-applications", { id, view: "completed" }, "", true)}
+      onAddMoney={(applicationId, additional) => visitPage("wallet-add-money", { id: applicationId, additional })} />;
+  } else if (currentPage === "wallet-add-money") {
+    const id = params.get("id");
+    const requestId = params.get("request");
+    const purchase = params.get("purchase");
+    const superstore = purchase === "wallet" || (typeof purchase === "string" && /^checkout(?:\?[A-Za-z0-9_%&=+-]+)?$/.test(purchase));
+    const amount = Number(params.get("additional"));
+    const nearestPaise = Math.round(amount);
+    const additional = (id || superstore) && Math.abs(amount - nearestPaise) < 0.000001 &&
+      nearestPaise > 0 && nearestPaise <= (superstore ? 1_000_000_000 : 10_000_000) ? nearestPaise : 0;
+    pageContent = <AddMoney key={id + ":" + requestId + ":" + purchase + ":" + additional} applicationId={superstore ? null : id}
+      additional={additional} requestId={requestId} superstore={superstore} returnToWallet={purchase === "wallet"}
+      darkMode={darkMode} onResultScreen={setAddMoneyResultScreen}
+      onBack={() => superstore ? visitPage("marketplace", {}, purchase === "wallet" ? "#wallet" : "#" + purchase)
+        : id ? visitPage("application-payment", { id }) : visitPage("wallet")}
+      onResume={(applicationId) => visitPage("application-payment", { id: applicationId })} />;
+  } else if (["admin", "wallet-credit-admin", "application-status"].includes(currentPage)) {
+    const initial = currentPage === "application-status" ? "applications" : currentPage === "wallet-credit-admin" ? "credits" : "dashboard";
+    pageContent = customer.role === "ADMIN" ? <AdminCentre key={currentPage} initial={initial} onExit={() => visitPage("home")}
+      onLogout={async () => {
+        await fetch(API_BASE_URL + "/api/auth/logout", { method: "POST", credentials: "include" });
+        setCustomer(null);
+        visitPage("admin-login");
+      }} /> : <main className="registration-screen"><h1>Administrator access required</h1>
+        <button type="button" onClick={() => openLogin(PAGE_PATHS.admin, "admin")}>Admin sign in</button></main>;
   } else if (currentPage === "application-form") {
     pageContent = (
       <ApplicationForm
@@ -395,7 +494,7 @@ onApplicationSubmitted={() => {
   } else if (currentPage === "service-detail") {
     pageContent = (
       <ServiceDetail
-  service={selectedService}
+  service={selectedService && { ...selectedService, publicDescription: serviceOverrides[selectedService.name?.toLowerCase()]?.description }}
   onBack={() => {
     setCurrentPage("services");
     window.scrollTo(0, 0);
@@ -419,6 +518,7 @@ onApplicationSubmitted={() => {
   } else if (currentPage === "services") {
     pageContent = (
       <DetailedServices
+  serviceOverrides={serviceOverrides}
   onBack={() => {
     setCurrentPage("home");
     window.scrollTo(0, 0);
@@ -453,38 +553,46 @@ onOpenAboutUs={handleOpenAboutUs}
 />
     );
     
-  } else if (["seller-register", "seller-login"].includes(currentPage)) {
+  } else if (["merchant-plans", "merchant-register"].includes(currentPage)) {
     pageContent = (
-      <MarketplaceSellerFlow customer={customer} page={currentPage} navigate={(page) => {
-        setCurrentPage(page);
-        window.scrollTo(0, 0);
-      }} />
+      <Suspense fallback={<LoadingSkeleton />}>
+        <Marketplace
+          onBack={() => visitPage("home")}
+        />
+      </Suspense>
     );
   } else if (currentPage === "marketplace" || currentPage === "seller-dashboard") {
     pageContent = (
-      <Marketplace
-        initialTab={currentPage === "seller-dashboard" ? "my-store" : "shop"}
-        customer={customer}
-        walletState={{ ...marketplaceWallet, loading: sessionLoading || marketplaceWallet.loading }}
-        darkMode={darkMode}
-        onThemeChange={setDarkMode}
-        onOpenSellerRegistration={() => { setCurrentPage("seller-register"); window.scrollTo(0, 0); }}
-        onOpenSellerLogin={() => { setCurrentPage("seller-login"); window.scrollTo(0, 0); }}
-        onOpenWallet={() => { setCurrentPage("wallet"); window.scrollTo(0, 0); }}
-        onOpenIndipayPage={handleBottomNavigation}
-        onBack={() => { setCurrentPage("home"); window.scrollTo(0, 0); }}
-        onLogin={() => { setCurrentPage("login"); window.scrollTo(0, 0); }}
-      />
+      <Suspense fallback={<LoadingSkeleton />}>
+        <Marketplace
+          key={customer?.id ?? "guest"}
+          initialTab={currentPage === "seller-dashboard" ? "my-store" : "shop"}
+          customer={customer}
+          identity={identity}
+          walletState={{ ...marketplaceWallet, loading: sessionLoading || marketplaceWallet.loading }}
+          darkMode={darkMode}
+          onThemeChange={setDarkMode}
+          onOpenMerchantPlans={openMerchantPlans}
+          onOpenWallet={() => { setCurrentPage("wallet"); window.scrollTo(0, 0); }}
+          onAddMoney={(additional, purchase) => visitPage("wallet-add-money", { additional, purchase })}
+          onOpenIndipayPage={handleBottomNavigation}
+          onBack={() => { setCurrentPage("home"); window.scrollTo(0, 0); }}
+          onLogin={(mode) => openLogin(activeUrl(), mode === "merchant" ? "merchant" : "customer")}
+        />
+      </Suspense>
     );
   } else if (currentPage === "home") {
   pageContent = (
     <Home
+  serviceOverrides={serviceOverrides}
   onOpenMarketplace={() => handleBottomNavigation("marketplace")}
   onOpenAboutUs={handleOpenAboutUs}
   customer={customer}
   wallet={marketplaceWallet.wallet}
-  walletLoading={sessionLoading || marketplaceWallet.loading}
-  onOpenWalletHistory={() => openMarketplaceWallet("statements")}
+  identity={identity}
+  onOpenMerchantPlans={openMerchantPlans}
+  onOpenMyStore={openMyStore}
+  onOpenWalletHistory={() => visitPage("wallet", { view: "statements" })}
   darkMode={darkMode}
   setDarkMode={setDarkMode}
     onLogout={async () => {
@@ -518,6 +626,9 @@ onOpenRefer={() => {
         window.scrollTo(0, 0);
       }}
       onSelectService={handleSelectService}
+      onSelectLegalService={handleOpenLegalDetails}
+      onAddMoney={() => visitPage("wallet-add-money")}
+      onOpenRewards={() => visitPage("rewards")}
       onOpenApplicationStatus={() => {
     if (customer?.role === "ADMIN") {
         setCurrentPage("application-status");
@@ -568,9 +679,17 @@ else if (currentPage === "wallet") {
   pageContent = (
     <Wallet
       customer={customer}
+      onAddMoney={() => visitPage("wallet-add-money")}
+      identity={identity}
+      onOpenMerchantPlans={openMerchantPlans}
+      onOpenMyStore={openMyStore}
       wallet={marketplaceWallet.wallet}
       walletLoading={marketplaceWallet.loading}
-      onOpenWalletHistory={() => openMarketplaceWallet("history")}
+      walletError={marketplaceWallet.error}
+      creditRequests={marketplaceWallet.account?.creditRequests}
+      view={["history", "statements"].includes(params.get("view")) ? params.get("view") : "overview"}
+      onView={(view) => visitPage("wallet", view === "overview" ? {} : { view })}
+      onOpenWalletHistory={() => visitPage("wallet", { view: "history" })}
       onBack={() => {
         setCurrentPage("home");
         window.scrollTo(0, 0);
@@ -703,23 +822,25 @@ else {
 }
 
   const isAuthPage =
-    ["login", "register", "seller-register", "seller-login", "seller-dashboard"].includes(currentPage);
+    ["login", "admin-login", "register", "merchant-plans", "merchant-register", "seller-dashboard"].includes(currentPage);
+  const hideAppChrome = isAuthPage || ["admin", "application-status", "wallet-credit-admin"].includes(currentPage) || (currentPage === "wallet-add-money" && addMoneyResultScreen);
 
 return (
   <div
     className={`indipay-app-shell${darkMode ? " dark-mode" : ""}`}
     data-theme={darkMode ? "dark" : "light"}
+    data-customer-ui={!["admin", "admin-login", "application-status", "wallet-credit-admin"].includes(currentPage) || undefined}
   >
     {pageContent}
 
-  {!isAuthPage && !["marketplace", "seller-dashboard"].includes(currentPage) && (
+  {!hideAppChrome && !["marketplace", "seller-dashboard"].includes(currentPage) && (
     <BottomNav
       activeTab={activeTab}
       onNavigate={handleBottomNavigation}
     />
   )}
 
-   {!isAuthPage && !["marketplace", "seller-dashboard"].includes(currentPage) && (
+   {!hideAppChrome && !["marketplace", "seller-dashboard"].includes(currentPage) && (
       <Chatbot
         customer={customer}
         hideLauncher
@@ -758,7 +879,7 @@ return (
       />
     )}
 
-    {!isAuthPage && (
+    {!hideAppChrome && (
       <>
         {currentPage !== "home" &&
  currentPage !== "service-detail" &&

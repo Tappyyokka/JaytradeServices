@@ -13,10 +13,12 @@ import {
 import "./Login.css";
 import API_BASE_URL from "../config/api";
 
-function Login({ onBack, onRegister, onSuccess  }) {
+function Login({ mode = "customer", onModeChange, onBack, onRegister, onMerchantRegister, onPlans, onAdmin, onSuccess }) {
+  const merchant = mode === "merchant";
+  const admin = mode === "admin";
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
-    email: "",
+    identifier: "",
     password: "",
     remember: false,
   });
@@ -34,7 +36,13 @@ function Login({ onBack, onRegister, onSuccess  }) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (isSubmitting) return;
     setMessage("");
+    const identifier = formData.identifier.trim();
+    if (merchant && !/^[6-9]\d{9}$/.test(identifier) && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(identifier)) {
+      setMessage("Enter your Indipay email or 10-digit mobile number.");
+      return;
+    }
     setIsSubmitting(true);
 
     try {
@@ -47,8 +55,10 @@ function Login({ onBack, onRegister, onSuccess  }) {
                 },
                 credentials: "include",
                 body: JSON.stringify({
-                    email: formData.email,
+                    email: identifier,
                     password: formData.password,
+                    mode,
+                    remember: formData.remember,
                 }),
             }
         );
@@ -57,6 +67,12 @@ function Login({ onBack, onRegister, onSuccess  }) {
 
         if (!response.ok || !result.success) {
             setMessage(result.message || "Login failed.");
+            return;
+        }
+
+        if (admin !== (result.user?.role === "ADMIN")) {
+            await fetch(`${API_BASE_URL}/api/auth/logout`, { method: "POST", credentials: "include" }).catch(() => {});
+            setMessage(admin ? "Administrator access is required." : "Use Administrator Sign-in for this account.");
             return;
         }
 
@@ -139,27 +155,42 @@ function Login({ onBack, onRegister, onSuccess  }) {
 
         <section className="auth-form-side">
           <div className="auth-form-card">
+            {!admin && <div className="auth-account-toggle" role="group" aria-label="Account sign-in type">
+              {[["customer", "Customer Login"], ["merchant", "Merchant Login"]].map(([value, label]) => (
+                <button key={value} type="button" aria-pressed={mode === value} disabled={isSubmitting} onClick={() => {
+                  if (mode !== value) {
+                    setFormData((current) => ({ ...current, identifier: "", password: "" }));
+                    setShowPassword(false);
+                    setMessage("");
+                    onModeChange(value);
+                  }
+                }}>{label}</button>
+              ))}
+            </div>}
             <div className="auth-form-heading">
               <span className="auth-form-icon">
                 <LockKeyhole size={24} />
               </span>
               <span className="auth-form-label">WELCOME BACK</span>
-              <h2>Sign in to Indipay</h2>
-              <p>Enter your details to access your account.</p>
+              <h2>{admin ? "Administrator Sign-in" : merchant ? "Merchant Login" : "Customer Login"}</h2>
+              <p>{admin ? "Sign in to access the Indipay Admin Control Centre."
+                : merchant ? "Use your Indipay account to access your merchant features."
+                  : "Sign in to access your Indipay services and Superstore."}</p>
             </div>
 
             <form onSubmit={handleSubmit} aria-busy={isSubmitting}>
               <label className="auth-field">
-                Email Address
+                {merchant ? "Email address or mobile number" : "Email address"}
                 <span className="auth-input-wrap">
                   <Mail size={19} />
                   <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
+                    type={merchant ? "text" : "email"}
+                    name="identifier"
+                    value={formData.identifier}
                     onChange={handleChange}
-                    placeholder="Enter your email address"
-                    autoComplete="email"
+                    placeholder={merchant ? "Email or 10-digit mobile number" : "Enter your email address"}
+                    autoComplete="username"
+                    maxLength={254}
                     required
                   />
                 </span>
@@ -204,7 +235,7 @@ function Login({ onBack, onRegister, onSuccess  }) {
                   type="button"
                   className="auth-text-button"
                   onClick={() =>
-                    setMessage("Forgot password functionality will be added later.")
+                    setMessage("Contact Indipay support for account recovery.")
                   }
                 >
                   Forgot password?
@@ -212,7 +243,7 @@ function Login({ onBack, onRegister, onSuccess  }) {
               </div>
 
               <button type="submit" className="auth-submit-button" disabled={isSubmitting}>
-                {isSubmitting ? "Signing in…" : "Login to Account"} <ArrowRight size={19} />
+                {isSubmitting ? "Signing in…" : admin ? "Sign in as Administrator" : merchant ? "Login as Merchant" : "Login to Account"} <ArrowRight size={19} />
               </button>
 
               {message && (
@@ -220,12 +251,13 @@ function Login({ onBack, onRegister, onSuccess  }) {
               )}
             </form>
 
-            <div className="auth-switch">
-              Don't have an account?
-              <button type="button" onClick={onRegister}>
-                Create Account
-              </button>
-            </div>
+            {!admin && <div className="auth-switch auth-account-links">
+              {merchant ? <>
+                <button type="button" onClick={onMerchantRegister}>Register as Merchant</button>
+                <button type="button" onClick={onPlans}>Explore Merchant Plans</button>
+              </> : <button type="button" onClick={onRegister}>Create Account</button>}
+              <button type="button" className="auth-admin-link" onClick={onAdmin}>Administrator Sign-in</button>
+            </div>}
           </div>
         </section>
       </div>

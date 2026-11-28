@@ -201,36 +201,41 @@ if (referralCode && referralCode.trim()) {
     }
 });
 
-// LOGIN CUSTOMER
+// INDIPAY LOGIN
+function loginIdentifier(body) {
+    const value = body?.identifier ?? body?.email;
+    return typeof value === "string" && value.length <= 254 ? value.trim().toLowerCase() : "";
+}
+
 router.post("/login",
     rateLimit({ limit: 300, windowMs: 15 * 60 * 1000 }),
     rateLimit({
         limit: 15,
         windowMs: 15 * 60 * 1000,
-        key: (req) => typeof req.body?.email === "string" ? req.body.email.trim().toLowerCase().slice(0, 254) : null,
+        key: (req) => loginIdentifier(req.body) || null,
     }),
     async (req, res) => {
     try {
-        const { email, password } = req.body ?? {};
+        const { password, mode, remember } = req.body ?? {};
+        const identifier = loginIdentifier(req.body);
+        const byPhone = mode === "merchant" && /^[6-9]\d{9}$/.test(identifier);
 
-        if (typeof email !== "string" || !email.trim() || email.length > 254 ||
+        if (!identifier || (mode !== undefined && !["customer", "merchant", "admin"].includes(mode)) ||
             typeof password !== "string" || !password || password.length > 1024) {
             return res.status(400).json({
                 success: false,
-                message: "Email and password are required.",
+                message: "Enter your sign-in details and password.",
             });
         }
 
-        const cleanEmail = email.trim().toLowerCase();
-
         const user = await prisma.user.findUnique({
-            where: { email: cleanEmail },
+            where: byPhone ? { phone: identifier } : { email: identifier },
         });
 
         if (!user || !(await bcrypt.compare(password, user.password))) {
             return res.status(401).json({
                 success: false,
-                message: "Invalid email or password.",
+                message: byPhone ? "Invalid mobile number or password." : "Invalid email or password.",
             });
         }
 
@@ -241,9 +246,18 @@ router.post("/login",
             });
         }
 
+        if ((mode === "admin") !== (user.role === "ADMIN")) {
+            return res.status(403).json({
+                success: false,
+                message: mode === "admin" ? "Administrator access is required." : "Use Administrator Sign-in for this account.",
+            });
+        }
+
         const token = createToken(user);
 
-        res.cookie(COOKIE_NAME, token, getCookieOptions());
+        const cookieOptions = getCookieOptions();
+        if (remember === false) delete cookieOptions.maxAge;
+        res.cookie(COOKIE_NAME, token, cookieOptions);
 
         return res.json({
             success: true,
@@ -293,10 +307,10 @@ async function authenticateCustomer(req, res, next) {
     try {
         const user = await prisma.user.findUnique({
             where: { id: decoded.userId },
-            select: { id: true, isActive: true, role: true },
+            select: { id: true, isActive: true, role: true, adminRole: true },
         });
         if (!user?.isActive) return res.status(401).json({ success: false, message: "Account not found or inactive." });
-        req.user = { id: user.id, role: user.role };
+        req.user = { id: user.id, role: user.role, adminRole: user.adminRole };
         next();
     } catch (error) {
         console.error("Session lookup failed:", error.code || error.name);

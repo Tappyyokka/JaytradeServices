@@ -83,11 +83,11 @@ function FilterDrawer({ params, products, stores, money, balance, signedIn, onLo
           </select></label>
           <label className="mp-checkbox"><input type="checkbox" checked={Boolean(draft.verified)} onChange={(event) => set("verified", event.target.checked ? "1" : "")} /> Verified sellers only</label>
           <fieldset className="mp-affordability">
-            <legend>Marketplace balance</legend>
+            <legend>Superstore balance</legend>
             <label className="mp-checkbox"><input type="checkbox" checked={Boolean(draft.affordable)} disabled={balance === null}
               onChange={(event) => set("affordable", event.target.checked ? "1" : "")} /> Within my Indipay balance</label>
             {balance !== null ? <strong>{money.format(balance)} available</strong>
-              : signedIn ? <small>Your marketplace balance is currently unavailable.</small>
+              : signedIn ? <small>Your Superstore balance is currently unavailable.</small>
                 : <button className="mp-promotion-button" type="button" onClick={onLogin}>Sign in to use your balance</button>}
           </fieldset>
           {error && <p role="alert">{error}</p>}
@@ -103,7 +103,7 @@ function FilterDrawer({ params, products, stores, money, balance, signedIn, onLo
 
 export function ProductListing({
   products, stores, params, onChange, renderProduct, money, balance, signedIn, onLogin,
-  searchProps, loading, error, onRetry, onBack, backLabel = "Marketplace", onClearRecent, inline = false,
+  searchProps, loading, error, onRetry, onBack, backLabel = "Superstore", onClearRecent, inline = false,
 }) {
   const [filterOpen, setFilterOpen] = useState(false);
   const filterButton = useRef(null);
@@ -154,11 +154,11 @@ export function ProductListing({
       </div>}
       {params.affordable && <p className="mp-discovery-status">Matches product prices. Delivery and other charges may affect checkout.</p>}
       {error && <p className="mp-discovery-status" role="alert">{error} <button className="mp-promotion-button" type="button" disabled={loading} onClick={onRetry}>Try again</button></p>}
-      {loading && <p className="mp-discovery-status" role="status">Loading marketplace listings…</p>}
+      {loading && <p className="mp-discovery-status" role="status">Loading Superstore listings…</p>}
       {matches.length > 0 ? <div className="mp-grid">{matches.map((product) => renderProduct(product))}</div>
         : !loading && <div className="mp-empty">
           <p>{params.affordable
-            ? balance === null ? (signedIn ? "Your marketplace balance is currently unavailable." : "Sign in to search within your balance.") : "No matching products are within your marketplace balance."
+            ? balance === null ? (signedIn ? "Your Superstore balance is currently unavailable." : "Sign in to search within your balance.") : "No matching products are within your Superstore balance."
             : params.collection === "recent" && !products.length ? "Products you open will appear here." : "No products match your search."}</p>
           {params.affordable && balance === null && !signedIn && <button type="button" onClick={onLogin}>Sign in</button>}
           {chips.length > 0 ? <button type="button" onClick={() => onChange(clearFilters(params))}>Clear filters</button>

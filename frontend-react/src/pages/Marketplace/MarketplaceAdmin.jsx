@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { OrderRequestSummary } from "./OrderManagement";
 
 export default function MarketplaceAdmin({ request, onChange, money }) {
   const [data, setData] = useState(null);
@@ -15,10 +16,12 @@ export default function MarketplaceAdmin({ request, onChange, money }) {
   }, [request]);
 
   async function mutate(path, method, body, success) {
+    const remarks = window.prompt("Enter audit remarks to confirm this action.");
+    if (!remarks?.trim()) return;
     setBusy(true);
     setMessage("");
     try {
-      await request(path, method, body);
+      await request(path, method, { ...body, confirmed: true, remarks });
       setMessage(success);
       setRefundId(null);
       setData(await request("/admin/recent"));
@@ -32,11 +35,11 @@ export default function MarketplaceAdmin({ request, onChange, money }) {
 
   return (
     <section className="mp-panel mp-seller">
-      <h1>Marketplace admin</h1>
+      <h1>Superstore admin</h1>
       <p role="status">{message}</p>
       {data && (
         <fieldset disabled={busy}>
-          <legend>Manage marketplace accounts and orders</legend>
+          <legend>Manage Superstore accounts and orders</legend>
           <form onSubmit={(event) => {
             event.preventDefault();
             const fields = new FormData(event.currentTarget);
@@ -63,17 +66,31 @@ export default function MarketplaceAdmin({ request, onChange, money }) {
             </div>
           ))}
           <h2>Recent orders</h2>
-          {data.orders.map((order) => (
+          {data.orders.map((order) => {
+            const canRefund = !order.checkoutDetails?.demo || (data.demoRefundsEnabled && order.management?.request?.status === "approved");
+            return (
             <div className="mp-cart-line" key={order.id}>
-              <strong>Order {order.id.slice(0, 8).toUpperCase()} · {money.format(order.total)}</strong>
-              {order.refunded ? <span>Refunded</span> : refundId === order.id ? (
+              <strong>Order {order.checkoutDetails ? order.id : order.id.slice(0, 8).toUpperCase()} · {money.format(order.total)}</strong>
+              {order.checkoutDetails && <span>{order.checkoutDetails.store} · {order.checkoutDetails.paymentReference} · Demo</span>}
+              <OrderRequestSummary key={order.management?.request?.at ?? "none"} order={order} />
+              {order.refunded ? <span>Refunded</span> : canRefund && (refundId === order.id ? (
                 <>
-                  <button type="button" onClick={() => void mutate(`/admin/orders/${order.id}/refund`, "POST", undefined, "Order refunded to the marketplace wallet.")}>Confirm refund</button>
+                  <button type="button" onClick={() => void mutate(`/admin/orders/${order.id}/refund`, "POST", undefined, "Refund credited to Customer Money.")}>Confirm refund</button>
                   <button type="button" onClick={() => setRefundId(null)}>Cancel</button>
                 </>
-              ) : <button type="button" onClick={() => setRefundId(order.id)}>Refund</button>}
+              ) : <button type="button" onClick={() => setRefundId(order.id)}>{order.checkoutDetails?.demo ? "Approve demo refund" : "Refund"}</button>)}
             </div>
-          ))}
+            );
+          })}
+          <h2>Review reports</h2>
+          {data.reviewReports?.length ? <ul>{data.reviewReports.map((report) => <li key={report.reviewId + ":" + report.userId}>
+            <strong>{report.review.product.name} · {report.review.rating} / 5</strong>
+            <p>{report.review.text}</p><p>Reported reason: {report.reason}</p>
+          </li>)}</ul> : <p>No review reports.</p>}
+          <h2>Recent wallet transactions</h2>
+          <ul>{data.transactions?.map((entry) => <li key={entry.id}>
+            {entry.reference} · {money.format(entry.amountPaise / 100)} · {new Date(entry.createdAt).toLocaleDateString("en-IN")}
+          </li>)}</ul>
         </fieldset>
       )}
     </section>

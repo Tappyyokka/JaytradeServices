@@ -606,3 +606,251 @@
     padding-bottom: 1px;
   }
 }
+
+/* =========================================
+   CUSTOMER APPLICATIONS - THEME FIX
+========================================= */
+
+/* Main page */
+[data-customer-ui] .customer-applications-page {
+  background: var(--ui-canvas);
+  color: var(--ui-text);
+  color-scheme: light;
+}
+
+[data-customer-ui][data-theme="dark"] .customer-applications-page {
+  color-scheme: dark;
+}
+
+/* Main container */
+[data-customer-ui] .customer-applications-list {
+  background: var(--ui-panel);
+  border-color: var(--ui-line);
+  color: var(--ui-text);
+}
+
+/* Page heading */
+[data-customer-ui] .customer-applications-toolbar h1 {
+  color: var(--ui-text);
+}
+
+[data-customer-ui] .customer-applications-count,
+[data-customer-ui] .customer-applications-updated {
+  color: var(--ui-secondary);
+}
+
+/* Refresh button */
+[data-customer-ui] .customer-applications-toolbar button {
+  background: var(--ui-panel);
+  border-color: var(--ui-line);
+  color: var(--ui-accent);
+}
+
+/* Search bar */
+[data-customer-ui] .customer-applications-search {
+  background: var(--ui-inset);
+  border-color: var(--ui-line);
+  color: var(--ui-secondary);
+}
+
+[data-customer-ui] .customer-applications-search input {
+  background: transparent;
+  color: var(--ui-text);
+  border: none;
+  box-shadow: none;
+}
+
+[data-customer-ui] .customer-applications-search input::placeholder {
+  color: var(--ui-secondary);
+  opacity: 1;
+}
+
+/* Filter buttons */
+[data-customer-ui] .customer-applications-filter-chips button {
+  background: var(--ui-panel);
+  border-color: var(--ui-line);
+  color: var(--ui-secondary);
+}
+
+[data-customer-ui] .customer-applications-filter-chips button.is-active {
+  background: var(--ui-tint);
+  border-color: var(--ui-accent);
+  color: var(--ui-accent);
+}
+
+/* Sort dropdown */
+[data-customer-ui] .customer-applications-sort {
+  color: var(--ui-secondary);
+}
+
+[data-customer-ui] .customer-applications-sort select {
+  background: var(--ui-panel);
+  border-color: var(--ui-line);
+  color: var(--ui-text);
+}
+
+/* Application cards */
+[data-customer-ui] .customer-application-card {
+  background: var(--ui-panel);
+  border-color: var(--ui-line);
+  color: var(--ui-text);
+}
+
+[data-customer-ui] .customer-application-card h3 {
+  color: var(--ui-text);
+}
+
+[data-customer-ui] .customer-application-id {
+  color: var(--ui-secondary);
+}
+
+/* Application information */
+[data-customer-ui] .customer-application-meta,
+[data-customer-ui] .customer-application-sync {
+  border-color: var(--ui-line);
+}
+
+[data-customer-ui] .customer-application-meta span,
+[data-customer-ui] .customer-application-sync span {
+  color: var(--ui-secondary);
+}
+
+[data-customer-ui] .customer-application-meta strong {
+  color: var(--ui-text);
+}
+
+/* Tracking details button */
+[data-customer-ui] .customer-tracking-toggle {
+  background: var(--ui-inset);
+  border-color: var(--ui-line);
+  color: var(--ui-text);
+}
+
+[data-customer-ui] .customer-tracking-toggle:hover {
+  background: var(--ui-tint);
+  border-color: var(--ui-accent);
+  color: var(--ui-accent);
+}
+
+/* Expanded tracking details */
+[data-customer-ui] .customer-jaytrade-tracking {
+  background: var(--ui-inset);
+  border-color: var(--ui-line);
+  color: var(--ui-text);
+}
+
+[data-customer-ui] .customer-jaytrade-employee {
+  background: var(--ui-panel);
+  border-color: var(--ui-line);
+}
+
+[data-customer-ui] .customer-jaytrade-heading,
+[data-customer-ui] .customer-jaytrade-employee-heading,
+[data-customer-ui] .customer-jaytrade-detail strong,
+[data-customer-ui] .customer-jaytrade-employee-info strong {
+  color: var(--ui-text);
+}
+
+[data-customer-ui] .customer-jaytrade-detail,
+[data-customer-ui] .customer-jaytrade-employee-info {
+  border-color: var(--ui-line);
+}
+
+[data-customer-ui] .customer-jaytrade-detail span,
+[data-customer-ui] .customer-jaytrade-employee-info span,
+[data-customer-ui] .customer-jaytrade-message,
+[data-customer-ui] .customer-jaytrade-waiting p {
+  color: var(--ui-secondary);
+}
+
+/* Registration panel */
+[data-customer-ui] .customer-applications-page .registration-card {
+  background: var(--ui-panel);
+  color: var(--ui-text);
+}
+
+[data-customer-ui] .customer-applications-page .registration-card > strong {
+  color: var(--ui-text);
+}
+
+[data-customer-ui] .customer-applications-page .registration-card > p {
+  color: var(--ui-secondary);
+}
+
+/* =========================================
+   DARK MODE - APPLICATION PROGRESS
+========================================= */
+
+[data-customer-ui][data-theme="dark"] .application-progress-step {
+  color: #a5b2c5;
+}
+
+[data-customer-ui][data-theme="dark"] .application-progress-marker {
+  background: #20334b;
+  border-color: #425771;
+  color: #b6c5d9;
+}
+
+[data-customer-ui][data-theme="dark"] 
+.application-progress-step:not(:last-child)::after {
+  background: #425771;
+}
+
+/* Completed stages */
+[data-customer-ui][data-theme="dark"] 
+.application-progress-step.is-complete {
+  color: #4ade80;
+}
+
+[data-customer-ui][data-theme="dark"] 
+.application-progress-step.is-complete .application-progress-marker {
+  background: #15803d;
+  border-color: #15803d;
+  color: #ffffff;
+}
+
+[data-customer-ui][data-theme="dark"] 
+.application-progress-step.is-complete:not(:last-child)::after {
+  background: #22c55e;
+}
+
+/* Current stage */
+[data-customer-ui][data-theme="dark"] 
+.application-progress-step.is-current {
+  color: #93b4ff;
+}
+
+[data-customer-ui][data-theme="dark"] 
+.application-progress-step.is-current .application-progress-marker {
+  background: #1e3a5f;
+  border-color: #60a5fa;
+  color: #bfdbfe;
+}
+
+/* Rejected stage */
+[data-customer-ui][data-theme="dark"] 
+.application-progress.is-rejected .application-progress-step.is-current,
+[data-customer-ui][data-theme="dark"] 
+.application-progress-note {
+  color: #fca5a5;
+}
+
+[data-customer-ui][data-theme="dark"] 
+.application-progress.is-rejected .application-progress-step.is-current
+.application-progress-marker {
+  background: #452525;
+  border-color: #f87171;
+  color: #fca5a5;
+}
+
+/* Transfer status */
+[data-customer-ui][data-theme="dark"] 
+.customer-application-sync strong {
+  color: #93b4ff;
+}
+
+/* Back button */
+[data-customer-ui][data-theme="dark"] 
+.customer-applications-back {
+  color: #93b4ff;
+}

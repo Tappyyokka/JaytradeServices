@@ -5,6 +5,7 @@ import './index.css'
 import './styles/global.css'
 import './styles/index.css'
 import App from './App.jsx'
+import './styles/customer.css'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

@@ -16,16 +16,26 @@ import {
   X,
   Info,
   ChevronRight,
+  Eye,
+  EyeOff,
 } from "lucide-react";
 
 import Jaytradelogo from "../assets/images/Jaytrade-logo.jpg";
 import { formatPaise } from "../wallet/walletData";
+import IndipayWalletActivity from "./IndipayWalletActivity";
+import { LoadingSkeleton } from "../components/common/Feedback";
+import CustomerPanel from "../components/common/CustomerPanel";
 import "./Wallet.css";
 
 function Wallet({
   customer,
+  identity,
+  onOpenMerchantPlans,
+  onOpenMyStore,
   wallet,
   walletLoading,
+  walletError,
+  creditRequests,
   onBack,
   onOpenServices,
   onOpenAnnouncements,
@@ -33,6 +43,9 @@ function Wallet({
   onLogout,
   onOpenRewards,
   onOpenWalletHistory,
+  onView,
+  view = "overview",
+  onAddMoney,
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isCardFlipped, setIsCardFlipped] = useState(false);
@@ -54,6 +67,7 @@ useEffect(() => {
   return () => clearTimeout(wheelTimer.current);
 }, []);
   const [profileOpen, setProfileOpen] = useState(false);
+  const [balanceVisible, setBalanceVisible] = useState(true);
   const [showAddMoneyInfo, setShowAddMoneyInfo] = useState(false);
   const [showRewardsInfo, setShowRewardsInfo] = useState(false);
   const transactions = wallet?.transactions ?? [];
@@ -72,15 +86,15 @@ useEffect(() => {
           className="indipay-app-menu"
           type="button"
           aria-label="Open menu"
+          aria-expanded={menuOpen}
           onClick={() => setMenuOpen((open) => !open)}
         >
           <Menu size={25} />
         </button>
 
-        <div className="indipay-app-search">
-          <span>Manage your Indipay Wallet</span>
-          <span className="indipay-search-line" />
-        </div>
+        <div className="indipay-wallet-header-title">
+  <span>Indipay Wallet</span>
+</div>
 
         <button
           className="indipay-header-icon"
@@ -111,9 +125,10 @@ useEffect(() => {
     className="indipay-drawer-backdrop"
     onClick={() => setMenuOpen(false)}
   >
-    <nav
+    <CustomerPanel
       className="indipay-app-drawer"
-      onClick={(event) => event.stopPropagation()}
+      label="Wallet menu"
+      onClose={() => setMenuOpen(false)}
     >
       <div className="indipay-drawer-brand">
         <img src={Jaytradelogo} alt="Jaytrade Logo" />
@@ -175,26 +190,32 @@ useEffect(() => {
           <LogOut size={18} /> Logout
         </button>
       )}
-    </nav>
+    </CustomerPanel>
   </div>
 )}
 
       {/* Main */}
-      <main className="indipay-wallet-main">
+      <main className="indipay-wallet-main" data-view={view}>
 
         <div className="wallet-page-heading">
           <div>
             <span>YOUR INDIPAY ACCOUNT</span>
             <h1>My Wallet</h1>
-            <p>Your balance. Your rewards. More ways to benefit.</p>
+            <p>Your Customer Money and complete account activity.</p>
           </div>
-          <div className="wallet-heading-icon">
-            <WalletIcon size={27} />
+          <div className="wallet-heading-controls">
+            <button type="button" onClick={() => setBalanceVisible((visible) => !visible)}
+              aria-label={balanceVisible ? "Hide wallet balance" : "Show wallet balance"}>
+              {balanceVisible ? <EyeOff size={21} /> : <Eye size={21} />}
+            </button>
+            <span className="wallet-heading-icon"><WalletIcon size={27} /></span>
           </div>
         </div>
+        {walletError && <p role="alert" className="wallet-load-error">Wallet activity could not be refreshed. {walletError}</p>}
 
         
-{/* Physical Wallet Card - Flip Interaction */}
+        <div className="wallet-workspace">
+        <div className="wallet-summary">
 <div
   className="wallet-card-scene"
   onClick={() => setIsCardFlipped((previous) => !previous)}
@@ -217,7 +238,7 @@ useEffect(() => {
       <div className="wallet-card-top">
         <div>
           <span className="wallet-card-eyebrow">
-            INDIPAY REWARDS WALLET
+            INDIPAY CUSTOMER MONEY
           </span>
           <h2>INDIPAY</h2>
         </div>
@@ -226,8 +247,8 @@ useEffect(() => {
       </div>
 
       <div className="wallet-balance-area">
-        <span>{wallet?.totalPaise != null ? "INDIPAY MONEY BALANCE" : "MARKETPLACE SPENDING BALANCE"}</span>
-        <h1>{walletLoading ? "Loading…" : formatPaise(balance)}</h1>
+        <span>AVAILABLE CUSTOMER MONEY</span>
+        <h1>{walletLoading ? "Loading…" : balanceVisible ? formatPaise(balance) : "₹ ••••••"}</h1>
       </div>
 
       <div className="wallet-card-divider" />
@@ -272,7 +293,14 @@ useEffect(() => {
   </div>
 </div>
 
+        </div>
+        <div className="wallet-workspace-content">
+        <nav className="indipay-wallet-tabs" aria-label="Indipay wallet sections">
+          {[["overview", "Overview"], ["history", "History"], ["statements", "Statements"]].map(([tab, label]) =>
+            <button key={tab} type="button" aria-current={view === tab ? "page" : undefined} onClick={() => onView(tab)}>{label}</button>)}
+        </nav>
 
+        {view === "overview" && <>
         {/* Wallet Information */}
         <div className="wallet-benefit-strip">
           <Gift size={21} />
@@ -300,7 +328,7 @@ useEffect(() => {
 
             <button
               className="wallet-action-card"
-              onClick={() => setShowAddMoneyInfo(true)}
+              onClick={onAddMoney ?? (() => setShowAddMoneyInfo(true))}
             >
               <span className="wallet-action-icon orange">
                 <PlusCircle size={23} />
@@ -398,13 +426,13 @@ useEffect(() => {
                 );
               })}
             </div>
-          ) : (
+          ) : walletLoading ? <LoadingSkeleton lines={3} /> : (
             <div className="wallet-empty-state">
               <span>
                 <History size={30} />
               </span>
-              <strong>{walletLoading ? "Loading wallet activity…" : "No transactions to display"}</strong>
-              {!walletLoading && <p>Marketplace wallet activity will appear here.</p>}
+              <strong>No transactions to display</strong>
+              <p>Indipay activity will appear here after a confirmed transaction.</p>
             </div>
           )}
         </section>
@@ -413,10 +441,15 @@ useEffect(() => {
         <div className="wallet-terms">
           <Clock size={19} />
           <p>
-            Promotional rewards are valid for 6 months from their credit date.
-            Wallet balance can be used only for eligible Indipay and Jaytrade
-            services.
+            Customer Money can be used for eligible Indipay services and Super Store purchases.
+            Pending wallet credits become available after verification.
           </p>
+        </div>
+        </>}
+
+        <IndipayWalletActivity wallet={wallet ?? { transactions: [], availablePaise: null, partial: false }}
+          view={view} creditRequests={creditRequests ?? (walletLoading ? null : [])} onAddMoney={onAddMoney} />
+        </div>
         </div>
 
       </main>
@@ -508,9 +541,10 @@ useEffect(() => {
     className="wallet-profile-overlay"
     onClick={() => setProfileOpen(false)}
   >
-    <section
+    <CustomerPanel
       className="wallet-profile-panel"
-      onClick={(event) => event.stopPropagation()}
+      label="Wallet profile"
+      onClose={() => setProfileOpen(false)}
     >
       <button
         className="wallet-profile-close"
@@ -525,7 +559,7 @@ useEffect(() => {
       </span>
 
       <h2>{customer?.name || "Indipay Customer"}</h2>
-      <p>Your Indipay Account</p>
+      <p>{identity?.label ?? "Customer Account"}</p>
 
       <div className="wallet-profile-details">
         <div>
@@ -542,7 +576,19 @@ useEffect(() => {
           <span>Mobile</span>
           <strong>{customer?.phone || "Not available"}</strong>
         </div>
+        {identity?.accountType === "merchant" && identity.storeName && <div><span>Store</span><strong>{identity.storeName}</strong></div>}
+        {identity?.planName && <div><span>Merchant plan</span><strong>{identity.planName} demo plan</strong></div>}
       </div>
+
+      {(identity?.canUpgrade || (identity?.accountType === "merchant" && (identity.canManageDemo || identity.canManageLive))) && (
+        <button className="wallet-profile-merchant" type="button" onClick={() => {
+          setProfileOpen(false);
+          if (identity.canUpgrade) onOpenMerchantPlans();
+          else onOpenMyStore();
+        }}>
+          <ShoppingBag size={18} /> {identity.canUpgrade ? "Become a Merchant" : "My Store"}
+        </button>
+      )}
 
       <button
         className="wallet-profile-logout"
@@ -554,7 +600,7 @@ useEffect(() => {
         <LogOut size={18} />
         Logout
       </button>
-    </section>
+    </CustomerPanel>
   </div>
 )}
 

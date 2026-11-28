@@ -5,7 +5,7 @@ import {
 } from "lucide-react";
 import {
   dateKey, filterWallet, formatPaise, statementRange, summarizeWallet, walletAnalytics, walletCsv,
-  walletDemo, walletStatement, walletStatusLabels, walletTypeLabels,
+  walletDemo, walletStatement, walletStatusLabels, walletTypeLabels, shoppingWallet,
 } from "../../wallet/walletData";
 import "./MarketplaceWallet.css";
 
@@ -15,7 +15,7 @@ const tabs = {
 };
 
 const transactionFilters = {
-  all: "All transactions", credits: "Credits", debits: "Debits", purchases: "Marketplace purchases",
+  all: "All transactions", credits: "Credits", debits: "Debits", purchases: "Superstore purchases",
   rewards: "Rewards", refunds: "Refunds and reversals", pending: "Pending", completed: "Completed", failed: "Failed",
 };
 
@@ -65,13 +65,13 @@ function TransactionList({ rows, onSelect, empty = "No wallet transactions yet."
   ) : <p className="mp-wallet-empty">{empty}</p>;
 }
 
-function Overview({ wallet, visible, onToggle, onView, onShop, onAffordable, onMainWallet }) {
+function Overview({ wallet, visible, onToggle, onView, onShop, onAffordable, onMainWallet, onAddMoney }) {
   const totals = summarizeWallet(wallet.transactions);
   const hasLedger = wallet.availablePaise !== null;
   const metrics = [
     ["Total Indipay Money", wallet.totalPaise],
     ["Eligible money earned", hasLedger ? totals.earned : null],
-    ["Marketplace spending", hasLedger ? totals.spent : null],
+    ["Superstore spending", hasLedger ? totals.spent : null],
     ["Pending credits", wallet.pendingPaise],
     ["Refunds received", hasLedger ? totals.refunded : null],
     ...(wallet.restrictedPaise !== null ? [["Restricted balance", wallet.restrictedPaise]] : []),
@@ -80,7 +80,7 @@ function Overview({ wallet, visible, onToggle, onView, onShop, onAffordable, onM
   const amount = (value) => value === null ? "Unavailable" : visible ? formatPaise(value) : "••••••";
   return <>
     <div className="mp-wallet-balance-card">
-      <div><WalletIcon size={20} aria-hidden="true" /><span>Marketplace spending balance</span></div>
+      <div><WalletIcon size={20} aria-hidden="true" /><span>Superstore spending balance</span></div>
       <button type="button" onClick={onToggle} className="mp-wallet-visibility" aria-label={visible ? "Hide wallet balances" : "Show wallet balances"}>
         {visible ? <EyeOff size={18} aria-hidden="true" /> : <Eye size={18} aria-hidden="true" />}
       </button>
@@ -94,12 +94,13 @@ function Overview({ wallet, visible, onToggle, onView, onShop, onAffordable, onM
       <h2>Quick actions</h2>
       <div className="mp-wallet-actions">
         <button type="button" onClick={onShop}><ShoppingBag size={18} aria-hidden="true" /> Shop Now</button>
+        <button type="button" onClick={onAddMoney}><WalletIcon size={18} aria-hidden="true" /> Add Money</button>
         <button type="button" onClick={() => onView("history")}><History size={18} aria-hidden="true" /> Transaction History</button>
         <button type="button" onClick={() => onView("earn")}><Gift size={18} aria-hidden="true" /> Earn More</button>
         <button type="button" onClick={() => onView("help")}><Headphones size={18} aria-hidden="true" /> Help and Support</button>
       </div>
       <div className="mp-wallet-affordable">
-        <div><strong>Shop Within My Balance</strong><p>{wallet.demo ? "Uses your account’s marketplace balance. " : "Filters products by your available marketplace balance. "}
+        <div><strong>Shop Within My Balance</strong><p>{wallet.demo ? "Uses your account’s Superstore balance. " : "Filters products by your available Superstore balance. "}
           Delivery and other charges may affect checkout.</p></div>
         <button type="button" className="mp-wallet-primary" onClick={onAffordable}>Find affordable products</button>
       </div>
@@ -142,7 +143,7 @@ function TransactionDetails({ row, canViewOrder, onOrder, onHelp, onBack }) {
   const receipt = () => download(
     "indipay-demo-" + String(row.id).replace(/[^a-z0-9-]/gi, "-") + ".txt",
     [
-      "INDIPAY MARKETPLACE — DEMONSTRATION RECEIPT", "",
+      "INDIPAY SUPERSTORE — DEMONSTRATION RECEIPT", "",
       "Transaction: " + row.id, "Type: " + walletTypeLabels[row.type], "Amount: " + signedAmount(row),
       "Status: " + walletStatusLabels[row.status], "Date: " + dateTime.format(new Date(row.timestamp)),
       "Reference: " + (row.referenceId || "Unavailable"), "Description: " + row.description,
@@ -152,8 +153,8 @@ function TransactionDetails({ row, canViewOrder, onOrder, onHelp, onBack }) {
     ["Transaction ID", row.id], ["Status", walletStatusLabels[row.status]],
     ["Date and time", dateTime.format(new Date(row.timestamp))], ["Description", row.description],
     ["Reference ID", row.referenceId], ["Related order", row.orderId], ["Store", row.store],
-    ["Payment method", row.paymentMethod], ["Previous marketplace balance", formatPaise(row.previousBalance)],
-    ["Updated marketplace balance", formatPaise(row.updatedBalance)], ["Refund or reversal reference", row.reversalReference],
+    ["Payment method", row.paymentMethod], ["Previous Superstore balance", formatPaise(row.previousBalance)],
+    ["Updated Superstore balance", formatPaise(row.updatedBalance)], ["Refund or reversal reference", row.reversalReference],
   ];
   return <section className="mp-wallet-panel">
     <button type="button" className="mp-wallet-back" onClick={onBack}><ArrowLeft size={16} aria-hidden="true" /> Transaction history</button>
@@ -178,7 +179,7 @@ function Statements({ wallet, now, onSelect }) {
   const valid = Boolean(from && to && from <= to);
   const report = valid ? walletStatement(wallet, from, to) : null;
   return <section className="mp-wallet-panel">
-    <h2>Marketplace wallet statements</h2>
+    <h2>Superstore wallet statements</h2>
     <div className="mp-wallet-fields">
       <label>Statement period<select value={preset} onChange={(event) => setPreset(event.target.value)}>
         <option value="current">Current month</option><option value="previous">Previous month</option>
@@ -190,7 +191,7 @@ function Statements({ wallet, now, onSelect }) {
       </>}
     </div>
     {report ? <>
-      <p className="mp-wallet-muted">Completed transactions that affect marketplace spending are included in statement totals.</p>
+      <p className="mp-wallet-muted">Completed transactions that affect Superstore spending are included in statement totals.</p>
       <dl className="mp-wallet-metrics">{[
         ["Opening balance", report.opening], ["Total credits", report.credits],
         ["Total debits", report.debits], ["Closing balance", report.closing],
@@ -226,7 +227,7 @@ function Analytics({ wallet, now }) {
   return <div className="mp-wallet-analytics">
     <section className="mp-wallet-panel">
       <h2>Monthly earnings and spending</h2>
-      <p className="mp-wallet-muted">Eligible earnings and completed marketplace purchases</p>
+      <p className="mp-wallet-muted">Eligible earnings and completed Superstore purchases</p>
       <div className="mp-wallet-legend"><span data-tone="credit">Earnings</span><span data-tone="debit">Spending</span></div>
       <ActivityBars rows={data.monthly} series={[{ key: "earned", name: "Earnings", tone: "credit" }, { key: "spent", name: "Spending", tone: "debit" }]} />
     </section>
@@ -235,10 +236,10 @@ function Analytics({ wallet, now }) {
       <p><strong>Total refunds received</strong> {formatPaise(data.refunds)}</p>
     </section>
     <section className="mp-wallet-panel"><h2>Spending by category</h2>
-      {data.category.length ? <ActivityBars rows={data.category} series={spending} /> : <p>No completed marketplace purchases.</p>}
+      {data.category.length ? <ActivityBars rows={data.category} series={spending} /> : <p>No completed Superstore purchases.</p>}
     </section>
     <section className="mp-wallet-panel"><h2>Spending by store</h2>
-      {data.store.length ? <ActivityBars rows={data.store} series={spending} /> : <p>No completed marketplace purchases.</p>}
+      {data.store.length ? <ActivityBars rows={data.store} series={spending} /> : <p>No completed Superstore purchases.</p>}
     </section>
   </div>;
 }
@@ -246,7 +247,7 @@ function Analytics({ wallet, now }) {
 function EarnMore({ onOpenIndipayPage }) {
   return <section className="mp-wallet-panel">
     <h2>Earn More</h2>
-    <p className="mp-wallet-muted">Marketplace eligibility is determined for each credit.</p>
+    <p className="mp-wallet-muted">Superstore eligibility is determined for each credit.</p>
     <div className="mp-wallet-actions mp-wallet-earn">
       {[
         ["refer", "Refer & Earn"], ["rewards", "Rewards and Scratch Cards"], ["learn-earn", "Learn & Earn"],
@@ -258,13 +259,13 @@ function EarnMore({ onOpenIndipayPage }) {
 
 export default function MarketplaceWallet({
   wallet, view, transactionId, demo, visible, onToggleVisible, onView, onToggleDemo,
-  customer, loading, error, onRetry, onLogin, onShop, onAffordable, onMainWallet, onOpenIndipayPage, onSupport, orders, onOrder,
+  customer, loading, error, onRetry, onLogin, onShop, onAffordable, onMainWallet, onOpenIndipayPage, onSupport, onAddMoney, orders, onOrder,
 }) {
   const [now] = useState(() => new Date());
   const [sample] = useState(() => walletDemo(now));
   const [filters, setFilters] = useState({});
   const heading = useRef(null);
-  const current = demo ? sample : wallet;
+  const current = demo ? shoppingWallet(sample) : wallet;
   const focused = current.transactions.find((row) => row.id === transactionId);
   const relatedOrder = focused?.orderId && (demo || orders.some((order) => order.id === focused.orderId));
   const select = (id) => onView("transaction", id);
@@ -273,19 +274,20 @@ export default function MarketplaceWallet({
 
   return <section className="mp-wallet-page">
     <header className="mp-wallet-page-heading">
-      <div><h1 ref={heading} tabIndex={-1}>Marketplace Wallet</h1>
+      <div><button type="button" className="mp-wallet-back" onClick={onShop}><ArrowLeft size={16} aria-hidden="true" /> Back to Super Store</button>
+        <h1 ref={heading} tabIndex={-1}>Superstore Wallet</h1>
         <p>{demo ? "Demo wallet · Sample transactions and balances" : "Balance, transactions and spending"}</p></div>
       <button type="button" onClick={() => { setFilters({}); onToggleDemo(); }}>{demo ? "Back to my wallet" : "Preview demo wallet"}</button>
     </header>
-    <nav className="mp-wallet-tabs" aria-label="Marketplace wallet navigation">
+    <nav className="mp-wallet-tabs" aria-label="Superstore wallet navigation">
       {Object.entries(tabs).map(([key, label]) => <button type="button" key={key}
         aria-current={view === key ? "page" : undefined} onClick={() => onView(key)}>{label}</button>)}
     </nav>
     {!demo && loading && <p role="status">Loading wallet data…</p>}
     {!demo && error && <p role="alert">{error} <button type="button" onClick={onRetry}>Try again</button></p>}
     {!demo && !customer && !loading && <p>Sign in to view your wallet. <button type="button" onClick={onLogin}>Sign in</button></p>}
-    {current.partial && <p className="mp-wallet-muted">The marketplace currently provides its latest 25 entries. History and totals reflect available records.</p>}
-    {view === "overview" && <Overview wallet={current} visible={visible} onToggle={onToggleVisible} onView={onView} onShop={onShop} onAffordable={onAffordable} onMainWallet={onMainWallet} />}
+    {current.partial && <p className="mp-wallet-muted">The Superstore currently provides its latest 25 entries. History and totals reflect available records.</p>}
+    {view === "overview" && <Overview wallet={current} visible={visible} onToggle={onToggleVisible} onView={onView} onShop={onShop} onAffordable={onAffordable} onMainWallet={onMainWallet} onAddMoney={onAddMoney} />}
     {view === "history" && <HistoryView wallet={current} filters={filters} setFilters={setFilters} onSelect={select} />}
     {view === "statements" && <Statements wallet={current} now={now} onSelect={select} />}
     {view === "analytics" && <Analytics wallet={current} now={now} />}
@@ -306,7 +308,7 @@ export default function MarketplaceWallet({
     {view === "help" && <section className="mp-wallet-panel">
       <h2>Wallet help and support</h2>
       {focused && <p>Transaction reference <strong>{focused.id}</strong></p>}
-      <p>IndiBot can explain marketplace balances, orders, and refunds.</p>
+      <p>IndiBot can explain Superstore balances, orders, and refunds.</p>
       <div className="mp-wallet-actions"><button type="button" onClick={onSupport}>Open IndiBot</button>
         <button type="button" onClick={onMainWallet}>Open Indipay Wallet</button></div>
     </section>}

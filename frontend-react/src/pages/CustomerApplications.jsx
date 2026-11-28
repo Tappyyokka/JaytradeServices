@@ -1,5 +1,5 @@
 
-import { useEffect, useCallback, useState } from "react";
+import { useEffect, useCallback, useRef, useState } from "react";
 import {
   ArrowLeft,
   FileText,
@@ -17,68 +17,54 @@ import {
 } from "lucide-react";
 
 import "./CustomerApplications.css";
+import { RegisterApplication, RegistrationDetails, RegistrationReceipt } from "./ApplicationRegistration";
+import { applicationRegistrationPath, registrationProgress, registrationRequest, registrationSteps as APPLICATION_STEPS } from "../wallet/registrationDemo";
+import { formatPaise } from "../wallet/walletData";
+import { serviceProcessingRequest } from "../wallet/serviceProcessing";
+import ServiceProgress from "./ServiceProgress";
+import CompanyBills from "./CompanyBills";
 import API_BASE_URL from "../config/api";
 import { EmptyState, LoadingSkeleton } from "../components/common/Feedback";
 
 const API_URL = `${API_BASE_URL}/api/my-applications`;
 const STATUS_API_URL = `${API_BASE_URL}/api/applications`;
 
-const APPLICATION_STEPS = [
-  "Submitted",
-  "Transferred",
-  "In Review",
-  "Decision",
-  "Completed",
-];
-
-function getResolvedStatus(application, jaytradeData) {
-  return jaytradeData?.status || application.status || "Pending";
+function getResolvedStatus(application, jaytradeData, registration) {
+  const progress = registrationProgress(application, jaytradeData, registration);
+  if (progress.currentStep === 4) return "Registration completed";
+  return progress.rejected ? "Rejected" : APPLICATION_STEPS[progress.currentStep];
 }
 
-function getApplicationProgress(application, jaytradeData) {
-  if (application.leadSyncStatus !== "SYNCED") {
-    return { currentStep: 0, rejected: false };
+function CustomerApplications({ onBack, onBrowseServices, initialFilter = "all", targetId, targetBillId, onPay, onAddMoney }) {
+  const [registrations, setRegistrations] = useState([]);
+  const [serviceProcessingAvailable, setServiceProcessingAvailable] = useState(false);
+  const [billDeliveryAvailable, setBillDeliveryAvailable] = useState(false);
+  const [syncNotice, setSyncNotice] = useState("");
+  const [syncing, setSyncing] = useState(null);
+
+  async function retrySync(id) {
+    if (syncing) return;
+    setSyncing(id);
+    try {
+      const { registration } = await registrationRequest(applicationRegistrationPath(id) + "/sync", {});
+      setRegistrations((current) => current.map((entry) => entry.applicationId === id ? registration : entry));
+      setSyncNotice(registration.syncedAt ? "Registration synchronized with Jaytrade." : "Registration is paid. Jaytrade synchronization is still pending.");
+    } catch (failure) { setSyncNotice(failure.message); }
+    finally { setSyncing(null); }
   }
-
-  const status = getResolvedStatus(application, jaytradeData).toLowerCase();
-
-  if (status.includes("reject")) {
-    return { currentStep: 3, rejected: true };
-  }
-
-  if (status.includes("complete")) {
-    return { currentStep: 4, rejected: false };
-  }
-
-  if (status.includes("approv")) {
-    return { currentStep: 3, rejected: false };
-  }
-
-  if (
-    status.includes("review") ||
-    status.includes("process") ||
-    status.includes("assign")
-  ) {
-    return { currentStep: 2, rejected: false };
-  }
-
-  // Synced to Jaytrade, but no later status is available yet.
-  return { currentStep: 1, rejected: false };
-}
-
-function CustomerApplications({ onBack, onBrowseServices }) {
   const [applications, setApplications] = useState([]);
   const [jaytradeStatuses, setJaytradeStatuses] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [refreshingStatuses, setRefreshingStatuses] = useState(false);
-  const [expandedTrackingIds, setExpandedTrackingIds] = useState(() => new Set());
+  const [expandedTrackingIds, setExpandedTrackingIds] = useState(() => new Set(targetId ? [targetId] : []));
   const [searchQuery, setSearchQuery] = useState("");
-  const [statusFilter, setStatusFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState(initialFilter);
   const [sortOrder, setSortOrder] = useState("newest");
   const [lastUpdated, setLastUpdated] = useState(null);
 
-  const fetchJaytradeStatuses = useCallback(async (applicationList) => {
+  const refreshRequest = useRef(null);
+  const fetchJaytradeStatuses = useCallback(async (applicationList, signal) => {
   setRefreshingStatuses(true);
 
   try {
@@ -94,27 +80,25 @@ function CustomerApplications({ onBack, onBrowseServices }) {
               application.applicationId
             )}/jaytrade-status`,
             {
-              credentials: "include",
+              credentials: "include", signal,
             }
           );
 
           const result = await response.json();
 
           if (!response.ok || !result.success) {
-            throw new Error(
-              result.message || "Unable to retrieve Jaytrade status."
-            );
+            const message = response.status === 404 ? "The linked Jaytrade enquiry is missing."
+              : response.status === 409 ? "The application link needs reconciliation."
+              : "Could not retrieve the latest status.";
+            return { applicationId: application.applicationId, data: { success: false, message } };
           }
 
           return {
             applicationId: application.applicationId,
             data: result,
           };
-        } catch (err) {
-          console.error(
-            `Jaytrade status error for ${application.applicationId}:`,
-            err
-          );
+        } catch {
+          if (signal.aborted) return { applicationId: application.applicationId, data: null };
 
           return {
             applicationId: application.applicationId,
@@ -133,16 +117,20 @@ function CustomerApplications({ onBack, onBrowseServices }) {
       updatedStatuses[applicationId] = data;
     });
 
-    setJaytradeStatuses(updatedStatuses);
+    if (!signal.aborted) setJaytradeStatuses(updatedStatuses);
   } finally {
-    setRefreshingStatuses(false);
+    if (!signal.aborted) setRefreshingStatuses(false);
   }
 }, []);
 
 const fetchApplications = useCallback(async () => {
+  refreshRequest.current?.abort();
+  const controller = new AbortController();
+  refreshRequest.current = controller;
+  const { signal } = controller;
   try {
     const response = await fetch(API_URL, {
-      credentials: "include",
+      credentials: "include", signal,
     });
 
     const result = await response.json();
@@ -151,17 +139,31 @@ const fetchApplications = useCallback(async () => {
       throw new Error(result.message || "Unable to load applications.");
     }
 
+    if (signal.aborted) return;
     const applicationList = result.applications || [];
 
     setApplications(applicationList);
     setError("");
 
-    await fetchJaytradeStatuses(applicationList);
-    setLastUpdated(new Date());
+    await Promise.all([
+      fetchJaytradeStatuses(applicationList, signal),
+      serviceProcessingRequest("/receipts", { signal }).then((payload) => {
+        if (!signal.aborted) {
+          setServiceProcessingAvailable(true);
+          setBillDeliveryAvailable(payload.billDeliveryAvailable === true);
+        }
+        return payload;
+      }).then(({ registrations }) => {
+        if (!signal.aborted) setRegistrations(registrations);
+      }).catch((failure) => {
+        if (!signal.aborted && failure.status !== 404) setSyncNotice(failure.message);
+      }),
+    ]);
+    if (!signal.aborted) setLastUpdated(new Date());
   } catch (err) {
-    setError(err.message || "Could not load your applications.");
+    if (!signal.aborted) setError(err.message || "Could not load your applications.");
   } finally {
-    setLoading(false);
+    if (!signal.aborted) setLoading(false);
   }
 }, [fetchJaytradeStatuses]);
 
@@ -170,7 +172,7 @@ useEffect(() => {
     fetchApplications();
   }, 0);
 
-  return () => window.clearTimeout(timeoutId);
+  return () => { window.clearTimeout(timeoutId); refreshRequest.current?.abort(); };
 }, [fetchApplications]);
 
 const handleRefresh = () => {
@@ -226,12 +228,10 @@ const handleRefresh = () => {
   };
 
   const getStatusCategory = (status) => {
+    if (status === "Registration completed") return "completed";
     const normalizedStatus = String(status || "").toLowerCase();
 
     if (normalizedStatus.includes("reject")) return "rejected";
-    if (normalizedStatus.includes("approv") || normalizedStatus.includes("complete")) {
-      return "completed";
-    }
 
     return "in-progress";
   };
@@ -239,7 +239,8 @@ const handleRefresh = () => {
   const filteredApplications = [...applications]
     .filter((application) => {
       const jaytradeData = getJaytradeStatus(application)?.jaytrade;
-      const resolvedStatus = getResolvedStatus(application, jaytradeData);
+      const registration = registrations.find((entry) => entry.applicationId === application.applicationId);
+      const resolvedStatus = getResolvedStatus(application, jaytradeData, registration);
       const searchText = [
         application.service,
         application.applicationId,
@@ -293,7 +294,7 @@ const handleRefresh = () => {
 
           <div className="customer-applications-toolbar">
             <div>
-              <h2>Your Submitted Applications</h2>
+              <h1>My applications</h1>
               {!loading && !error && (
                 <p className="customer-applications-count">
                   Showing {filteredApplications.length} of {applications.length}
@@ -332,7 +333,7 @@ const handleRefresh = () => {
                 {[
                   ["all", "All"],
                   ["in-progress", "In progress"],
-                  ["completed", "Completed"],
+                    ["completed", "Completed"],
                   ["rejected", "Rejected"],
                 ].map(([value, label]) => (
                   <button
@@ -384,14 +385,18 @@ const handleRefresh = () => {
             />
           ) : (
             <div className="customer-applications-cards">
+              {syncNotice && <p role="status">{syncNotice}</p>}
+              {statusFilter === "completed" && <p>Completed Applications shows completed registration. Service processing may continue separately.</p>}
 
               {filteredApplications.map((application) => {
                 const jaytrade = getJaytradeStatus(application);
 const jaytradeData = jaytrade?.jaytrade;
 const employee = jaytradeData?.assigned_employee;
-const progress = getApplicationProgress(application, jaytradeData);
+const registration = registrations.find((entry) => entry.applicationId === application.applicationId);
+const offer = jaytradeData?.registration;
+const progress = registrationProgress(application, jaytradeData, registration);
 const customerStatus = jaytradeData?.customer_status;
-const resolvedStatus = getResolvedStatus(application, jaytradeData);
+const resolvedStatus = getResolvedStatus(application, jaytradeData, registration);
 const isTrackingExpanded = expandedTrackingIds.has(application.applicationId);
 const trackingDetailsId = `tracking-${application.applicationId}`;
 
@@ -433,7 +438,7 @@ const trackingDetailsId = `tracking-${application.applicationId}`;
   }`}
 >
   {APPLICATION_STEPS.map((step, index) => {
-    const isComplete = index < progress.currentStep;
+    const isComplete = index < progress.currentStep || (index === 4 && Boolean(registration));
     const isCurrent = index === progress.currentStep;
 
     return (
@@ -491,6 +496,28 @@ const trackingDetailsId = `tracking-${application.applicationId}`;
                       {isTrackingExpanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
                     </button>
 
+                    {registration ? <section className="registration-card" aria-label="Completed registration">
+                      <strong>Registration completed · Demo</strong>
+                      <RegistrationDetails id={registration.applicationId} offer={registration} />
+                      <p>Registered on {formatDate(registration.acceptedAt)}</p>
+                      <p>Payment reference {registration.reference}</p>
+                      {!registration.syncedAt && <p>Payment confirmed. Jaytrade synchronization is pending.</p>}
+                      <RegistrationReceipt record={registration} />
+                      {!registration.syncedAt && !serviceProcessingAvailable && <button type="button" disabled={Boolean(syncing)} onClick={() => retrySync(application.applicationId)}>Retry Jaytrade sync</button>}
+                    </section> : offer?.eligible === true && !progress.rejected && (
+                      offer.demo === true ? (
+                        <RegisterApplication id={application.applicationId} offer={offer} onPay={onPay} onAddMoney={onAddMoney} />
+                      ) : (
+                        <section className="registration-card" aria-label="Registration details">
+                          <strong>Register My Application</strong>
+                          {Number.isInteger(offer.amount_paise) && <p>Registration charge {formatPaise(offer.amount_paise)}</p>}
+                          <p>Registration payments are currently unavailable.</p>
+                        </section>
+                      )
+                    )}
+                    {registration && serviceProcessingAvailable && <ServiceProgress applicationId={application.applicationId} />}
+                    {registration && billDeliveryAvailable && <CompanyBills applicationId={application.applicationId}
+                      targetBillId={targetId === application.applicationId ? targetBillId : null} />}
                     {isTrackingExpanded && (
                     <div className="customer-jaytrade-tracking" id={trackingDetailsId}>
 

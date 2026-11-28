@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { ArrowLeft, BadgeCheck, Heart, Minus, Plus, Share2, ShoppingCart, Star, Store, Truck } from "lucide-react";
+import { ArrowLeft, BadgeCheck, Heart, Minus, Plus, ShoppingCart, Star, Store, Truck } from "lucide-react";
 import { rupeesToPaise } from "../../wallet/walletData";
 import WalletEstimate from "./WalletEstimate";
 import ProductGallery from "./ProductGallery";
 import ProductReviews from "./ProductReviews";
+import { ShareShopping } from "./SocialShopping";
 import { discountPercent } from "./productDiscovery";
 import { detailsRoute, productImages, productOffer, storeRating, validQuantity, variantAttributes } from "./productDetailUtils";
 import "./ProductDetails.css";
@@ -77,7 +78,7 @@ function SellerCard({ store, products, following, onStore, onFollow }) {
     </div>
     <button type="button" className="mp-detail-button" onClick={onStore}>Visit Store</button>
     <button type="button" className="mp-detail-button" aria-pressed={following} onClick={() => {
-      try { onFollow(); setError(""); } catch (failure) { setError(failure.message); }
+      try { onFollow?.(); setError(""); } catch (failure) { setError(failure.message); }
     }}>{following ? "Following" : "Follow Store"}</button>
     {error && <p role="alert">{error}</p>}
   </section>;
@@ -85,15 +86,13 @@ function SellerCard({ store, products, following, onStore, onFollow }) {
 
 export default function ProductDetails({
   product, initialVariant, initialQuantity = 1, money, balance, signedIn, onEarn, saved, cartCount, cart,
-  store, storeProducts, following, onFollow, onStore, onBack, onCart, onSave, onAdd, onBuy, busy,
+  store, storeProducts, following, onFollow, onStore, onBack, onCart, onSave, onAdd, onBuy, busy, reviewAccess,
   recommendations, renderProduct,
 }) {
   const options = product.variantOptions ?? [];
   const attributes = variantAttributes(options);
   const [selection, setSelection] = useState(() => options.find((option) => option.id === initialVariant)?.attributes ?? {});
   const [quantity, setQuantity] = useState(initialQuantity);
-  const [shareStatus, setShareStatus] = useState("");
-  const [copyLink, setCopyLink] = useState("");
   const variant = options.find((option) => attributes.every((name) => option.attributes[name] === selection[name]));
   const offer = productOffer(product, variant?.id);
   const count = Math.min(Math.max(quantity, 1), Math.max(offer.quantityLimit, 1));
@@ -109,32 +108,15 @@ export default function ProductDetails({
     setQuantity(1);
   }
 
-  async function share() {
-    const url = new URL("/marketplace", window.location.href);
-    url.hash = detailsRoute(product.id);
-    if (navigator.share) {
-      try { await navigator.share({ title: product.name, url: url.href }); return; }
-      catch (error) { if (error.name === "AbortError") return; }
-    }
-    try {
-      await navigator.clipboard.writeText(url.href);
-      setShareStatus("Product link copied.");
-    } catch {
-      setCopyLink(url.href);
-    }
-  }
-
   return <article className="mp-product-detail">
     <header className="mp-detail-header">
       <button type="button" className="mp-detail-button mp-detail-icon" onClick={onBack} aria-label="Back to products"><ArrowLeft size={20} /></button>
       <h1 tabIndex={-1} data-product-heading>Product Details</h1>
-      <button type="button" className="mp-detail-button mp-detail-icon" onClick={share} aria-label="Share product"><Share2 size={18} /></button>
+      <ShareShopping title={product.name} route={detailsRoute(product.id)} />
       <button type="button" className="mp-detail-button" onClick={onCart} aria-label={"Shopping cart, " + cartCount + " items"}>
         <ShoppingCart size={18} aria-hidden="true" /> <span>{cartCount}</span>
       </button>
     </header>
-    {shareStatus && <p className="mp-detail-muted" role="status">{shareStatus}</p>}
-    {copyLink && <label className="mp-copy-product">Copy product link<input value={copyLink} readOnly onFocus={(event) => event.target.select()} /></label>}
     <div className="mp-detail-overview">
       <ProductGallery key={variant?.images?.length ? variant.id : "main-gallery"} images={images} name={product.name} />
       <section className="mp-detail-panel mp-detail-info">
@@ -146,7 +128,7 @@ export default function ProductDetails({
         </div>
         <div className="mp-detail-rating">
           <span><Star size={16} aria-hidden="true" /> {Number.isFinite(product.rating) ? product.rating.toFixed(1) + " / 5" : "Unrated"}</span>
-          <span>{product.reviews?.length ?? 0} reviews</span>
+          <span>{product.reviewCount ?? product.reviews?.length ?? 0} reviews</span>
           {product.sold !== undefined && <span>{product.sold} sold</span>}
         </div>
         <div className="mp-detail-price"><strong>{money.format(offer.price)}</strong>
@@ -190,7 +172,7 @@ export default function ProductDetails({
     </div>
     {store && <SellerCard store={store} products={storeProducts} following={following} onStore={onStore} onFollow={onFollow} />}
     <Specifications product={product} />
-    <ProductReviews product={product} />
+    <ProductReviews product={product} access={reviewAccess} />
     {recommendations.map(({ label, items }) => <section className="mp-section" key={label}>
       <h2>{label}</h2>
       {items.length ? <div className="mp-grid">{items.map((item) => renderProduct(item))}</div> : <p>No products to display yet.</p>}

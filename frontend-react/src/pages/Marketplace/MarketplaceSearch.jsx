@@ -83,7 +83,7 @@ export default function MarketplaceSearch({
         <Search size={18} aria-hidden="true" />
         <input ref={input} type="text" inputMode="search" role="combobox" aria-autocomplete="list" aria-haspopup="listbox"
           aria-expanded={showMenu && options.length > 0} aria-controls={showMenu && options.length > 0 ? listId : undefined}
-          aria-activedescendant={selected ? listId + "-" + active : undefined} aria-label={withinStore ? "Search this store" : "Search marketplace"}
+          aria-activedescendant={selected ? listId + "-" + active : undefined} aria-label={withinStore ? "Search this store" : "Search Superstore"}
           placeholder={withinStore ? "Search this store" : "Search products, stores or brands"}
           maxLength={120} autoComplete="off" value={value} onFocus={() => setOpen(true)} onKeyDown={handleKey}
           onChange={(event) => { setValue(event.target.value); setActive(-1); setOpen(true); }} />

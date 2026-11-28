@@ -8,14 +8,14 @@ const imageTypes = "image/jpeg,image/png,image/webp";
 async function readImages(fields, name, existing) {
   const files = fields.getAll(name).filter((file) => file.size);
   if (files.length > 4) throw new Error("Choose up to four photos for each gallery.");
-  return files.length ? Promise.all(files.map(readStoreImage)) : existing;
+  return files.length ? Promise.all(files.map((file) => readStoreImage(file))) : existing;
 }
 
-async function readOptions(fields, variants, basePrice, baseOriginal) {
+async function readOptions(fields, variants, basePrice, baseOriginal, preview) {
   const combinations = new Set();
   let names;
   const options = [];
-  for (const { id, images } of variants) {
+  for (const { id, images, stock: expectedStock } of variants) {
     const prefix = "variant-" + id + "-";
     const pairs = parseDetailPairs(fields.get(prefix + "attributes"), "Variant attributes", 4);
     names ??= pairs.map(({ name }) => name);
@@ -32,9 +32,10 @@ async function readOptions(fields, variants, basePrice, baseOriginal) {
     const original = fields.get(prefix + "original");
     const stock = fields.get(prefix + "stock");
     if (original && Number(original) < Number(price || basePrice)) throw new Error("A variant's original price must cover its selling price.");
-    const photos = await readImages(fields, prefix + "photo", fields.has(prefix + "clear-photo") ? [] : images ?? []);
+    const photos = preview ? await readImages(fields, prefix + "photo", fields.has(prefix + "clear-photo") ? [] : images ?? []) : undefined;
     options.push({
       id, attributes, images: photos,
+      ...(!preview && { expectedStock }),
       ...(price ? { price: Number(price) } : {}),
       ...(original ? { original: Number(original) } : price && Number(price) > baseOriginal ? { original: Number(price) } : {}),
       ...(stock ? { stock: Number(stock) } : {}),
@@ -43,7 +44,7 @@ async function readOptions(fields, variants, basePrice, baseOriginal) {
   return options;
 }
 
-function VariantFields({ variants, onAdd, onRemove }) {
+function VariantFields({ variants, onAdd, onRemove, preview }) {
   return <fieldset className="mp-editor-details">
     <legend>Product variants</legend>
     <small>Enter attributes as Name: value, one per line. Leave price and stock blank to inherit the product values.</small>
@@ -58,8 +59,8 @@ function VariantFields({ variants, onAdd, onRemove }) {
           <label>Original price (₹)<input type="number" name={prefix + "original"} min="1" max="10000000" defaultValue={variant.original} /></label>
           <label>Stock<input type="number" name={prefix + "stock"} min="0" max="1000000" defaultValue={variant.stock} /></label>
         </div>
-        <label>Variant photos<input type="file" name={prefix + "photo"} accept={imageTypes} multiple /></label>
-        {variant.images?.length > 0 && <label className="store-inline"><input type="checkbox" name={prefix + "clear-photo"} /> Use main product photos</label>}
+        {preview && <label>Variant photos<input type="file" name={prefix + "photo"} accept={imageTypes} multiple /></label>}
+        {preview && variant.images?.length > 0 && <label className="store-inline"><input type="checkbox" name={prefix + "clear-photo"} /> Use main product photos</label>}
         <button type="button" onClick={() => onRemove(variant.id)}>Remove variant</button>
       </fieldset>;
     })}
@@ -105,8 +106,7 @@ export default function ProductEditor({ listing, preview = false, onSave, onCanc
       const existing = listing.images ?? (listing.image ? [listing.image] : []);
       const images = await readImages(fields, "photo", existing);
       const details = preview ? {
-        images, variants: fields.get("variants").trim(), available: fields.has("available"),
-        variantOptions: await readOptions(fields, variants, price, original),
+        variants: fields.get("variants").trim(), available: fields.has("available"),
         brand: fields.get("brand").trim(),
         features: fields.get("features").split(/\r?\n/).map((feature) => feature.trim()).filter(Boolean),
         specifications: parseDetailPairs(fields.get("specifications"), "Specifications"),
@@ -119,7 +119,9 @@ export default function ProductEditor({ listing, preview = false, onSave, onCanc
         },
       } : {};
       await onSave({ name, description, price, original, stock: Number(fields.get("stock")), category: fields.get("category"),
-        image: images[0] || "", ...details });
+        image: images[0] || "", images, active: fields.has("active"), lowStockThreshold: Number(fields.get("threshold")),
+        variantOptions: await readOptions(fields, variants, price, original, preview),
+        ...(!preview && { expectedStock: listing.stock }), ...details });
     } catch (failure) { setMessage(failure.message); }
     finally { setBusy(false); }
   }
@@ -131,12 +133,14 @@ export default function ProductEditor({ listing, preview = false, onSave, onCanc
     <label>Selling price (₹)<input name="price" type="number" required min="1" max="10000000" defaultValue={listing.price} /></label>
     <label>Original price (₹)<input name="original" type="number" min="1" max="10000000" defaultValue={listing.original} /></label>
     <label>Stock quantity<input name="stock" type="number" required min="0" max="1000000" defaultValue={listing.stock} /></label>
-    <label>{preview ? "Product photos (up to four, replace existing photos)" : "Product photo"}<input name="photo" type="file" accept={imageTypes} multiple={preview} /></label>
+    <label>Product photos (up to four, replace existing photos)<input name="photo" type="file" accept={imageTypes} multiple /></label>
     <small>JPG, PNG or WebP, up to 400 KB each.</small>
+    <label>Low-stock alert threshold<input type="number" name="threshold" min="0" max="1000" required defaultValue={listing.lowStockThreshold ?? 5} /></label>
+    <label className="store-inline"><input name="active" type="checkbox" defaultChecked={listing.active !== false} /> Show this product in the store</label>
+    <VariantFields variants={variants} preview={preview} onAdd={() => setVariants((current) => [...current, { id: crypto.randomUUID(), attributes: {} }])}
+      onRemove={(id) => setVariants((current) => current.filter((variant) => variant.id !== id))} />
     {preview && <>
       <label>Seller options note (optional)<input name="variants" maxLength={160} defaultValue={listing.variants} /></label>
-      <VariantFields variants={variants} onAdd={() => setVariants((current) => [...current, { id: crypto.randomUUID(), attributes: {} }])}
-        onRemove={(id) => setVariants((current) => current.filter((variant) => variant.id !== id))} />
       <ListingDetailsFields listing={listing} />
       <label className="store-inline"><input name="available" type="checkbox" defaultChecked={listing.available !== false} /> Available for sale</label>
     </>}

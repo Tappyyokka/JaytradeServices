@@ -20,7 +20,7 @@ const statusOptions = [
   "Rejected",
 ];
 
-function ApplicationStatus({ onBack }) {
+function ApplicationStatus({ onBack, onOpenWalletCreditRequests }) {
   const [applications, setApplications] = useState([]);
   const [search, setSearch] = useState("");
   const [selectedApplication, setSelectedApplication] = useState(null);
@@ -169,6 +169,11 @@ const handleRefresh = () => {
             <p>View and manage all customer applications.</p>
           </div>
 
+          {onOpenWalletCreditRequests && (
+            <button className="application-status-back" type="button" onClick={onOpenWalletCreditRequests}>
+              Wallet Credit Requests
+            </button>
+          )}
           <span className="admin-view-label">Admin View</span>
         </div>
 

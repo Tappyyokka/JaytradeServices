@@ -1,0 +1,19 @@
+.company-bill { padding: 12px 0; border-bottom: 1px solid var(--registration-border); overflow-wrap: anywhere; }
+.company-bill:last-of-type { border-bottom: 0; }
+.company-bill[aria-current] { border-inline-start: 3px solid #e38b37; padding-inline-start: 10px; }
+.company-bill h4, .company-bill p { margin-block: 6px; }
+.company-bill-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+.company-bill-actions h3 { flex: 1; margin: 0; overflow-wrap: anywhere; }
+.company-bill-download { display: inline-flex; min-height: 44px; align-items: center; color: inherit; font-weight: 650; }
+.company-bill-preview {
+  box-sizing: border-box;
+  width: min(680px, calc(100% - 26px));
+  max-height: calc(100dvh - 28px);
+  padding: 16px;
+  color: var(--registration-text);
+  background: var(--registration-panel);
+  border: 1px solid var(--registration-border);
+  border-radius: 12px;
+}
+.company-bill-preview::backdrop { background: #111827aa; }
+.company-bill-preview img { display: block; width: 100%; max-height: 65dvh; object-fit: contain; margin: 12px 0; }

@@ -1,0 +1,296 @@
+/* Customer-facing primitives. Admin screens use their own theme. */
+[data-customer-ui] {
+  --ui-canvas: #f4f6fa;
+  --ui-panel: #fff;
+  --ui-inset: #edf1f6;
+  --ui-text: #142540;
+  --ui-secondary: #51637b;
+  --ui-line: #d7e0ea;
+  --ui-accent: #954600;
+  --ui-tint: #fff0df;
+  --ui-shadow: 0 4px 18px rgb(18 38 68 / 6%);
+  --ui-gap: clamp(16px, 2.5vw, 30px);
+  --ui-width: 1160px;
+}
+[data-customer-ui][data-theme="dark"] {
+  --ui-canvas: #0b1525;
+  --ui-panel: #15253a;
+  --ui-inset: #20334b;
+  --ui-text: #f0f5fc;
+  --ui-secondary: #b6c5d9;
+  --ui-line: #344960;
+  --ui-accent: #ffb46e;
+  --ui-tint: #372c28;
+  --ui-shadow: 0 4px 18px rgb(0 0 0 / 18%);
+}
+[data-customer-ui] :focus-visible {
+  outline: 3px solid #e58b35;
+  outline-offset: 3px;
+}
+[data-customer-ui] :is(h1, h2, h3) { text-wrap: balance; }
+[data-customer-ui] :is(.wallet-balance-area, .indipay-activity-list, .indipay-statement-totals, .customer-application-id) {
+  font-variant-numeric: tabular-nums;
+}
+[data-customer-ui] :is(.home-overview-section, .le-card, .refer-stat-card, .announcement-card,
+  .about-contact, .registration-card, .customer-application-card, .indipay-activity-panel,
+  .ip-money-amount-card, .ip-money-terms, .auth-form-card, .store-plans, .mp-preview-card) {
+  border: 1px solid var(--ui-line);
+  border-radius: var(--radius-lg);
+  background-color: var(--ui-panel);
+  box-shadow: var(--ui-shadow);
+}
+[data-customer-ui] :is(.ip-money-header, .about-header, .refer-header, .rewards-header,
+  .le-header, .announcements-header, .indipay-detail-header, .mp-preview-header) {
+  padding-inline: max(16px, calc((100% - var(--ui-width)) / 2));
+}
+[data-customer-ui] :is(.indipay-profile-sheet, .wallet-profile-panel, .indipay-app-drawer) {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  max-height: 100dvh;
+  background: var(--ui-panel);
+  color: var(--ui-text);
+}
+[data-customer-ui] .indipay-drawer-backdrop .indipay-app-drawer button {
+  background: transparent;
+  color: var(--ui-text);
+  min-height: 44px;
+  flex-shrink: 0;
+}
+[data-customer-ui] .indipay-drawer-backdrop .indipay-app-drawer button:hover {
+  background: var(--ui-tint);
+  color: var(--ui-accent);
+}
+[data-customer-ui] .indipay-bottom-nav button { min-height: 44px; }
+[data-customer-ui] .indipay-support-main {
+  background: var(--brand-navy);
+  border: 2px solid var(--brand-orange);
+  color: white;
+  box-shadow: var(--shadow-floating);
+}
+[data-customer-ui] .indipay-empty-state {
+  min-height: 170px;
+  background: var(--ui-inset);
+  color: var(--ui-text);
+  border-radius: var(--radius-md);
+}
+[data-customer-ui] .indipay-empty-state p { color: var(--ui-secondary); }
+[data-customer-ui] .indipay-home-redesign {
+  --overview-section-gap: var(--ui-gap);
+  --overview-background: var(--ui-canvas);
+  --overview-line: var(--ui-line);
+}
+[data-customer-ui] .home-overview-section { padding: clamp(14px, 2.4vw, 28px); }
+[data-customer-ui] .home-overview .home-overview-heading h2,
+[data-customer-ui] .home-services-title-row h2 {
+  font-size: clamp(19px, 2.4vw, 27px);
+  line-height: 1.2;
+}
+[data-customer-ui] :is(.indipay-detail-category, .service-detail-process, .indipay-simple-application) {
+  border-radius: var(--radius-lg);
+  box-shadow: var(--ui-shadow);
+}
+[data-customer-ui] :is(.indipay-services-header-search, .le-search, .mp-preview-search):focus-within {
+  outline: 2px solid var(--brand-orange);
+  outline-offset: 2px;
+}
+[data-customer-ui] :is(.wallet-page-heading h1, .customer-applications-toolbar h1, .auth-form-heading h2) {
+  margin: 0;
+  font-size: clamp(24px, 3vw, 36px);
+  letter-spacing: -.035em;
+  line-height: 1.18;
+  color: var(--ui-text);
+}
+[data-customer-ui] .customer-application-card { padding: clamp(14px, 2.4vw, 26px); }
+[data-customer-ui] .customer-applications-filter-chips { flex-wrap: wrap; gap: 6px; }
+[data-customer-ui] :is(.customer-applications-filter-chips, .auth-account-toggle, .rewards-filters) button {
+  min-height: 44px;
+}
+[data-customer-ui] .application-progress { padding-block: 16px; }
+[data-customer-ui] .registration-card { border-inline-start: 3px solid var(--ui-accent); }
+[data-customer-ui] .wallet-workspace-content { min-width: 0; }
+[data-customer-ui] .indipay-wallet-tabs, [data-customer-ui] .auth-account-toggle {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 4px;
+  margin-top: 0;
+  padding: 4px;
+  border: 1px solid var(--ui-line);
+  border-radius: var(--radius-md);
+  background: var(--ui-inset);
+}
+[data-customer-ui] .indipay-wallet-tabs button,
+[data-customer-ui] .auth-account-toggle button {
+  min-width: 0;
+  padding: 8px 4px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  color: var(--ui-secondary);
+  background: transparent;
+}
+[data-customer-ui] .indipay-wallet-tabs button[aria-current="page"],
+[data-customer-ui] .auth-account-toggle button[aria-pressed="true"] {
+  background: var(--ui-panel);
+  border-color: var(--ui-line);
+  color: var(--ui-accent);
+  box-shadow: var(--ui-shadow);
+}
+[data-customer-ui] .wallet-transaction-details { min-width: 0; overflow-wrap: anywhere; }
+[data-customer-ui] .wallet-profile-details strong { overflow-wrap: anywhere; }
+[data-customer-ui] .ip-add-money {
+  --money-bg: var(--ui-canvas);
+  --money-card: var(--ui-panel);
+  --money-text: var(--ui-text);
+  --money-muted: var(--ui-secondary);
+  --money-border: var(--ui-line);
+  --money-input: var(--ui-inset);
+}
+[data-customer-ui] .ip-money-primary[data-action="upload"] {
+  border: 1px dashed var(--ui-accent);
+  background: var(--ui-tint);
+  color: var(--ui-accent);
+  padding-block: 16px;
+}
+[data-customer-ui] .ip-money-primary:disabled { opacity: .6; cursor: not-allowed; }
+[data-customer-ui] .auth-form-card { padding: clamp(20px, 3vw, 38px); }
+[data-customer-ui] .auth-input-wrap:focus-within {
+  box-shadow: 0 0 0 3px var(--ui-tint);
+  border-color: var(--ui-accent);
+}
+[data-customer-ui] .mp-preview {
+  --mp-surface: var(--ui-panel);
+  --mp-muted: var(--ui-secondary);
+  --mp-text: var(--ui-text);
+  --mp-border: var(--ui-line);
+  --mp-photo-bg: var(--ui-inset);
+  color: var(--ui-text);
+  background: var(--ui-canvas);
+}
+[data-customer-ui] .mp-preview-main {
+  width: min(var(--ui-width), calc(100% - 32px));
+  margin-inline: auto;
+}
+[data-customer-ui] .mp-preview-banner {
+  position: relative;
+  align-items: flex-start;
+  text-align: left;
+  padding: clamp(20px, 4vw, 48px);
+  padding-right: max(22%, 74px);
+  background: radial-gradient(ellipse at top right, #315378, transparent 68%), #101d36;
+}
+[data-customer-ui] .mp-preview-banner > svg {
+  position: absolute;
+  right: 6%;
+  top: 50%;
+  transform: translateY(-50%);
+  width: clamp(32px, 6vw, 74px);
+  height: auto;
+}
+@media (min-width: 900px) {
+  [data-customer-ui] .wallet-workspace {
+    display: grid;
+    grid-template-columns: minmax(310px, .85fr) minmax(0, 1.5fr);
+    align-items: start;
+    gap: var(--ui-gap);
+  }
+  [data-customer-ui] .wallet-summary { position: sticky; top: 90px; }
+  [data-customer-ui] .wallet-actions-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  [data-customer-ui] .indipay-bottom-nav {
+    width: min(560px, 90vw);
+    max-width: 100%;
+    margin-inline: auto;
+    left: 0;
+    right: 0;
+    bottom: 10px;
+    border: 1px solid var(--ui-line);
+    border-radius: var(--radius-lg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-customer-ui] .indipay-skeleton-line { animation: none; }
+}
+
+/* Browsing, tracking and account information */
+[data-customer-ui] .indipay-detailed-services .indipay-detail-category {
+  padding: clamp(14px, 2.4vw, 28px);
+  border: 1px solid var(--ui-line);
+  background: var(--ui-panel);
+}
+[data-customer-ui] .indipay-detailed-services .indipay-detail-category-heading h2,
+[data-customer-ui] :is(.about-contact-heading, .about-map-section, .rewards-section-heading) h2 {
+  font-size: clamp(21px, 3vw, 29px);
+  letter-spacing: -.025em;
+}
+[data-customer-ui] .indipay-detailed-services .indipay-detail-service-item:focus-visible {
+  outline-offset: 1px;
+}
+[data-customer-ui] .indipay-detailed-services .indipay-services-explore,
+[data-customer-ui] :is(.announcements-back, .announcement-detail-back, .company-bill-actions button) {
+  min-height: 44px;
+}
+[data-customer-ui] .service-detail-process-marker {
+  border: 1px solid var(--ui-line);
+  background: var(--ui-tint);
+  color: var(--ui-accent);
+}
+[data-customer-ui] .indipay-simple-application { border-top: 3px solid var(--brand-orange); }
+[data-customer-ui] .registration-details { gap: 8px 16px; }
+[data-customer-ui] .company-bill[aria-current] {
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  background: var(--ui-inset);
+}
+[data-customer-ui] .company-bill-download {
+  padding-inline: 12px;
+  border-radius: var(--radius-sm);
+  background: var(--ui-tint);
+  color: var(--ui-accent);
+}
+[data-customer-ui] :is(.refer-list-section, .refer-link-card, .le-content-section, .announcement-detail-card) {
+  border-radius: var(--radius-lg);
+  border-color: var(--ui-line);
+  background: var(--ui-panel);
+  color: var(--ui-text);
+}
+[data-customer-ui] .indipay-refer-page { padding-inline: max(16px, calc((100% - var(--ui-width)) / 2)); }
+[data-customer-ui] .refer-header { padding: clamp(18px, 3vw, 36px); }
+[data-customer-ui] .announcements-header { padding-inline: 0; }
+[data-customer-ui] .about-contact {
+  width: min(calc(100% - 32px), var(--ui-width));
+  margin-block: var(--ui-gap);
+  padding: var(--ui-gap);
+}
+[data-customer-ui] .about-contact-icon {
+  width: 44px;
+  height: 44px;
+  background: var(--ui-tint);
+  color: var(--ui-accent);
+}
+[data-customer-ui] .about-contact-item { gap: 12px; overflow-wrap: anywhere; }
+@media (min-width: 900px) {
+  [data-customer-ui] .about-contact-list { grid-template-columns: 1.3fr 1fr 1fr; }
+}
+
+[data-customer-ui] .home-account-row {
+  display: grid;
+  gap: var(--ui-gap);
+  align-items: stretch;
+}
+[data-customer-ui] .home-account-row .home-super-store-banner {
+  margin: 0;
+  background: linear-gradient(125deg, #182a45, #2c4665);
+}
+[data-customer-ui] .ip-money-success-circle {
+  width: 78px;
+  height: 78px;
+  color: var(--ui-accent);
+  background: var(--ui-tint);
+  border: 1px solid var(--ui-accent);
+}
+@media (min-width: 900px) {
+  [data-customer-ui] .home-account-row { grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); }
+  [data-customer-ui] .home-account-row .home-super-store-banner {
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+  }
+}

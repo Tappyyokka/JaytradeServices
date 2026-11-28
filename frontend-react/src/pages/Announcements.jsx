@@ -1,6 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import PublishedAdminContent, { SupportRequestForm } from "./PublishedAdminContent";
 import { ArrowLeft, Megaphone, CalendarDays, Pin } from "lucide-react";
 import "./Announcements.css";
+import { registrationRequest } from "../wallet/registrationDemo";
+import { serviceProcessingRequest } from "../wallet/serviceProcessing";
+import marketplaceRequest from "../config/marketplaceApi";
 
 const announcements = [
   {
@@ -23,11 +27,41 @@ const announcements = [
   },
 ];
 
-function Announcements({ onBack }) {
+function Announcements({ onBack, customer, onOpenRegistrationActivity, onOpenSuperstoreActivity }) {
   const [selectedAnnouncement, setSelectedAnnouncement] = useState(null);
+  const [registrationUpdates, setRegistrationUpdates] = useState(null);
+  const [superstore, setSuperstore] = useState(null);
+  const customerId = customer?.id;
+  useEffect(() => {
+    if (!customerId) return;
+    const controller = new AbortController();
+    Promise.allSettled([
+      registrationRequest("/notifications", undefined, controller.signal),
+      serviceProcessingRequest("/updates", { signal: controller.signal }),
+    ]).then((results) => {
+      if (!controller.signal.aborted) setRegistrationUpdates({
+        customerId,
+        events: results.flatMap((result) => result.status === "fulfilled" ? result.value.events : [])
+          .sort((a, b) => Date.parse(b.date ?? 0) - Date.parse(a.date ?? 0)),
+      });
+    });
+    return () => controller.abort();
+  }, [customerId]);
+  useEffect(() => {
+    if (!customerId) return;
+    let active = true;
+    marketplaceRequest("/notifications").then(({ events }) => {
+      if (active) setSuperstore({ customerId, events });
+    }).catch(() => {});
+    return () => { active = false; };
+  }, [customerId]);
+  const superstoreEvents = superstore?.customerId === customerId ? superstore?.events ?? [] : [];
+  const registrationEvents = registrationUpdates?.customerId === customerId ? registrationUpdates?.events ?? [] : [];
 
   return (
     <div className="indipay-announcements-page">
+      <PublishedAdminContent channel="announcements" />
+      {customer && <SupportRequestForm />}
       <div className="announcements-header">
         <button type="button" onClick={onBack} className="announcements-back">
           <ArrowLeft size={18} />
@@ -72,6 +106,20 @@ function Announcements({ onBack }) {
           </article>
         ) : (
           <>
+            {superstoreEvents.length > 0 && <section className="registration-card">
+              <h2>Super Store activity</h2>
+              <ul className="registration-list">{superstoreEvents.map((event) => <li key={event.key}>
+                <button type="button" onClick={() => onOpenSuperstoreActivity(event)}>{event.title}</button>
+                <time dateTime={event.date}>{new Date(event.date).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })}</time>
+              </li>)}</ul>
+            </section>}
+            {customerId && registrationEvents.length > 0 && <section className="registration-card">
+              <h2>Application and Wallet Activity</h2>
+              <ul className="registration-list">{registrationEvents.map((event) => <li key={event.key}>
+                <button type="button" onClick={() => onOpenRegistrationActivity(event)}>{event.title} · {event.id}</button>
+                {event.date && <time dateTime={event.date}>{new Date(event.date).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })}</time>}
+              </li>)}</ul>
+            </section>}
             <div className="announcements-section-heading">
               <h2>Latest Updates</h2>
               <span>{announcements.length} Announcements</span>

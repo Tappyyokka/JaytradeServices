@@ -543,3 +543,59 @@
     max-width: 155px;
   }
 }
+
+.auth-account-toggle {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px;
+  margin-bottom: 20px;
+  padding: 4px;
+  border: 1px solid #e3e7ed;
+  border-radius: 10px;
+  background: #f4f6fa;
+}
+.auth-account-toggle button {
+  min-height: 42px;
+  padding: 6px 4px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--auth-navy);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.auth-account-toggle button[aria-pressed="true"] {
+  background: #101d36;
+  color: #fff;
+}
+.auth-account-toggle button:focus-visible,
+.auth-account-links button:focus-visible { outline: 2px solid #df7f23; outline-offset: 2px; }
+.auth-account-links { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px 14px; }
+.auth-account-links button { min-height: 34px; margin: 0; }
+.auth-account-links .auth-admin-link { flex: 1 0 100%; color: var(--auth-muted); font-size: 11px; }
+
+.indipay-app-shell[data-theme="dark"] .indipay-auth-page {
+  --auth-cream: #0d1524;
+  --auth-navy: #f0f4fa;
+  --auth-muted: #b4c0d2;
+  color-scheme: dark;
+}
+.indipay-app-shell[data-theme="dark"] .indipay-auth-page .auth-form-card {
+  background: #172438;
+  border-color: #334761;
+}
+.indipay-app-shell[data-theme="dark"] .indipay-auth-page :is(.auth-input-wrap, .auth-account-toggle) {
+  background: #111d30;
+  border-color: #334761;
+}
+.indipay-app-shell[data-theme="dark"] .indipay-auth-page .auth-switch { border-color: #334761; }
+.indipay-app-shell[data-theme="dark"] .indipay-auth-page :is(.auth-presentation > p, .auth-remember, .auth-terms, .auth-footer) { color: var(--auth-muted); }
+.indipay-app-shell[data-theme="dark"] .indipay-auth-page :is(.auth-form-label, .auth-text-button, .auth-switch button) { color: #ffb365; }
+.indipay-app-shell[data-theme="dark"] .indipay-auth-page .auth-account-links .auth-admin-link { color: var(--auth-muted); }
+.indipay-app-shell[data-theme="dark"] .indipay-auth-page :is(.auth-submit-button, .auth-account-toggle button[aria-pressed="true"]) {
+  background: #ffb365;
+  color: #101d36;
+}
+.indipay-app-shell[data-theme="dark"] .indipay-auth-page .auth-feedback { background: #39291e; color: #ffe7cb; }

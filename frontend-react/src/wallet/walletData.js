@@ -1,9 +1,12 @@
 export const walletTypeLabels = {
+  subscription: "Merchant subscription payment",
+  "wallet-credit": "Wallet credit",
+  "application-payment": "Application registration payment",
   reward: "Reward credit",
   referral: "Referral earnings",
   learning: "Learn & Earn reward",
   commission: "Eligible commission",
-  purchase: "Marketplace purchase",
+  purchase: "Superstore purchase",
   refund: "Order refund",
   reversal: "Cancelled order reversal",
   adjustment: "Administrative adjustment",
@@ -38,15 +41,21 @@ const signedAmount = (transaction) => transaction.direction === "credit" ? trans
 function transactionType(entry) {
   if (Object.hasOwn(walletTypeLabels, entry.type)) return entry.type;
   const prefix = (entry.reference ?? "").split(":")[0];
-  const types = { order: "purchase", refund: "refund", reversal: "reversal" };
+  const types = {
+    order: "purchase", refund: "refund", reversal: "reversal", application: "application-payment",
+    "application-credit": "wallet-credit", credit: "wallet-credit", referral: "referral", subscription: "subscription",
+    learning: "learning", reward: "reward", commission: "commission", adjustment: "adjustment",
+  };
+  if (String(entry.reference ?? "").startsWith("DEMO-REG-")) return "application-payment";
+  if (String(entry.reference ?? "").startsWith("DEMO-CREDIT-")) return "wallet-credit";
   return Object.hasOwn(types, prefix) ? types[prefix] : "adjustment";
 }
 
 function normalizeLedger(entries, customerId, orders) {
   return entries.flatMap((entry) => {
     if (entry.userId != null && entry.userId !== customerId) return [];
-    const signed = rupeesToPaise(entry.amount);
-    const amountPaise = knownPaise(entry.amountPaise) ?? (signed === null ? null : Math.abs(signed));
+    const signed = Number.isInteger(entry.amountPaise) ? entry.amountPaise : rupeesToPaise(entry.amount);
+    const amountPaise = signed === null ? null : Math.abs(signed);
     const timestamp = entry.timestamp ?? entry.createdAt;
     if (amountPaise === null || !Number.isFinite(Date.parse(timestamp))) return [];
     const type = transactionType(entry);
@@ -64,7 +73,7 @@ function normalizeLedger(entries, customerId, orders) {
       affectsSpending: entry.affectsSpending !== false,
       store: entry.store ?? order?.store, category: entry.category ?? order?.category,
       reversalReference: entry.reversalReference ?? (["refund", "reversal"].includes(type) ? referenceId : ""),
-      paymentMethod: entry.paymentMethod ?? (orderId ? "Marketplace wallet" : "Wallet credit"),
+      paymentMethod: entry.paymentMethod ?? (orderId ? "Customer Money" : "Wallet credit"),
     }];
   });
 }
@@ -81,18 +90,27 @@ function attachBalances(rows, startingBalance) {
 export function accountWallet(account, customer) {
   const details = account?.indipayMoney ?? customer?.indipayMoney;
   const wallet = account?.wallet;
-  const availablePaise = knownPaise(rupeesToPaise(wallet?.balance)) ??
+  const availablePaise = knownPaise(wallet?.balancePaise) ?? knownPaise(rupeesToPaise(wallet?.balance)) ??
     knownPaise(details?.marketplaceBalancePaise) ?? (account && !wallet ? 0 : null);
   const entries = wallet?.entries ?? [];
   const rows = normalizeLedger(entries, customer?.id, account?.orders ?? []);
   return {
-    availablePaise, totalPaise: knownPaise(details?.totalBalancePaise),
+    availablePaise, totalPaise: knownPaise(details?.totalBalancePaise) ?? availablePaise,
     restrictedPaise: knownPaise(details?.restrictedBalancePaise),
     reservedPaise: knownPaise(details?.reservedPaise),
     pendingPaise: knownPaise(details?.pendingCreditsPaise) ?? (account ? sum(rows.filter((row) => row.status === "pending" && row.direction === "credit")) : null),
     transactions: attachBalances(rows, availablePaise),
-    partial: entries.length >= 25,
+    partial: account?.partial === true,
     demo: false,
+  };
+}
+
+export function shoppingWallet(wallet) {
+  return {
+    ...wallet,
+    transactions: wallet.transactions.filter((row) => ["purchase", "refund", "reversal"].includes(row.type) ||
+      (row.type === "wallet-credit" && row.referenceId.startsWith("credit:")) ||
+      (row.direction === "credit" && row.eligible && row.affectsSpending && marketplaceEarningTypes.has(row.type))),
   };
 }
 
@@ -118,7 +136,7 @@ export function walletDemo(now) {
     return {
       id: "DEMO-TX-" + String(index + 1).padStart(3, "0"), customerId: "demo-customer", type, direction, amountPaise, currency: "INR",
       status, description, timestamp: date.toISOString(), referenceId: extra.orderId ?? "DEMO-REF-" + (index + 1),
-      paymentMethod: extra.orderId ? "Demo marketplace wallet" : "Demo wallet credit",
+      paymentMethod: extra.orderId ? "Demo Superstore wallet" : "Demo wallet credit",
       affectsSpending: true, ...extra,
     };
   });

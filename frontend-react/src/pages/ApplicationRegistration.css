@@ -1,0 +1,59 @@
+.indipay-app-shell {
+  --registration-panel: #fff;
+  --registration-text: #142139;
+  --registration-border: #dce4ef;
+  --registration-muted: #4f6179;
+  --registration-bg: #f4f6fa;
+}
+.indipay-app-shell[data-theme="dark"] {
+  --registration-panel: #172438;
+  --registration-text: #f1f5fb;
+  --registration-border: #3b4c67;
+  --registration-muted: #b8c6d8;
+  --registration-bg: #0d1728;
+  color-scheme: dark;
+}
+.registration-screen { width: min(760px, calc(100% - 32px)); margin-inline: auto; padding: 24px 0 120px; color: var(--registration-text); }
+.registration-screen h1 { font-size: clamp(1.5rem, 4vw, 2rem); margin: 16px 0 6px; }
+.registration-screen h2 { font-size: 1.15rem; }
+.registration-card {
+  padding: clamp(12px, 3vw, 20px);
+  margin: 14px 0;
+  border: 1px solid var(--registration-border);
+  border-radius: 14px;
+  background: var(--registration-panel);
+  color: var(--registration-text);
+  overflow-wrap: anywhere;
+}
+.registration-card summary { cursor: pointer; font-weight: 700; }
+.registration-screen button, .registration-card button, .registration-notification {
+  min-height: 44px; padding: 8px 12px; margin: 4px 6px 4px 0;
+  border: 1px solid var(--registration-border); border-radius: 8px;
+  background: #101d36; color: #fff; font: inherit; cursor: pointer;
+}
+.registration-screen button:disabled, .registration-card button:disabled { opacity: .6; cursor: default; }
+.registration-screen :is(button, input, select, textarea):focus-visible,
+.registration-card :is(button, input, summary):focus-visible { outline: 2px solid #e38b37; outline-offset: 3px; }
+.registration-eyebrow { color: var(--registration-muted); font-size: .9rem; }
+.registration-details { display: grid; gap: 8px; }
+.registration-details div { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.registration-details dt { color: var(--registration-muted); }
+.registration-details dd { margin: 0; text-align: right; font-weight: 650; }
+.registration-check { display: flex; align-items: flex-start; gap: 8px; margin: 12px 0; }
+.registration-check input { flex: none; width: 18px; height: 18px; accent-color: #cf6d18; }
+.registration-slider { position: relative; height: 54px; display: grid; place-items: center; border-radius: 28px; background: #101d36; color: #fff; margin: 12px 0; user-select: none; }
+.registration-slider-thumb { position: absolute; top: 4px; margin-left: 4px; width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; background: #ffad62; color: #142139; cursor: grab; touch-action: none; }
+.registration-confirm { padding: 12px; background: var(--registration-bg); border-radius: 10px; }
+.registration-success { position: fixed; inset: 0; z-index: 2000; display: grid; place-content: center; justify-items: center; background: var(--registration-panel); color: var(--registration-text); text-align: center; }
+.registration-success svg { color: #2ca76c; animation: registration-confirmed .3s ease-out both; }
+@keyframes registration-confirmed { from { transform: scale(.8); opacity: .3; } to { transform: scale(1); opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .registration-success svg { animation: none; } }
+.registration-field { display: grid; gap: 5px; margin: 12px 0; }
+.registration-field :is(input, select, textarea), .registration-screen select { width: 100%; box-sizing: border-box; min-height: 42px; padding: 8px; border: 1px solid var(--registration-border); background: var(--registration-bg); color: var(--registration-text); border-radius: 8px; font: inherit; }
+.registration-qr { margin: 14px auto; width: min(200px, 100%); aspect-ratio: 1; box-sizing: border-box; display: grid; place-content: center; justify-items: center; gap: 8px; border: 1px dashed var(--registration-border); border-radius: 10px; color: var(--registration-muted); text-align: center; padding: 12px; }
+.registration-qr img { width: 100%; height: 100%; object-fit: contain; }
+.registration-upi { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
+.registration-upi span { display: inline-flex; align-items: center; gap: 4px; padding: 5px 8px; border: 1px solid var(--registration-border); border-radius: 8px; font-size: .85rem; }
+.registration-evidence { display: block; max-width: 100%; max-height: 360px; object-fit: contain; margin: 10px 0; }
+.registration-list { display: grid; gap: 8px; padding-left: 0; list-style: none; }
+.registration-list li { padding: 10px; border-top: 1px solid var(--registration-border); }

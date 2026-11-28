@@ -1,0 +1,733 @@
+/* ==========================================
+   INDIPAY ADD MONEY - DESIGN TOKENS
+========================================== */
+
+.ip-add-money {
+  --money-bg: #f6f7fa;
+  --money-card: #ffffff;
+  --money-text: #101d36;
+  --money-muted: #69758a;
+  --money-border: #e0e5ed;
+  --money-orange: #f28c28;
+  --money-input: #f6f7fa;
+
+  min-height: 100dvh;
+  background: var(--money-bg);
+  color: var(--money-text);
+  font-family: "Segoe UI", Arial, sans-serif;
+}
+
+.ip-add-money.dark-mode {
+  --money-bg: #0d1524;
+  --money-card: #172438;
+  --money-text: #f1f5fa;
+  --money-muted: #aebdd1;
+  --money-border: #30425b;
+  --money-input: #1e2d43;
+}
+
+.ip-add-money *,
+.ip-add-money *::before,
+.ip-add-money *::after {
+  box-sizing: border-box;
+}
+
+.ip-add-money button,
+.ip-add-money input {
+  font: inherit;
+}
+
+.ip-add-money button {
+  cursor: pointer;
+}
+
+.ip-add-money button:focus-visible,
+.ip-add-money input:focus-visible {
+  outline: 2px solid #f28c28;
+  outline-offset: 4px;
+}
+
+/* ==========================================
+   HEADER
+========================================== */
+
+.ip-money-header {
+  min-height: 64px;
+  padding: 12px 20px;
+
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  background: #101d36;
+  color: #ffffff;
+
+  border-bottom: 1px solid #30425b;
+}
+
+.ip-money-header h1 {
+  margin: 0;
+  font-size: 19px;
+  font-weight: 700;
+}
+
+.ip-money-header button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 36px;
+  height: 36px;
+  padding: 0;
+
+  background: transparent;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+}
+
+/* ==========================================
+   MAIN CONTAINER
+========================================== */
+
+.ip-money-container {
+  width: 100%;
+  max-width: 580px;
+
+  margin: 0 auto;
+  padding: 24px 18px 100px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ==========================================
+   ENTER AMOUNT
+========================================== */
+
+.ip-money-amount-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  padding: 28px 20px;
+
+  background: var(--money-card);
+  border: 1px solid var(--money-border);
+  border-radius: 18px;
+
+  text-align: center;
+}
+
+.ip-money-wallet-icon {
+  width: 68px;
+  height: 68px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 16px;
+
+  border-radius: 50%;
+  color: #f28c28;
+  background: rgba(242, 140, 40, 0.12);
+}
+
+.ip-money-amount-card h2 {
+  margin: 0 0 7px;
+  font-size: 21px;
+}
+
+.ip-money-amount-card p {
+  margin: 0;
+  color: var(--money-muted);
+  font-size: 13px;
+}
+
+.ip-money-amount-input {
+  width: 100%;
+  max-width: 320px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  margin: 30px 0 24px;
+  padding-bottom: 12px;
+
+  border-bottom: 2px solid var(--money-border);
+}
+
+.ip-money-amount-input:focus-within {
+  border-bottom-color: #f28c28;
+}
+
+.ip-money-amount-input span {
+  font-size: 38px;
+  font-weight: 700;
+}
+
+.ip-money-amount-input input {
+  width: 100%;
+  min-width: 0;
+
+  background: transparent;
+  color: var(--money-text);
+
+  border: none;
+  outline: none;
+
+  font-size: clamp(30px, 8vw, 42px);
+  font-weight: 750;
+  text-align: center;
+}
+
+.ip-money-amount-input input:focus-visible {
+  outline: none;
+}
+
+.ip-money-amount-input input::placeholder {
+  color: var(--money-muted);
+  opacity: 0.5;
+}
+
+/* Quick amounts */
+
+.ip-money-quick-amounts {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.ip-money-quick-amounts button {
+  padding: 11px 5px;
+
+  background: var(--money-input);
+  border: 1px solid var(--money-border);
+  border-radius: 10px;
+
+  color: var(--money-text);
+  font-size: 13px;
+  font-weight: 650;
+
+  transition: 0.2s ease;
+}
+
+.ip-money-quick-amounts button:hover,
+.ip-money-quick-amounts button.selected {
+  border-color: #f28c28;
+  color: #f28c28;
+  background: rgba(242, 140, 40, 0.09);
+}
+
+/* ==========================================
+   TERMS AND CONDITIONS
+========================================== */
+
+.ip-money-terms {
+  padding: 18px;
+
+  background: var(--money-card);
+  border: 1px solid var(--money-border);
+  border-radius: 14px;
+}
+
+.ip-money-terms-heading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ip-money-terms-heading svg {
+  color: #f28c28;
+  flex-shrink: 0;
+}
+
+.ip-money-terms h3 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.ip-money-terms ul {
+  padding-left: 19px;
+  margin: 15px 0 18px;
+
+  color: var(--money-muted);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.ip-money-terms li {
+  margin-bottom: 8px;
+}
+
+.ip-money-checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+
+  padding-top: 14px;
+  border-top: 1px solid var(--money-border);
+
+  font-size: 13px;
+  line-height: 1.5;
+  cursor: pointer;
+}
+
+.ip-money-checkbox input {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+
+  margin: 2px 0 0;
+
+  accent-color: #f28c28;
+  cursor: pointer;
+}
+
+/* ==========================================
+   PRIMARY BUTTON
+========================================== */
+
+.ip-money-primary {
+  width: 100%;
+  min-height: 52px;
+  padding: 14px 16px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  background: #f28c28;
+  color: #101d36;
+
+  border: none;
+  border-radius: 12px;
+
+  font-size: 15px;
+  font-weight: 750;
+
+  transition: 0.2s ease;
+}
+
+.ip-money-payment-status {
+  min-height: 20px;
+  margin: 8px 0 0;
+  color: var(--money-muted);
+  font-size: 13px;
+  text-align: center;
+}
+
+.ip-money-primary:hover:not(:disabled) {
+  background: #ffa348;
+  transform: translateY(-2px);
+}
+
+.ip-money-primary:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.ip-money-evidence-preview {
+  display: block;
+  max-width: 100%;
+  max-height: 220px;
+  margin: 14px auto;
+  border-radius: 10px;
+  object-fit: contain;
+}
+
+.ip-money-footer-note {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+
+  color: var(--money-muted);
+  font-size: 12px;
+  text-align: center;
+}
+
+/* ==========================================
+   PAYMENT AMOUNT
+========================================== */
+
+.ip-money-payment-amount {
+  padding: 10px 0;
+  text-align: center;
+}
+
+.ip-money-payment-amount span {
+  color: var(--money-muted);
+  font-size: 14px;
+}
+
+.ip-money-payment-amount h2 {
+  margin: 8px 0 0;
+
+  color: var(--money-text);
+  font-size: 36px;
+  font-weight: 800;
+}
+
+/* ==========================================
+   QR CODE SECTION
+========================================== */
+
+.ip-money-qr-section {
+  padding: 24px 18px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  background: var(--money-card);
+  border: 1px solid var(--money-border);
+  border-radius: 18px;
+
+  text-align: center;
+}
+
+.ip-money-qr-section h3 {
+  margin: 0 0 7px;
+  font-size: 20px;
+}
+
+.ip-money-qr-section p {
+  margin: 0;
+
+  color: var(--money-muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.ip-money-qr {
+  width: min(220px, 100%);
+  aspect-ratio: 1;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin: 24px 0;
+
+  padding: 12px;
+
+  background: #ffffff;
+  border-radius: 12px;
+}
+
+.ip-money-qr img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.ip-money-qr-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+
+  color: #101d36;
+}
+
+.ip-money-qr-placeholder span {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.ip-money-qr-placeholder small {
+  font-size: 10px;
+}
+
+/* ==========================================
+   UPI APP LOGOS
+========================================== */
+
+.ip-money-upi-label {
+  margin-bottom: 17px;
+
+  color: var(--money-muted);
+  font-size: 12px;
+}
+
+.ip-money-upi-apps {
+  width: 100%;
+  max-width: 340px;
+
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.ip-money-upi-app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.ip-money-upi-icon {
+  width: 52px;
+  height: 52px;
+  padding: 7px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #ffffff;
+  color: #14253e;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.ip-money-upi-icon.phonepe {
+  color: #5f259f;
+}
+
+.ip-money-upi-icon.paytm {
+  color: #003b71;
+}
+
+.ip-money-upi-app > span {
+  color: var(--money-muted);
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+/* ==========================================
+   TRANSACTION REFERENCE
+========================================== */
+
+.ip-money-reference {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.ip-money-reference label {
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.ip-money-reference input {
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 15px;
+
+  border: 1px solid var(--money-border);
+  border-radius: 10px;
+
+  background: var(--money-card);
+  color: var(--money-text);
+
+  font-size: 14px;
+}
+
+.ip-money-reference input::placeholder {
+  color: var(--money-muted);
+}
+
+.ip-money-error {
+  margin: 0;
+  padding: 12px;
+
+  color: #d94b4b;
+  background: rgba(217, 75, 75, 0.08);
+
+  border-radius: 8px;
+  font-size: 13px;
+}
+
+.ip-add-money.dark-mode .ip-money-error {
+  color: #ff9999;
+}
+
+.ip-money-demo-notice {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+
+  padding: 12px;
+  border-radius: 8px;
+
+  background: rgba(242, 140, 40, 0.12);
+  color: var(--money-text);
+
+  font-size: 12px;
+}
+
+/* ==========================================
+   LOADING AND SUCCESS SCREEN
+========================================== */
+
+.ip-money-result-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  overflow: auto;
+  padding: 30px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+
+  text-align: center;
+}
+
+.ip-money-result-screen h2 {
+  margin: 6px 0 0;
+
+  font-size: 24px;
+  font-weight: 750;
+}
+
+.ip-money-result-screen p {
+  max-width: 340px;
+  margin: 0;
+
+  color: var(--money-muted);
+
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.ip-money-result-screen small {
+  margin-top: 12px;
+
+  color: var(--money-muted);
+  font-size: 12px;
+}
+
+.ip-money-spinner {
+  color: #f28c28;
+  animation: ip-money-spin 0.9s linear infinite;
+}
+
+@keyframes ip-money-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Green success tick */
+
+.ip-money-success-circle {
+  width: 110px;
+  height: 110px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #22a35a;
+  color: #ffffff;
+
+  border-radius: 50%;
+
+  box-shadow: 0 0 0 12px rgba(34, 163, 90, 0.1);
+
+  animation: ip-money-success 0.45s ease;
+}
+
+@keyframes ip-money-success {
+  from {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.ip-money-success-amount {
+  color: var(--money-text);
+  font-size: 30px;
+}
+
+.ip-money-credit-message {
+  max-width: 360px;
+  margin-top: 6px;
+
+  color: var(--money-muted);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width: 600px) {
+  .ip-money-container {
+    padding: 20px 15px 100px;
+    gap: 16px;
+  }
+
+  .ip-money-amount-card {
+    padding: 24px 15px;
+  }
+
+  .ip-money-terms {
+    padding: 16px;
+  }
+
+  .ip-money-header {
+    min-height: 60px;
+    padding: 10px 15px;
+  }
+
+  .ip-money-payment-amount h2 {
+    font-size: 32px;
+  }
+
+  .ip-money-quick-amounts button {
+    font-size: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ip-money-success-circle,
+  .ip-money-spinner {
+    animation: none;
+  }
+
+  .ip-add-money button {
+    transition: none;
+  }
+}
+
+.ip-money-history h2 {
+  margin: 0 0 12px;
+  font-size: 18px;
+}
+
+.ip-money-history button {
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid currentColor;
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+}
+
+.ip-money-history li {
+  padding: 8px;
+  overflow-wrap: anywhere;
+}
+
+.ip-money-history li[aria-current="true"] {
+  border-inline-start: 3px solid #f28c28;
+}

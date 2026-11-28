@@ -16,7 +16,7 @@
   --ib-link: #d5b7ff;
 }
 
-.indipay-marketplace .indibot :is(button, input):focus-visible {
+.indipay-marketplace .indibot :is(button, input, select):focus-visible {
   outline: 2px solid var(--ib-link);
   outline-offset: 2px;
 }
@@ -74,7 +74,19 @@
 .indibot .indibot-heading p { margin: 0; }
 .indibot .indibot-heading h2 { font-size: 1.05rem; }
 .indibot .indibot-heading p { color: var(--ib-highlight); font-size: .78rem; }
-.indibot .indibot-heading button { margin-left: auto; background: transparent; color: white; }
+.indibot .indibot-heading button { background: transparent; color: white; }
+.indibot .indibot-language {
+  margin-left: auto;
+  min-height: 40px;
+  padding: 4px 7px;
+  border: 1px solid #c7acf7;
+  border-radius: 8px;
+  background: #50259e;
+  color: #fff;
+  font: inherit;
+  font-size: .8rem;
+}
+.indipay-marketplace .indibot .indibot-heading :is(button, select):focus-visible { outline-color: #fff; }
 .indibot .indibot-heading button,
 .indibot .indibot-form button {
   display: grid;

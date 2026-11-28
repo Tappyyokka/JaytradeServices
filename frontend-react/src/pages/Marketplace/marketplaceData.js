@@ -1,6 +1,15 @@
 export const categories = ["All Products", "Electronics", "Fashion", "Grocery", "Beauty", "Home & Living", "Accessories"];
 export const demoBalance = 2450;
-export const deliveryStages = ["Confirmed", "Packed", "Shipped", "Delivered"];
+export const orderStages = ["Order Placed", "Order Confirmed", "Processing", "Packed", "Shipped", "Out for Delivery", "Delivered"];
+const defaultStage = [1, 3, 4, 6];
+
+export function orderStage(order) {
+  return order.management?.stage ?? (order.checkoutDetails?.demo && order.sellerStage === 0 ? 0 : defaultStage[order.sellerStage] ?? 0);
+}
+
+export function isClosedOrder(order) {
+  return order.refunded || order.management?.request?.status === "approved";
+}
 
 const catalog = [
   ["Wireless over-ear headphones", "Soundcraft Studio", "Electronics", 899, 1499, 4.5, "1505740420928-5e560c06d30e", "🎧", "Trending"],
